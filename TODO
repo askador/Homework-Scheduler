@@ -1,0 +1,19 @@
+Chat(
+    id
+    title:
+    admins:
+)
+
+
+Subgrps_chat_<id> (
+    id,
+    uids:
+)
+
+hw_chat_123 (
+    id
+    subj:
+    decrp: 
+    deadline:
+)
+
