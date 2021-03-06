@@ -1,11 +1,11 @@
 token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8'
 
 db_setting = {
-    "Host": "ec2-46-137-124-19.eu-west-1.compute.amazonaws.com",
-    "Database": "d52aadfi1esdet",
-    "User": "puiejcfigqodwu",
+    "Host": "ec2-34-224-229-81.compute-1.amazonaws.com",
+    "Database": "d7kotnui7ubmvq",
+    "User": "rjblaxrzxaxpum",
     "Port": "5432",
-    "Password": "4ec39612794d480bd8253264273e0e902a35b552c1d4ea809f0b7b720f84d6db"
+    "Password": "ea00c427c5ef18079f94af132a47f42fe10ddc81393bdd48ba2c84b708f1a1d1"
 }
 
 admins = [
@@ -20,4 +20,4 @@ commands = {
     '/help': "",
 }
 
-db = f"postgres://{db_setting['User']}:{db_setting['Password']}@{db_setting['Host']}:{db_setting['Port']}/{db_setting['Database']}"
+db_url = f"postgres://{db_setting['User']}:{db_setting['Password']}@{db_setting['Host']}:{db_setting['Port']}/{db_setting['Database']}"
