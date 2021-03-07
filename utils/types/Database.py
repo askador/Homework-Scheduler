@@ -1,25 +1,21 @@
-import psycopg2
-# from data.misc import conn, cur
+import asyncpg
+from data.config import db_url
 from datetime import datetime, timedelta
 
 
-class db:
 
-    def __init__(self, name):
-        self.name = name
 
+
+class Database:
+
+    def __init__(self):
+        self.db_url = db_url
+
+    async def connect(self):
+        self.conn = await asyncpg.connect(self.db_url)
 
     def create_table(self):
-        cur.execute(
-            f"CREATE TABLE if not exists {self.name}"
-            f"(Id        Serial,"
-            f"subject        TEXT          NOT NULL,"
-            f"type           VARCHAR(20)     NOT NULL,"
-            f"deadline       bigint            NOT NULL,"
-            "PRIMARY KEY(Id))")
-
-        conn.commit()
-
+        pass
 
     def add_hw(self, subject, type, deadline):
         pass
