@@ -1,9 +1,5 @@
 import asyncpg
 from data.config import db_url
-from datetime import datetime, timedelta
-
-
-
 
 
 class Database:
@@ -14,8 +10,26 @@ class Database:
     async def connect(self):
         self.conn = await asyncpg.connect(self.db_url)
 
-    def create_table(self):
-        pass
+    async def close(self):
+        await self.conn.close()
+
+    async def create_table(self, table):
+        await self.connect()
+        # print(query)
+        await self.conn.execute(table)
+        await self.close()
+
+    async def query(self, query):
+        await self.connect()
+        await self.conn.execute(query)
+        await self.close()
+
+    async def fetch(self, query):
+        await self.connect()
+        data = await self.conn.fetch(query)
+        await self.close()
+
+        return data
 
     def add_hw(self, subject, type, deadline):
         pass
