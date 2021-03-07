@@ -27,10 +27,10 @@ class Chat:
     title = Column("chat_id", "varchar(64)")
     admins = Column("chat_id", "text", not_null=True)
 
-    def __init__(self):
-        pass
-
     async def create_table(self):
-        pass
+        table = f"create table {self.__tablename__} if not exists (" \
+                f"{self.chat_id}," \
+                f"{self.title}," \
+                f"{self.admins})"
 
 print(Chat.__dict__)

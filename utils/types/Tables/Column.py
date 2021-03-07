@@ -26,7 +26,6 @@ class Column:
                 else:
                     column += f"{key} "
 
-        column += ","
         return column
 
     def __repr__(self):
