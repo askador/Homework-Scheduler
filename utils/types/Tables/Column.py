@@ -1,18 +1,29 @@
 class Column:
+    """
+    Object of database column
+    """
 
-    def __init__(self, title, type, *, primary_key=False, not_null=False, unique=False,
-                 unsigned=False, serial=False, default=None):
+    def __init__(self, title, type, *,
+                 serial=False,
+                 primary_key=False,
+                 not_null=False,
+                 unique=False,
+                 default=None):
 
         self.title = title
         self.type = type
+        self.serial = serial
         self.primary_key = primary_key
         self.not_null = not_null
         self.unique = unique
-        self.unsigned = unsigned
-        self.serial = serial
         self.default = default
 
     def create_column(self):
+        """
+        Create column string
+
+        :return str column: column string for table creating
+        """
         column = f"{self.title} {self.type} "
 
         for key in self.__dict__.keys():
