@@ -1,5 +1,5 @@
 import asyncpg
-from data.config import db_url
+from data.config import postresql_db_url
 
 
 class Database:
@@ -11,7 +11,7 @@ class Database:
         """
         Set db uri
         """
-        self.db_url = db_url
+        self.db_url = postresql_db_url
         self.conn = None
 
     async def connect(self):
@@ -87,7 +87,7 @@ class Database:
         """
         _current_table_last_column_name = await self.fetch(f"select column_name "
                                                            f"from information_schema.columns "
-                                                           f"where table_name = '{__tablename__}'"
+                                                           f"""where table_name = "{__tablename__}" """
                                                         )
         _current_table_last_column_name = _current_table_last_column_name[-1][0]
 
@@ -113,7 +113,7 @@ class Database:
         :return list columns: list of table columns
         """
         await self.connect()
-        query = f"SELECT column_name FROM information_schema.columns WHERE table_name = '{__tablename__}'"
+        query = f"""SELECT column_name FROM information_schema.columns WHERE table_name = "{__tablename__}" """
         columns = await self.conn.fetch(query)
         await self.close()
 

@@ -1,8 +1,6 @@
-from utils.types.Tables.Column import Column
-from utils.types.Tables.ChatHomework import ChatHomework
-from utils.types.Database import Database
-
-from pprint import pprint
+from utils.types.PosrtgreSQL.Tables.Column import Column
+from utils.types.PosrtgreSQL.Tables.ChatHomework import ChatHomework
+from utils.types.PosrtgreSQL.Database import Database
 
 
 class Chat:
@@ -17,6 +15,7 @@ class Chat:
         'chat_id': Column("chat_id", "bigint", primary_key=True, not_null=True),
         'title': Column("title", "varchar(64)"),
         'admins': Column("admins", "text", not_null=True),
+        'subjects': Column("subjects", "text")
     }
 
     async def create_table(self):

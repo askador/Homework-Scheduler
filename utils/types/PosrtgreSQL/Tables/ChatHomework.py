@@ -1,5 +1,5 @@
-from utils.types.Tables.Column import Column
-from utils.types.Database import Database
+from utils.types.PosrtgreSQL.Tables import Column
+from utils.types.PosrtgreSQL.Database import Database
 
 
 class ChatHomework:
@@ -13,7 +13,10 @@ class ChatHomework:
         'id': Column("id", "", serial=True, primary_key=True),
         'subject': Column("subject", "varchar(64)"),
         'description': Column("description", "text", not_null=True),
-        'deadline': Column("deadline", "timestamp with time zone", not_null=True, default="CURRENT_TIMESTAMP"),
+        'deadline': Column("deadline", "timestamp with time zone",
+                           not_null=True,
+                           default="now() + interval '1 day'"),
+        'subgroup': Column("subgroup", "int")
     }
 
     def __init__(self, chat_id):
@@ -23,13 +26,15 @@ class ChatHomework:
         """
         Create table
         """
-        table = f"create table if not exists {self.__tablename__}  ("
+        table = f"""create table if not exists "{self.__tablename__}"  ("""
 
         for i, col in self.columns.items():
             table += f"{col},"
 
         table = table[:-1]
         table += ");"
+
+        print(table)
 
         await Database().query(table)
 
@@ -40,21 +45,33 @@ class ChatHomework:
         db = Database()
         await db.add_column(self.__tablename__, columns=self.columns)
 
-    async def add_hw(self, *, subject, description, deadline):
+    async def add_hw(self, *, subject, description, deadline, subgroup='NULL'):
         """
         Add homework
 
         :param str subject: subject
         :param str description: description
         :param datetime deadline: deadline
+        :param int subgroup: subgroup id
         """
         db = Database()
 
-        query = f"INSERT INTO {self.__tablename__}" \
-                f"(subject, desciption, deadline) " \
-                f"VALUES ('{subject}', '{description}', '{deadline}')"
+        query = f"""INSERT INTO "{self.__tablename__}" """ \
+                f"(subject, description, deadline, subgroup) " \
+                f"VALUES ('{subject}', '{description}', '{deadline}', {subgroup})"
 
         await db.query(query)
+
+        # try:
+        #     await db.query(query)
+        # except asyncpg.exceptions.UndefinedColumnError as e:
+        #     print("Undefined column:", e)
+        # except NameError as e:
+        #     print(e)
+        # except asyncpg.exceptions.PostgresSyntaxError as e:
+        #     print("Syntax error:", e)
+        # except asyncpg.exceptions.UndefinedTableError as e:
+        #     print("Undefined table:", e)
 
     async def del_hw(self, id):
         """
@@ -64,7 +81,7 @@ class ChatHomework:
         """
         db = Database()
 
-        query = f"DELETE FROM {self.__tablename__} WHERE id = {id}"
+        query = f"""DELETE FROM "{self.__tablename__}" WHERE id = {id}"""
 
         await db.query(query)
 
