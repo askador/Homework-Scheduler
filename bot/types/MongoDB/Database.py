@@ -1,5 +1,5 @@
 import pymongo
-from data.config import mongodb_url
+from bot.data import mongodb_url
 
 # ---------- for aiogram-fsm -------------
 # start_db_name_index = mongodb_url.rfind("/")

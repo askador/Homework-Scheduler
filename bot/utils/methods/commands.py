@@ -1,7 +1,8 @@
 import sys
 from datetime import datetime, timedelta
 sys.path.append('D:/dz_bot')
-import data.config 
+
+
 # from data.misc import conn, cur, sh_subjects
 # from utils.types.db import db
 # from aiogram import types
@@ -23,11 +24,13 @@ def validate(func):
             return await message.reply("Неверные аргументы. Правильная структура: добавить дз <предмет> <задание> <дата дд.мм.гггг.ЧЧ:ММ>",reply = False)
     return wrapper
 
+
 def readable(arr):
     s = ''
     for i in arr:
         s+=str(i[0]) + ' ' + str(i[1]) + ' ' + datetime.fromtimestamp(int(i[2])).strftime('%d.%m.%Y.%H:%M') +'\n'
     return s
+
 
 @validate
 async def c_add_hw(message):

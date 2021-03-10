@@ -1,4 +1,4 @@
-from utils.types.MongoDB.Database import Database
+from bot.types.MongoDB.Database import Database
 
 
 class Chats:

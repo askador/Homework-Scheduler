@@ -1,4 +1,4 @@
-from utils.types.MongoDB.Database import Database
+from bot.types.MongoDB.Database import Database
 
 
 class ChatHomework:
@@ -94,5 +94,11 @@ class ChatHomework:
 
         Database().delete_one(self.__collection_name__, filters={"_id": id})
 
+    def get_hw(self, id):
+        """
+        Get homework info
 
+        :param int id: homework id
+        :return dict hw: homework info
+        """
 

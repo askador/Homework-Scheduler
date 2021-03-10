@@ -1,5 +1,5 @@
-from utils.types.PosrtgreSQL.Tables import Column
-from utils.types.PosrtgreSQL.Database import Database
+from bot.utils import Column
+from bot.utils import Database
 
 
 class ChatHomework:
