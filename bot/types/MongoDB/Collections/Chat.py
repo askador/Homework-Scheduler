@@ -1,38 +1,26 @@
 from bot.types.MongoDB.Database import Database
 
 
-class Chats:
+class Chat:
     """
     Make convenient interaction with chats
     """
 
-    __collection_name__ = "chats"
+    __collection_name__ = "chat"
 
     columns = [
-      "_id",
-      "title",
-      "admins",
-      "subjects",
+        "_id",
+        "title",
+        "admins",
+        "subjects",
+        "subgroups",
+        "homeworks",
     ]
 
-    def create_collection(self):
-        """
-        Create collection
-        """
+    def __init__(self, chat_id):
+        self.chat_id = chat_id
 
-        if self.__collection_name__ in Database().client.list_collection_names():
-            return False
-
-        null_chat = {}
-
-        for col in self.columns:
-            null_chat[col] = None
-
-        db = Database()
-
-        db.insert_one(self.__collection_name__, null_chat)
-
-    def add_chat(self, *, chat_id, title, admins, subjects):
+    def add_chat(self, *, chat_id, title, admins, subjects, subgroups, homeworks=None):
         """
         Add new chat
 
@@ -40,6 +28,8 @@ class Chats:
         :param str title: chat title
         :param list admins: list of chat admins
         :param list subjects: list of subjects
+        :param dict subgroups: chat subgroups
+        :param dict homeworks: homeworks
         """
 
         chat = {
@@ -47,6 +37,8 @@ class Chats:
             "title": title,
             "admins": admins,
             "subjects": subjects,
+            "subgroups": subgroups,
+            "homeworks": homeworks
         }
 
         Database().insert_one(self.__collection_name__, chat)

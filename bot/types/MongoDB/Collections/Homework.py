@@ -1,15 +1,13 @@
 from bot.types.MongoDB.Database import Database
 
 
-class ChatHomework:
+class Homework:
     """
     Make convenient interaction with homework
     """
 
-    __collection_name__ = "hw_chat_"
-
     columns = [
-        "_id",
+        "id",
         "subject",
         "description",
         "deadline",
