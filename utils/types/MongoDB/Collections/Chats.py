@@ -2,6 +2,9 @@ from utils.types.MongoDB.Database import Database
 
 
 class Chats:
+    """
+    Make convenient interaction with chats
+    """
 
     __collection_name__ = "chats"
 
@@ -13,6 +16,13 @@ class Chats:
     ]
 
     def create_collection(self):
+        """
+        Create collection
+        """
+
+        if self.__collection_name__ in Database().client.list_collection_names():
+            return False
+
         null_chat = {}
 
         for col in self.columns:
@@ -40,4 +50,15 @@ class Chats:
         }
 
         Database().insert_one(self.__collection_name__, chat)
+
+    def update_chat(self, *, title, admins, subjects):
+        """
+        Update chat info
+
+        :param str title: chat title
+        :param list admins: chat admins
+        :param list subjects: subjects
+        """
+
+        pass
 

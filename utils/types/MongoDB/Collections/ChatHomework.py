@@ -20,6 +20,13 @@ class ChatHomework:
         self.__collection_name__ += str(chat_id)
 
     def create_collection(self):
+        """
+        Create new homework collection
+        """
+
+        if self.__collection_name__ in Database().client.list_collection_names():
+            return False
+
         null_hw = {}
 
         for col in self.columns:
@@ -50,6 +57,11 @@ class ChatHomework:
         Database().insert_one(self.__collection_name__, hw)
 
     def _increment(self):
+        """
+        Increment id
+
+        :return int id: incremented id
+        """
         db = Database()
 
         last_id = db.get_sorted(self.__collection_name__, direction=-1, limit=1)
@@ -59,6 +71,19 @@ class ChatHomework:
                 return 1
 
             return row['_id'] + 1
+
+    def update_hw(self, *, subject=None, description=None, deadline=None, subgroup=None):
+        """
+        Update homework info
+
+        :param str subject: subject
+        :param str description: description
+        :param datetime deadline: deadline
+        :param int subgroup: subgroup
+
+        """
+
+        pass
 
     def del_hw(self, id):
         """
