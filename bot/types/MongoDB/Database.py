@@ -1,5 +1,5 @@
 import pymongo
-from bot.data import mongodb_url
+from bot.data.config import mongodb_url
 
 # ---------- for aiogram-fsm -------------
 # start_db_name_index = mongodb_url.rfind("/")
@@ -26,15 +26,15 @@ class Database:
         :return bool: if successfully inserted
         """
         # insert_one(document)
-        return False
 
     def insert_many(self, collection, documents):
         # insert_many(documents)
         pass
 
     def get(self, collection, filters=None):
-        # find(filters)
-        pass
+
+        for doc in self.client[collection].find({filters}):
+            return doc
 
     def get_sorted(self, collection, filters=None, sort_by="_id", direction=None, limit=None):
         """
@@ -51,7 +51,16 @@ class Database:
 
         return sorted_docs.limit(limit)
 
-    def update(self, collection, document, change):
+    def update(self, collection, filters, changes):
+        # TODO: rewrite
+        """
+        Update document
+
+        :param str collection: collection
+        :param dict filters: filters
+        :param dict changes: changes
+        """
+        self.client[collection].update_one(filters, changes)
         # update_many(document, change)
         pass
 

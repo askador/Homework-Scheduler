@@ -14,63 +14,45 @@ class Homework:
         "subgroup",
     ]
 
-    def __init__(self, chat_id):
-        self.__collection_name__ += str(chat_id)
+    def __init__(self, *, chat_id=None, id, subject, description, deadline, subgroup):
+        self.chat_id = chat_id
+        self.id = id
+        self.subject = subject
+        self.description = description
+        self.deadline = deadline
+        self.subgroup = subgroup
 
-    def create_collection(self):
-        """
-        Create new homework collection
-        """
-
-        if self.__collection_name__ in Database().client.list_collection_names():
-            return False
-
-        null_hw = {}
-
-        for col in self.columns:
-            null_hw[col] = None
-
-        db = Database()
-
-        db.insert_one(self.__collection_name__, null_hw)
-
-    def add_hw(self, *, subject, description, deadline, subgroup='NULL'):
-        """
-        Add homework
-
-        :param str subject: subject
-        :param str description: description
-        :param datetime deadline: deadline
-        :param int subgroup: subgroup id
-        """
-
-        hw = {
-            "_id": self._increment(),
-            "subject": subject,
-            "description": description,
-            "deadline": deadline,
-            "subgroup": subgroup,
-        }
-
-        Database().insert_one(self.__collection_name__, hw)
-
-    def _increment(self):
+    @staticmethod
+    def _increment(id):
         """
         Increment id
 
+        :param int id: last homework id
         :return int id: incremented id
         """
-        db = Database()
 
-        last_id = db.get_sorted(self.__collection_name__, direction=-1, limit=1)
+        if not isinstance(id, int):
+            return 1
 
-        for row in last_id:
-            if not isinstance(row["_id"], int):
-                return 1
+        return id + 1
 
-            return row['_id'] + 1
+    def add(self):
+        # TODO: rewrite db query
+        """
+        Add homework
+        """
 
-    def update_hw(self, *, subject=None, description=None, deadline=None, subgroup=None):
+        hw = {
+            "_id": self._increment(self.id),
+            "subject": self.subject,
+            "description": self.description,
+            "deadline": self.deadline,
+            "subgroup": self.subgroup,
+        }
+
+        Database().client["chat"].update_one({"_id": self.chat_id}, {"$push": {"homeworks": hw}})
+
+    def update(self, *, subject=None, description=None, deadline=None, subgroup=None):
         """
         Update homework info
 
@@ -83,20 +65,24 @@ class Homework:
 
         pass
 
-    def del_hw(self, id):
+    def delete(self, id):
         """
         Delete homework
 
         :param int id: homework id
         """
 
-        Database().delete_one(self.__collection_name__, filters={"_id": id})
+        # Database().delete_one(self.__collection_name__, filters={"_id": id})
 
-    def get_hw(self, id):
+    def get(self, id):
         """
         Get homework info
 
         :param int id: homework id
         :return dict hw: homework info
         """
+
+    # def __repr__(self):
+    #     hw = "{'id': 1}"
+    #     return hw
 
