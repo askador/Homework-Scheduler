@@ -1,4 +1,4 @@
-# token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE'
+# token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE'  # @itai_hw_bot
 
 token = '1173133322:AAG_E7H2IjRypO3dt-pygUjh9V1HP8X8JPk' # test_bot
 
