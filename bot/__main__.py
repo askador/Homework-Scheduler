@@ -3,8 +3,9 @@ import logging
 from aiogram import Dispatcher
 from aiogram.utils import executor
 
-from bot import utils, config
+from bot import utils
 from bot.loader import dp
+from bot.data import config
 
 # The configuration of the modules using import
 from bot import handlers
