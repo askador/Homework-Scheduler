@@ -2,7 +2,7 @@ from bot.loader import dp, bot
 
 
 @dp.message_handler(lambda msg: msg.text.lower() == "админы")
-async def mes(msg):
+async def get_chat_admins(msg):
     admins_object = await bot.get_chat_administrators(msg.chat.id)
 
     admins_list = []
