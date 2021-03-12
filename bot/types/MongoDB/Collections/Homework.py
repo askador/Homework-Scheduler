@@ -37,9 +37,10 @@ class Homework:
         return id + 1
 
     def add(self):
-        # TODO: rewrite db query
         """
         Add homework
+
+        :return dict hw: homework data
         """
 
         hw = {
@@ -50,7 +51,7 @@ class Homework:
             "subgroup": self.subgroup,
         }
 
-        Database().client["chat"].update_one({"_id": self.chat_id}, {"$push": {"homeworks": hw}})
+        return hw
 
     def update(self, *, subject=None, description=None, deadline=None, subgroup=None):
         """
@@ -58,12 +59,25 @@ class Homework:
 
         :param str subject: subject
         :param str description: description
-        :param datetime deadline: deadline
+        :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup
 
         """
 
-        pass
+        fields = {
+            "subject": subject,
+            "description": description,
+            "deadline": deadline,
+            "subgroup": subgroup,
+        }
+
+        db = Database()
+
+        for field, val in fields.items():
+            if val is not None:
+                db.update("chat",
+                          filters={"_id": self.chat_id, "hws": {"$elemMatch": {"_id": self.id}}},
+                          changes={"$set": {f"hws.$.{field}": f"{val}"}})
 
     def delete(self, id):
         """

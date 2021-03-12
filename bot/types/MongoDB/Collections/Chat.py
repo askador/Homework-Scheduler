@@ -21,7 +21,7 @@ class Chat:
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
-    def add_chat(self, *, chat_id, title, admins, subjects, subgroups=None, homeworks=None):
+    def add_chat(self, *, chat_id, title, admins, subjects=None, subgroups=None, homeworks=None):
         """
         Add new chat
 
@@ -42,7 +42,7 @@ class Chat:
             "homeworks": homeworks
         }
 
-        Database().insert_one(self.__collection_name__, chat)
+        Database().insert(self.__collection_name__, chat)
 
     def update_chat(self, *, title, admins=None, subjects=None, subgroups=None):
         """
@@ -54,32 +54,33 @@ class Chat:
         :param dict subgroups: subgroups
         """
 
-        if admins is None:
-            admins = Database().get(self.__collection_name__, {"_id": self.chat_id})['admins']
-        if subjects is None:
-            subjects = Database().get(self.__collection_name__, {"_id": self.chat_id})['subjects']
-        if subgroups is None:
-            subgroups = Database().get(self.__collection_name__, {"_id": self.chat_id})['subgroups']
+        fields = {
+            "title": title,
+            "admins": admins,
+            "subjects": subjects,
+            "subgroups": subgroups,
+        }
 
-        Database().update(self.__collection_name__, {"_id": self.chat_id}, {"$set": {
-                                                                                        "title": title,
-                                                                                        "admins": admins,
-                                                                                        "subjects": subjects,
-                                                                                        "subgroups": subgroups
-                                                                                    }
-                                                                            })
+        db = Database()
+
+        for field, val in fields.items():
+            if val is not None:
+                db.update(self.__collection_name__,
+                          filters={"_id": self.chat_id},
+                          changes={"$set": {f"{field}": f"{val}"}})
 
     def add_hw(self, *,
                subject,
                description,
                deadline,
-               subgroup=None):
+               subgroup=None
+               ):
         """
         Add homework
 
         :param str subject: subject
         :param str description: description
-        :param datetime deadline: deadline
+        :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
         """
 
@@ -90,13 +91,32 @@ class Chat:
                       subject=subject,
                       description=description,
                       deadline=deadline,
-                      subgroup=subgroup)
+                      subgroup=subgroup).add()
 
-        print(vars(hw))
+        Database().update(self.__collection_name__,
+                          filters={"_id": self.chat_id},
+                          changes={"$push": {"homeworks": hw}})
 
-        hw.add()
+        # Database().client["chat"].update_one({"_id": self.chat_id}, {"$push": {"homeworks": hw}})
 
-    def get_hw(self, id):
+    def update_hw(self, *,
+                  id,
+                  subject=None,
+                  description=None,
+                  deadline=None,
+                  subgroup=None):
+        """
+        Change homework
+
+        :param int id: homework id
+        :param str subject: subject
+        :param str description: description
+        :param datetime.datetime deadline: deadline
+        :param int subgroup: subgroup id
+        """
+
+
+    def get_hws(self, id, amount):
         hw = Database().get(self.__collection_name__, filters={[{"_id": self.chat_id}, {""}]})
         pass
 

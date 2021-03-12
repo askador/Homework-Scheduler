@@ -17,7 +17,7 @@ class Database:
     def __init__(self):
         self.client = pymongo.MongoClient(mongodb_url)
 
-    def insert_one(self, collection, document):
+    def insert(self, collection, document):
         """
         insert document to collection
 
@@ -25,13 +25,10 @@ class Database:
         :param dict document:
         :return bool: if successfully inserted
         """
-        # insert_one(document)
 
-    def insert_many(self, collection, documents):
-        # insert_many(documents)
-        pass
+        self.client[collection].insert_one(document)
 
-    def get(self, collection, filters=None):
+    def get(self, collection, filters=None, limit=None):
 
         for doc in self.client[collection].find({filters}):
             return doc
@@ -60,11 +57,9 @@ class Database:
         :param dict filters: filters
         :param dict changes: changes
         """
-        self.client[collection].update_one(filters, changes)
-        # update_many(document, change)
-        pass
+        self.client[collection].update_many(filters, changes)
 
-    def delete_one(self, collection, filters=None):
+    def delete(self, collection, filters=None):
         """
         Delete document
 
@@ -72,11 +67,7 @@ class Database:
         :param dict filters: filters {"key": "value"}
         """
 
-        self.client[collection].delete_one(filters)
-
-    def delete_many(self, collection, filters=None):
-        # delete_many(filters)
-        pass
+        self.client[collection].delete_many(filters)
 
 
 
