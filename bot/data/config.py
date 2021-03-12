@@ -1,5 +1,5 @@
-# token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE'
-
+# token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE'  # @itai_hw_bot
+# token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8' #shishki
 token = '1173133322:AAG_E7H2IjRypO3dt-pygUjh9V1HP8X8JPk' # test_bot
 
 postgresql_db_setting = {

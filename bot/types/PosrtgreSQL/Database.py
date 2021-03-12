@@ -1,5 +1,5 @@
 import asyncpg
-from bot.data import postresql_db_url
+from bot.data.config import postresql_db_url
 
 
 class Database:

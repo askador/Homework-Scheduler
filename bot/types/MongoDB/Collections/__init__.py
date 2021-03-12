@@ -1,2 +1,3 @@
-from .ChatHomework import ChatHomework
-from .Chats import Chats
+from .Homework import Homework
+from .Chat import Chat
+

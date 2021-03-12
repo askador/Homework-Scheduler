@@ -1,5 +1,5 @@
 import pymongo
-from bot.data import mongodb_url
+from bot.data.config import mongodb_url
 
 # ---------- for aiogram-fsm -------------
 # start_db_name_index = mongodb_url.rfind("/")
@@ -17,7 +17,7 @@ class Database:
     def __init__(self):
         self.client = pymongo.MongoClient(mongodb_url)
 
-    def insert_one(self, collection, document):
+    def insert(self, collection, document):
         """
         insert document to collection
 
@@ -25,16 +25,13 @@ class Database:
         :param dict document:
         :return bool: if successfully inserted
         """
-        # insert_one(document)
-        return False
 
-    def insert_many(self, collection, documents):
-        # insert_many(documents)
-        pass
+        self.client[collection].insert_one(document)
 
-    def get(self, collection, filters=None):
-        # find(filters)
-        pass
+    def get(self, collection, filters=None, limit=None):
+
+        for doc in self.client[collection].find({filters}):
+            return doc
 
     def get_sorted(self, collection, filters=None, sort_by="_id", direction=None, limit=None):
         """
@@ -51,11 +48,18 @@ class Database:
 
         return sorted_docs.limit(limit)
 
-    def update(self, collection, document, change):
-        # update_many(document, change)
-        pass
+    def update(self, collection, filters, changes):
+        # TODO: rewrite
+        """
+        Update document
 
-    def delete_one(self, collection, filters=None):
+        :param str collection: collection
+        :param dict filters: filters
+        :param dict changes: changes
+        """
+        self.client[collection].update_many(filters, changes)
+
+    def delete(self, collection, filters=None):
         """
         Delete document
 
@@ -63,11 +67,7 @@ class Database:
         :param dict filters: filters {"key": "value"}
         """
 
-        self.client[collection].delete_one(filters)
-
-    def delete_many(self, collection, filters=None):
-        # delete_many(filters)
-        pass
+        self.client[collection].delete_many(filters)
 
 
 
