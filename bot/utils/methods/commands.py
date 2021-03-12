@@ -4,8 +4,8 @@ sys.path.append('D:/dz_bot')
 
 
 # from data.misc import conn, cur, sh_subjects
-# from utils._types.db import db
-# from aiogram import _types
+# from utils.types.db import db
+# from aiogram import types
 # from data.config import admins
 
 
