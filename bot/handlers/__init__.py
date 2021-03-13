@@ -5,4 +5,7 @@ from .edit_hw import edit_hw
 from .get_hw_public import get_hw_public
 from .get_help_public import get_help_public
 from .subgroup import subgroup
+from .settings import settings
+from .command_start import start
+
 
