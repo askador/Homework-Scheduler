@@ -5,6 +5,24 @@ from bot.types.MongoDB.Collections.Homework import Homework
 class Chat:
     """
     Make convenient interaction with chats
+
+    {
+        "_id": int,
+        "title": str,
+        "admins": [int, int],
+        "subjects": [str, str],
+        "subgroups": {
+                subj_name: {
+                    _id: [name: str, name: str]
+                }
+            }
+        "homeworks": {
+                "subject": str,
+                "description": str,
+                "deadline": datetime,
+                "subgroup": int,
+            }
+    }
     """
 
     __collection_name__ = "chat"
@@ -64,7 +82,7 @@ class Chat:
         db = Database()
 
         for field, val in fields.items():
-            if val is not None:
+            if val:
                 db.update(self.__collection_name__,
                           filters={"_id": self.chat_id},
                           changes={"$set": {f"{field}": f"{val}"}})
@@ -86,18 +104,16 @@ class Chat:
 
         last_id = Database().get_sorted(self.__collection_name__, direction=-1, limit=1)
 
-        hw = Homework(chat_id=self.chat_id,
-                      id=last_id,
-                      subject=subject,
-                      description=description,
-                      deadline=deadline,
-                      subgroup=subgroup).add()
+        hw = Homework(chat_id=self.chat_id, id=last_id,)\
+            .create(
+            subject=subject,
+            description=description,
+            deadline=deadline,
+            subgroup=subgroup)
 
         Database().update(self.__collection_name__,
                           filters={"_id": self.chat_id},
                           changes={"$push": {"homeworks": hw}})
-
-        # Database().client["chat"].update_one({"_id": self.chat_id}, {"$push": {"homeworks": hw}})
 
     def update_hw(self, *,
                   id,
@@ -115,13 +131,21 @@ class Chat:
         :param int subgroup: subgroup id
         """
 
+        hw = Homework(chat_id=self.chat_id, id=id)
+        hw.update(subject=subject,
+                  description=description,
+                  deadline=deadline,
+                  subgroup=subgroup)
 
     def get_hws(self, id, amount):
         hw = Database().get(self.__collection_name__, filters={[{"_id": self.chat_id}, {""}]})
         pass
 
-    def update_hw(self, id):
-        pass
-
     def delete_hw(self, id):
-        pass
+        """
+        Delete homework
+
+        :param int id: homework id
+        """
+        hw = Homework(chat_id=self.chat_id, id=id)
+        hw.delete()

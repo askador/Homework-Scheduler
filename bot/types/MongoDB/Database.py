@@ -64,7 +64,7 @@ class Database:
         Delete document
 
         :param str collection: collection title
-        :param dict filters: filters {"key": "value"}
+        :param dict filters: filters
         """
 
         self.client[collection].delete_many(filters)

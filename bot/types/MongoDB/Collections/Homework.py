@@ -14,13 +14,9 @@ class Homework:
         "subgroup",
     ]
 
-    def __init__(self, *, chat_id=None, id, subject, description, deadline, subgroup):
+    def __init__(self, *, chat_id=None, id):
         self.chat_id = chat_id
         self.id = id
-        self.subject = subject
-        self.description = description
-        self.deadline = deadline
-        self.subgroup = subgroup
 
     @staticmethod
     def _increment(id):
@@ -36,7 +32,7 @@ class Homework:
 
         return id + 1
 
-    def add(self):
+    def create(self, *, subject, description, deadline, subgroup):
         """
         Add homework
 
@@ -45,18 +41,19 @@ class Homework:
 
         hw = {
             "_id": self._increment(self.id),
-            "subject": self.subject,
-            "description": self.description,
-            "deadline": self.deadline,
-            "subgroup": self.subgroup,
+            "subject": subject,
+            "description": description,
+            "deadline": deadline,
+            "subgroup": subgroup,
         }
 
         return hw
 
-    def update(self, *, subject=None, description=None, deadline=None, subgroup=None):
+    def update(self, collection, *, subject=None, description=None, deadline=None, subgroup=None):
         """
         Update homework info
 
+        :param str collection: collection
         :param str subject: subject
         :param str description: description
         :param datetime.datetime deadline: deadline
@@ -74,27 +71,37 @@ class Homework:
         db = Database()
 
         for field, val in fields.items():
-            if val is not None:
-                db.update("chat",
+            if val:
+                db.update(collection,
                           filters={"_id": self.chat_id, "hws": {"$elemMatch": {"_id": self.id}}},
                           changes={"$set": {f"hws.$.{field}": f"{val}"}})
 
-    def delete(self, id):
-        """
-        Delete homework
-
-        :param int id: homework id
-        """
-
-        # Database().delete_one(self.__collection_name__, filters={"_id": id})
-
-    def get(self, id):
+    def get_short(self):
         """
         Get homework info
 
-        :param int id: homework id
-        :return dict hw: homework info
+        :return dict hw: homework short info
         """
+
+    def get_full(self):
+        """
+        Get homework info
+
+        :return dict hw: homework full info
+        """
+
+    def delete(self, collection):
+        """
+        Delete homework
+
+        :param collection: collection
+        """
+
+        Database().delete(collection,
+                          filters={
+                              "_id": self.chat_id,
+                              "hws": {"$elemMatch": {"_id": self.id}}
+                          })
 
     # def __repr__(self):
     #     hw = "{'id': 1}"
