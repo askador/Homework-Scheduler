@@ -1,5 +1,5 @@
 from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.contrib.fsm_storage.mongo import MongoStorage
 
 
 from bot.data import config
@@ -9,7 +9,9 @@ bot = Bot(
     parse_mode=types.ParseMode.HTML,
 )
 
-# storage = MemoryStorage()
+
+# db_name = config.mongodb_url[config.mongodb_url.rfind("/")+1:config.mongodb_url.rfind("?")]
+# storage = MongoStorage(config.mongodb_url.replace(db_name, "aiogram_fsm"))
 
 dp = Dispatcher(
     bot=bot,
