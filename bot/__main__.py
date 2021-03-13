@@ -10,6 +10,7 @@ from bot.data import config
 # The configuration of the modules using import
 from bot import handlers
 
+
 async def on_startup(dispatcher: Dispatcher):
     pass
     # await utils.setup_default_commands(dispatcher)
