@@ -1,17 +1,6 @@
 import pymongo
 from bot.data.config import mongodb_url
 
-# ---------- for aiogram-fsm -------------
-# start_db_name_index = mongodb_url.rfind("/")
-# db_name_indexes = [mongodb_url.rfind("/")+1, mongodb_url.rfind("?")]
-# db_name = mongodb_url[mongodb_url.rfind("/")+1:mongodb_url.rfind("?")]
-#
-# print(db_name)
-# print(mongodb_url.replace(db_name, "TEST_DB"))
-# print(mongodb_url)
-# ----------------------------------------
-
-
 class Database:
 
     def __init__(self):
