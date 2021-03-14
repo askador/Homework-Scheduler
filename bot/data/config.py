@@ -14,7 +14,15 @@ mongodb_setting = {
     "User": "test_user",
     "Password": "1234",
     "Host": "cluster0.lajfk.mongodb.net",
-    "Database": "hw_bot_db",
+    "Database": "aiogram_fsm",
+    "args": "retryWrites=true&w=majority"
+}
+
+mongodb_setting1 = {
+    "User": "master",
+    "Password": "4321",
+    "Host": "chekaimat.aunqh.mongodb.net",
+    "Database": "aiogram_fsm",
     "args": "retryWrites=true&w=majority"
 }
 
@@ -33,5 +41,8 @@ commands = {
 postresql_db_url = f"postgres://{postgresql_db_setting['User']}:{postgresql_db_setting['Password']}" \
          f"@{postgresql_db_setting['Host']}:{postgresql_db_setting['Port']}/{postgresql_db_setting['Database']}"
 
-mongodb_url = f"mongodb+srv://{mongodb_setting['User']}:{mongodb_setting['Password']}@" \
-              f"{mongodb_setting['Host']}/{mongodb_setting['Database']}?{mongodb_setting['args']}"
+#mongodb_url = f"mongodb+srv://{mongodb_setting['User']}:{mongodb_setting['Password']}@" \
+#              f"{mongodb_setting['Host']}/{mongodb_setting['Database']}?{mongodb_setting['args']}"
+
+mongodb_url = f"mongodb+srv://{mongodb_setting1['User']}:{mongodb_setting1['Password']}@" \
+              f"{mongodb_setting1['Host']}/{mongodb_setting1['Database']}?{mongodb_setting1['args']}"

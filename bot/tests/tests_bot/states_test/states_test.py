@@ -7,6 +7,7 @@ from aiogram.contrib.fsm_storage.mongo import MongoStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 
+from pymongo import MongoClient
 
 from bot.data import config
 
@@ -15,8 +16,17 @@ bot = Bot(
     parse_mode=types.ParseMode.HTML,
 )
 
+mongodb_setting1 = {
+    "User": "master",
+    "Password": "4321",
+    "Host": "chekaimat.aunqh.mongodb.net",
+    "Database": "aiogram_fsm",
+    "args": "retryWrites=true&w=majority"
+}
+
 db_name = config.mongodb_url[config.mongodb_url.rfind("/")+1:config.mongodb_url.rfind("?")]
-storage = MongoStorage(config.mongodb_url.replace(db_name, "aiogram_fsm"))
+storage = MongoStorage(uri=config.mongodb_url.replace(db_name, "aiogram_fsm"))
+
 
 dp = Dispatcher(
     bot=bot,
@@ -48,9 +58,15 @@ async def process_name(message, state):
     await message.reply("How old are you?")
 
 
+class Homework(StatesGroup):
+    subject = State()
+    name = State()
+    deadline = State()
+    description = State()
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    # utils.setup_logger("INFO", ["sqlalchemy.engine", "aiogram.bot.api"])
     executor.start_polling(
         dp, skip_updates=True
     )

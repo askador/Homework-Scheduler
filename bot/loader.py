@@ -10,12 +10,12 @@ bot = Bot(
 )
 
 
-# db_name = config.mongodb_url[config.mongodb_url.rfind("/")+1:config.mongodb_url.rfind("?")]
-# storage = MongoStorage(config.mongodb_url.replace(db_name, "aiogram_fsm"))
+db_name = config.mongodb_url[config.mongodb_url.rfind("/")+1:config.mongodb_url.rfind("?")]
+storage = MongoStorage(config.mongodb_url.replace(db_name, "aiogram_fsm"))
 
 dp = Dispatcher(
     bot=bot,
-    # storage=storage,
+    storage=storage,
 )
 
 __all__ = (
