@@ -89,6 +89,7 @@ class Chat:
 
     def add_hw(self, *,
                subject,
+               name,
                description,
                deadline,
                subgroup=None
@@ -97,6 +98,7 @@ class Chat:
         Add homework
 
         :param str subject: subject
+        :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
@@ -107,6 +109,7 @@ class Chat:
         hw = Homework(chat_id=self.chat_id, id=last_id,)\
             .create(
             subject=subject,
+            name=name,
             description=description,
             deadline=deadline,
             subgroup=subgroup)
@@ -118,6 +121,7 @@ class Chat:
     def update_hw(self, *,
                   id,
                   subject=None,
+                  name=None,
                   description=None,
                   deadline=None,
                   subgroup=None):
@@ -126,6 +130,7 @@ class Chat:
 
         :param int id: homework id
         :param str subject: subject
+        :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
@@ -149,3 +154,5 @@ class Chat:
         """
         hw = Homework(chat_id=self.chat_id, id=id)
         hw.delete()
+
+

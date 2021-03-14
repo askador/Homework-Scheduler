@@ -9,6 +9,7 @@ class Homework:
     columns = [
         "id",
         "subject",
+        "name",
         "description",
         "deadline",
         "subgroup",
@@ -32,10 +33,15 @@ class Homework:
 
         return id + 1
 
-    def create(self, *, subject, description, deadline, subgroup):
+    def create(self, *, subject, name, description, deadline, subgroup):
         """
         Add homework
 
+        :param str subject:
+        :param str name:
+        :param str description:
+        :param datetime.datetime deadline:
+        :param int subgroup:
         :return dict hw: homework data
         """
 
@@ -49,12 +55,13 @@ class Homework:
 
         return hw
 
-    def update(self, collection, *, subject=None, description=None, deadline=None, subgroup=None):
+    def update(self, collection, *, subject=None, name=None, description=None, deadline=None, subgroup=None):
         """
         Update homework info
 
         :param str collection: collection
         :param str subject: subject
+        :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup
@@ -63,6 +70,7 @@ class Homework:
 
         fields = {
             "subject": subject,
+            "name": name,
             "description": description,
             "deadline": deadline,
             "subgroup": subgroup,
