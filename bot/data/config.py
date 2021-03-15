@@ -27,7 +27,7 @@ materials = "https://drive.google.com/drive/folders/1sirZ5VHO0djffSrOdWcMhMJ30Dd
 
 commands = {
     '/start': "",
-    '/help': "",
+    '/help':"",
 }
 
 postresql_db_url = f"postgres://{postgresql_db_setting['User']}:{postgresql_db_setting['Password']}" \
