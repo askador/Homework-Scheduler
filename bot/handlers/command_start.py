@@ -3,6 +3,7 @@ from aiogram import types
 from aiogram.dispatcher import filters
 from bot.tests.tests_bot.states_test.states_test import AddChat
 
+
 CHAT_TYPES = [
     types.ChatType.GROUP,
     types.ChatType.SUPERGROUP
@@ -17,7 +18,7 @@ async def start(message):
                                "Предметы через запятую, быстро")
 
 
-@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES),state=AddChat.subjects)
+@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), state=AddChat.subjects)
 async def process_subjects(message, state):
 
     async with state.proxy() as data:
@@ -27,7 +28,7 @@ async def process_subjects(message, state):
     await message.reply("Теперь перечислите подгруппы, отправьте None если их нет")
 
 
-@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES),state=AddChat.subgroups)
+@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), state=AddChat.subgroups)
 async def process_subgroups(message, state):
 
     async with state.proxy() as data:

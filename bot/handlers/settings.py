@@ -1,7 +1,8 @@
-from bot.loader import dp
-from aiogram.dispatcher import filters
+from bot.loader import dp, bot
+from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from bot.keyboards import settings_keyboard
+from bot.tests.tests_bot.states_test.states_test import Settings
 
 ALIAS = [
     "настройки"
@@ -17,4 +18,11 @@ CHAT_TYPES = [
 @dp.message_handler(filters.Text(equals=ALIAS), filters.ChatTypeFilter(CHAT_TYPES))
 async def settings(message):
     markup = await settings_keyboard()
+    await Settings.choice.set()
     return await message.reply("Себя настрой лучше", reply_markup=markup)
+
+
+@dp.callback_query_handler()
+async def callback_select_subject(callback_query: types.CallbackQuery, state: FSMContext):
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(callback_query.from_user.id, "Довай ностраивай:")

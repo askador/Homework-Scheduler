@@ -58,11 +58,26 @@ async def process_name(message, state):
     await message.reply("How old are you?")
 
 
-class Homework(StatesGroup):
+class SetHomework(StatesGroup):
     subject = State()
     name = State()
     deadline = State()
     description = State()
+
+
+class GetHomework(StatesGroup):
+    subject = State()
+    name = State()
+    deadline = State()
+    description = State()
+
+
+class Settings(StatesGroup):
+    choice = State()
+    subjects = State()
+    subgroups = State()
+    notifications = State()
+    terms = State()
 
 
 if __name__ == '__main__':
