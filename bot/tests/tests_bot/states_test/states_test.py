@@ -57,12 +57,11 @@ async def process_name(message, state):
         if data['subjects_amount'] == 0:
             await message.answer("Мб не будешь хыуйней заниматься?")
             await message.answer(data)
-            db = Database()
-            db.delete("aiogram_data", {"chat": message.chat.id})
-            await state.reset_state(with_data=True)
         else:
             await message.answer(f"Количество подгрупп для {subjects[data['subjects_amount']].strip()}")
-            # await message.answer(f"{subjects[data['subjects_amount']]}")
+            return
+
+    await state.reset_state(with_data=True)
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
