@@ -92,7 +92,8 @@ class Chat:
                name,
                description,
                deadline,
-               subgroup=None
+               subgroup=None,
+               priority=0
                ):
         """
         Add homework
@@ -102,6 +103,7 @@ class Chat:
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
+        :param int priority: work priority
         """
 
         last_id = Database().get_sorted(self.__collection_name__, direction=-1, limit=1)
@@ -112,7 +114,9 @@ class Chat:
             name=name,
             description=description,
             deadline=deadline,
-            subgroup=subgroup)
+            subgroup=subgroup,
+            priority=priority
+        )
 
         Database().update(self.__collection_name__,
                           filters={"_id": self.chat_id},
@@ -124,7 +128,8 @@ class Chat:
                   name=None,
                   description=None,
                   deadline=None,
-                  subgroup=None):
+                  subgroup=None,
+                  priority=None):
         """
         Change homework
 
@@ -134,13 +139,15 @@ class Chat:
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
+        :param int priority: work priority
         """
 
         hw = Homework(chat_id=self.chat_id, id=id)
         hw.update(subject=subject,
                   description=description,
                   deadline=deadline,
-                  subgroup=subgroup)
+                  subgroup=subgroup,
+                  priority=priority)
 
     def get_hws(self, id, amount):
         hw = Database().get(self.__collection_name__, filters={[{"_id": self.chat_id}, {""}]})
@@ -153,6 +160,7 @@ class Chat:
         :param int id: homework id
         """
         hw = Homework(chat_id=self.chat_id, id=id)
-        hw.delete()
+        hw.delete(self.__collection_name__)
+
 
 
