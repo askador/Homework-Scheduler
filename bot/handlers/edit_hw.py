@@ -10,8 +10,14 @@ ALIAS = [
     "обновить дз"
 ]
 
+COMMANDS = [
+    "edit_hw",
+    "edit_homework"
+]
 
-@dp.message_handler(filters.Text(startswith=ALIAS), is_chat_admin=True)
+
+@dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
+@dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
 async def edit_hw(message):
     if message.text == "регулярОчка":
         return await message.reply("все сразу, круто")
@@ -31,29 +37,36 @@ async def edit_subject(message, state: FSMContext):
     return await message.reply("Введите название работы:")
 
 
-@dp.callback_query_handler(func=lambda c: c.data == 'next', state=GetHomework.subject)
+@dp.callback_query_handler(lambda c: c.data == 'next', state=GetHomework.subject)
 async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
     async with state.proxy() as data:
         await state.update_data(page=data['page'] + 1)
         page = data['page']
     markup = await subjects_keyboard(['peepeepoopoo', 'poopoo'], page)
-    await bot.edit_message_reply_markup(callback_query.from_user.id, markup)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, markup)
 
 
-@dp.callback_query_handler(func=lambda c: c.data == 'back', state=GetHomework.subject)
+@dp.callback_query_handler(lambda c: c.data == 'back', state=GetHomework.subject)
 async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
     async with state.proxy() as data:
         await state.update_data(page=data['page'] -1)
         page = data['page']
     markup = await subjects_keyboard(['peepeepoopoo', 'poopoo'], page)
-    await bot.edit_message_reply_markup(callback_query.from_user.id, markup)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, markup)
+
+
+@dp.callback_query_handler(lambda c: c.data is not None, state=GetHomework.subject)
+async def callback_select_subject(callback_query: types.CallbackQuery, state: FSMContext):
+    await bot.answer_callback_query(callback_query.id)
+    await GetHomework.next()
+    await bot.send_message(callback_query.message.chat.id, "Введите название работы:")
 
 
 @dp.message_handler(state=GetHomework.name)
 async def edit_name(message, state: FSMContext):
     hw_name = message.text
     await state.update_data(name=hw_name)
-    await GetHomework.finish()
+    await state.finish()
     return await message.reply("Выберите что вы хотите обновить или введите данные для замены:")

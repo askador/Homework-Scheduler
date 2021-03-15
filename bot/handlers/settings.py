@@ -9,13 +9,20 @@ ALIAS = [
 ]
 
 
+COMMANDS = [
+    "settings",
+    "chat_settings"
+]
+
+
 CHAT_TYPES = [
     types.ChatType.GROUP,
     types.ChatType.SUPERGROUP
 ]
 
 
-@dp.message_handler(filters.Text(equals=ALIAS), filters.ChatTypeFilter(CHAT_TYPES))
+@dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
+@dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
 async def settings(message):
     markup = await settings_keyboard()
     await Settings.choice.set()
@@ -27,6 +34,6 @@ async def callback_select_subject(callback_query: types.CallbackQuery, state: FS
     await bot.answer_callback_query(callback_query.id)
 
     if callback_query.id == 'Subjects':
-        await bot.send_message(callback_query.from_user.id, "Довай ностраивай:")
+        await bot.send_message(callback_query.message.chat.id, "Довай ностраивай:")
     elif callback_query.id == 'Subgroups':
-        await bot.send_message(callback_query.from_user.id, "Довай ностраивай:")
+        await bot.send_message(callback_query.message.chat.id, "Довай ностраивай:")
