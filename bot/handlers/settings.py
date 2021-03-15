@@ -22,7 +22,11 @@ async def settings(message):
     return await message.reply("Себя настрой лучше", reply_markup=markup)
 
 
-@dp.callback_query_handler()
+@dp.callback_query_handler(state=Settings.choice)
 async def callback_select_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    await bot.send_message(callback_query.from_user.id, "Довай ностраивай:")
+
+    if callback_query.id == 'Subjects':
+        await bot.send_message(callback_query.from_user.id, "Довай ностраивай:")
+    elif callback_query.id == 'Subgroups':
+        await bot.send_message(callback_query.from_user.id, "Довай ностраивай:")
