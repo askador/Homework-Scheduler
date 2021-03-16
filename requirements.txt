@@ -1,5 +1,6 @@
-aiogram==2.12
+aiogram==2.11
 pyTelegramBotAPI==3.7.6
 pymongo==3.11.3
 asyncpg==0.22.0
 motor==2.3.1
+pyppeteer==0.2.5
