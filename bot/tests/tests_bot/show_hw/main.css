@@ -28,18 +28,15 @@ thead tr {
     color: white;
 }
 
-tr.common.week-day {
+tr.week-day {
     background-color: #bdbdd4;
 }
 
-tr.common.row {
+tr.common__row{
     background-color: #F8E391;
     color: #222244;
 }
 
-tr.important.week-day {
-    background-color: #bdbdd4;
-}
 
 tr.important.row {
     background-color: #c68ffa;

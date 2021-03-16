@@ -1,5 +1,5 @@
 import asyncio
-from pyppeteer import launch
+from bot.tests.tests_bot.show_hw.pyppeteer.pyppeteer import launch
 import os
 
 

@@ -11,7 +11,7 @@ from generate_png import generate_png
 
 
 bot = Bot(
-    token=config.token,
+    token=config.test_bot_token,
     parse_mode=types.ParseMode.HTML,
 )
 
@@ -26,14 +26,10 @@ async def show_png(msg):
     html_file = f"{datetime.timestamp(datetime.now())}_{chat_id}.html"
     photo_file = f"{datetime.timestamp(datetime.now())}_{str(chat_id)}.png"
 
-    from html_wrap import top, body, bottom
-
-    html = top
-    html += body
-    html += bottom
+    from generate_body import generate_body
 
     file = open(html_file, "w")
-    file.write(html)
+    file.write(generate_body({1: 1}))
     file.close()
 
     hw = await generate_png(html_file=html_file, output=photo_file)
