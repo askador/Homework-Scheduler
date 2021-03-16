@@ -1,3 +1,5 @@
+import datetime
+from time import strptime
 from bot.loader import dp, bot
 from aiogram import types
 from aiogram.dispatcher import filters, FSMContext
@@ -34,8 +36,10 @@ TEST = [
 
 @dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
 @dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
-async def add_hw(message):
-    if message.text == "регулярОчка":
+async def add_hw(message: types.Message):
+    arguments = message.get_args()
+    print(arguments)
+    if arguments is not None and len(arguments) >= 3:
         return await message.reply("все сразу, круто")
     else:
         await SetHomework.subject.set()
@@ -93,9 +97,14 @@ async def select_name(message: types.Message, state: FSMContext):
 @dp.message_handler(state=SetHomework.deadline)
 async def select_deadline(message: types.Message, state: FSMContext):
     hw_date = message.text
-    await state.update_data(deadline=hw_date)
-    await SetHomework.next()
-    return await message.reply("Введите описание работы:")
+    try:
+        date = strptime(hw_date, '%d/%m')
+        await state.update_data(deadline=hw_date)
+        await SetHomework.next()
+        return await message.reply("Введите описание работы:")
+    except Exception as e:
+        print(e)
+        return await message.reply("Данные введены неверно! Введите дату повторно:")
 
 
 @dp.message_handler(state=SetHomework.description)
