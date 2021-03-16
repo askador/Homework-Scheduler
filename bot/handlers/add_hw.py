@@ -15,6 +15,22 @@ COMMANDS = [
     "add_homework"
 ]
 
+TEST = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5'
+]
+
 
 @dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
 @dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
@@ -25,7 +41,7 @@ async def add_hw(message):
         await SetHomework.subject.set()
         state = dp.get_current().current_state()
         await state.update_data(page=1)
-        markup = await subjects_keyboard(['peepeepoopoo', 'poopoo'], 1)
+        markup = await subjects_keyboard(TEST, 1)
         return await message.reply("Выберите предмет или введите его:", reply_markup=markup)
 
 
@@ -40,21 +56,23 @@ async def select_subject(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(lambda c: c.data == 'next', state=SetHomework.subject)
 async def callback_next_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
+    page = 0
     async with state.proxy() as data:
-        await state.update_data(page=data['page'] + 1)
+        data['page'] = data['page'] + 1
         page = data['page']
-    markup = await subjects_keyboard(['peepeepoopoo', 'poopoo'], page)
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, markup)
+    markup = await subjects_keyboard(TEST, page)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'back', state=SetHomework.subject)
 async def callback_back_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
+    page = 0
     async with state.proxy() as data:
-        await state.update_data(page=data['page']-1)
+        data['page']=data['page']-1
         page = data['page']
-    markup = await subjects_keyboard(['peepeepoopoo', 'poopoo'], page)
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, markup)
+    markup = await subjects_keyboard(TEST, page)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 
 @dp.callback_query_handler(lambda c: c.data is not None, state=SetHomework.subject)
@@ -69,7 +87,7 @@ async def select_name(message: types.Message, state: FSMContext):
     hw_name = message.text
     await state.update_data(name=hw_name)
     await SetHomework.next()
-    return await message.reply("Введите срок сдачи:")
+    return await message.reply("Введите срок сдачи в формате ДД/ММ:")
 
 
 @dp.message_handler(state=SetHomework.deadline)

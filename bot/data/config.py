@@ -18,6 +18,8 @@ mongodb_setting = {
     "args": "retryWrites=true&w=majority"
 }
 
+
+
 mongodb_setting1 = {
     "User": "master",
     "Password": "4321",
@@ -25,6 +27,7 @@ mongodb_setting1 = {
     "Database": "aiogram_fsm",
     "args": "retryWrites=true&w=majority"
 }
+
 
 admins = [
     526497876,
@@ -46,3 +49,5 @@ postresql_db_url = f"postgres://{postgresql_db_setting['User']}:{postgresql_db_s
 
 mongodb_url = f"mongodb+srv://{mongodb_setting1['User']}:{mongodb_setting1['Password']}@" \
               f"{mongodb_setting1['Host']}/{mongodb_setting1['Database']}?{mongodb_setting1['args']}"
+
+#mongodb_url = "mongodb+srv://test_user:1234@cluster0.lajfk.mongodb.net/aiogram_fsm?retryWrites=true&w=majority"
