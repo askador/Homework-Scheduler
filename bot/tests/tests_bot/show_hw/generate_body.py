@@ -17,6 +17,23 @@ def generate_body(data: dict):
                         'descr': 'description',
                         'name': 'pz 1',
                     },
+                    {
+                        '_id': 1,
+                        'deadline': '01/01/01',
+                        'descr': 'description',
+                        'name': 'labsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdgsdg 1',
+                    },                    {
+                        '_id': 1,
+                        'deadline': '01/01/01',
+                        'descr': 'description',
+                        'name': 'lab 1',
+                    },                    {
+                        '_id': 1,
+                        'deadline': '01/01/01',
+                        'descr': 'description',
+                        'name': 'lab 1',
+                    },
+
                 ],
         }
 

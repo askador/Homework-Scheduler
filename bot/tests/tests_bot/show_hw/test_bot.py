@@ -4,7 +4,8 @@ from datetime import datetime
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
-from aiogram.dispatcher.filters import Text
+from aiogram.dispatcher.filters import Text, Command
+from aiogram.contrib.fsm_storage.mongo import MongoStorage
 
 from bot.loader import config
 from generate_png import generate_png
@@ -15,12 +16,21 @@ bot = Bot(
     parse_mode=types.ParseMode.HTML,
 )
 
+
+storage = MongoStorage(uri=config.mongodb_url)
 dp = Dispatcher(
     bot=bot,
+    storage=storage
 )
 
 
-@dp.message_handler(Text(equals="скинь нюдсы"))
+@dp.message_handler(Text(equals="добавить дз"))
+@dp.message_handler(Command(commands='add_hw'))
+async def add_hw(msg):
+    pass
+
+
+@dp.message_handler(Text(equals="показать дз"))
 async def show_png(msg):
     chat_id = msg.chat.id
     html_file = f"{datetime.timestamp(datetime.now())}_{chat_id}.html"
