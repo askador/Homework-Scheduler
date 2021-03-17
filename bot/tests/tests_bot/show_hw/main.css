@@ -1,6 +1,6 @@
 body {
     background-color: #222244;
-    font-family: 'Franklin Gothic Medium';
+    font-family: 'Franklin Gothic';
     /* justify-content: space-between; */
 }
 
@@ -33,12 +33,12 @@ tr.week-day {
 }
 
 tr.common__row{
-    background-color: #F8E391;
+    background-color: #fad797;
     color: #222244;
 }
 
 
-tr.important.row {
+tr.important__row {
     background-color: #c68ffa;
     color: #222244;
 }

@@ -42,12 +42,15 @@ def bottom_block():
 
 class TRElement:
 
-    def __init__(self, class_name):
+    def __init__(self, class_name="common__row"):
         self.class_name = class_name
         self.elements = []
 
     def add_element(self, element):
         self.elements.append(element)
+
+    def set_class_name(self, class_name):
+        self.class_name = class_name
 
     def __str__(self):
         obj = f"""<tr class={str(self.class_name)}>\n"""
