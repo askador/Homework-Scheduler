@@ -1,6 +1,6 @@
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from pymongo import MongoClient
 from aiogram import Bot, Dispatcher, types
@@ -10,6 +10,7 @@ from aiogram.contrib.fsm_storage.mongo import MongoStorage
 
 from bot.loader import config
 from generate_png import generate_png
+from bot.types.HomeworksList import HomeworksList
 
 
 bot = Bot(
@@ -92,27 +93,27 @@ async def show_png(msg):
     html_file = f"{datetime.timestamp(datetime.now())}_{chat_id}.html"
     photo_file = f"{datetime.timestamp(datetime.now())}_{str(chat_id)}.png"
 
-    from generate_body import generate_body
-
     client = MongoClient(config.mongodb_url)
     db = client["hw_bot_db"]
     col = db["chat"]
 
     homeworks = []
 
-    for x in col.find({"_id": -1001424619068}, {"_id":0, "homeworks": 1}):
+    for x in col.find({"_id": -1001424619068}, {"_id": 0, "homeworks": 1}):
         homeworks = x["homeworks"]
 
     if not homeworks:
         await msg.reply("Домашнего задания нет")
         return
 
+    hws_list = HomeworksList()
+
     file = open(html_file, "w")
     file.write(generate_body(homeworks))
     file.close()
 
     hw_photo = await generate_png(html_file=html_file, output=photo_file)
-    await bot.send_photo(msg.chat.id, hw_photo, reply_to_message_id=msg.message_id)
+    mes_is = await bot.send_photo(msg.chat.id, hw_photo, reply_to_message_id=msg.message_id)
 
     os.remove(html_file)
     os.remove(photo_file)

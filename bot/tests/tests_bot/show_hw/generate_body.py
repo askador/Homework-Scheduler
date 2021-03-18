@@ -32,7 +32,7 @@ def date_row(date):
     td_date.insert_data(date)
 
     tr_day.add_element(td_day_name)
-    tr_day.add_element(td_date)
+    tr_day.add_element(datetime.strftime(date, "%d.%m.%y"))
 
     return str(tr_day)
 
