@@ -4,7 +4,8 @@ from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.keyboards import subjects_keyboard, edit_hw_keyboard
 from bot.tests.tests_bot.states_test.states_test import GetHomework
-from bot.utils.methods import clear, update_last, check_date
+from bot.utils.methods import clear, update_last, check_date, make_datetime
+from time import strptime
 
 ALIAS = [
     "изменить дз",
@@ -107,7 +108,7 @@ async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMC
 async def callback_select_subject(callback_query: types.CallbackQuery, state: FSMContext):
 
     await clear(state)
-
+    await state.update_data(subject=callback_query.data)
     await bot.answer_callback_query(callback_query.id)
     await GetHomework.next()
     await update_last(state, await bot.send_message(callback_query.message.chat.id, "Введите название работы:"))
@@ -117,10 +118,7 @@ async def callback_select_subject(callback_query: types.CallbackQuery, state: FS
 async def edit_name(message, state: FSMContext):
     hw_name = message.text
 
-    try:
-        await clear(state)
-    except:
-        pass
+    await clear(state)
 
     await state.update_data(name=hw_name)
     await GetHomework.next()
@@ -130,16 +128,66 @@ async def edit_name(message, state: FSMContext):
 
 @dp.callback_query_handler(lambda c: c.data is not None, state=GetHomework.choice)
 async def edit_deadline(callback_query: types.CallbackQuery, state: FSMContext):
-    try:
-        await clear(state)
-    except:
+
+    await clear(state)
+
+    if callback_query.data == 'deadline':
+        text = "Установите новый срок сдачи:"
+        await GetHomework.deadline.set()
+    elif callback_query.data == 'description':
+        text = "Введите новое описание:"
+        await GetHomework.description.set()
+    elif callback_query.data == 'delete':
+        text = "Задание успешно удалено"
+        await state.finish()
+    else:
+        text = "Успешно завершено"
         await state.finish()
 
     await bot.answer_callback_query(callback_query.id)
-    await state.finish()
-    await update_last(state, await bot.send_message(callback_query.message.chat.id, "fff"))
+    await update_last(state, await bot.send_message(callback_query.message.chat.id, text))
 
 
 @dp.message_handler(state=GetHomework.choice)
-async def pizdos(message, state: FSMContext):
-    await state.finish()
+async def choice_dialogue(message, state: FSMContext):
+    await clear(state)
+
+    if message.text.lower() == 'Срок сдачи':
+        text = "Установите новый срок сдачи:"
+        await GetHomework.deadline.set()
+    elif message.text.lower() == 'Описание':
+        text = "Введите новое описание:"
+        await GetHomework.description.set()
+    elif message.text.lower() == 'Удалить':
+        text = "Задание успешно удалено"
+        await state.finish()
+    await update_last(state, await message.reply(text))
+
+
+@dp.message_handler(state=GetHomework.deadline)
+async def edit_deadline(message, state: FSMContext):
+    hw_date = message.text
+    await clear(state)
+
+    if await check_date(hw_date):
+        date = await make_datetime(hw_date)
+        await state.update_data(deadline=date)
+        text = "Срок сдачи успешно изменен!"
+        await GetHomework.choice.set()
+        markup = await edit_hw_keyboard()
+        await update_last(state, await message.reply(text, reply_markup=markup))
+    else:
+        text = "Данные введены неверно!\nВведите дату повторно:"
+        await update_last(state, await message.reply(text))
+
+
+@dp.message_handler(state=GetHomework.description)
+async def edit_deadline(message, state: FSMContext):
+    await clear(state)
+    await state.update_data(description=message.text)
+    markup = await edit_hw_keyboard()
+    await update_last(state, await message.reply("Описание успешно изменено!", reply_markup=markup))
+    await GetHomework.choice.set()
+
+
+

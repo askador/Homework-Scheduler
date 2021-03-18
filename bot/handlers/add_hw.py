@@ -6,7 +6,7 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.keyboards import subjects_keyboard
 from bot.tests.tests_bot.states_test.states_test import SetHomework
-from bot.utils.methods import clear, update_last, check_date
+from bot.utils.methods import clear, update_last, check_date, make_datetime
 #from datetime import datetime, timedelta
 
 ALIAS = [
@@ -76,6 +76,7 @@ async def select_subject(message: types.Message, state: FSMContext):
         await SetHomework.next()
         sent = await message.reply("Введите название работы:")
         await state.update_data(last_message_id=sent.message_id)
+        await state.update_data(subject=hw_subj)
         return
     else:
         async with state.proxy() as data:
@@ -109,7 +110,7 @@ async def callback_back_subject(callback_query: types.CallbackQuery, state: FSMC
 @dp.callback_query_handler(lambda c: c.data is not None, state=SetHomework.subject)
 async def callback_select_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await clear(state)
-
+    await state.update_data(subject=callback_query.data)
     await bot.answer_callback_query(callback_query.id)
     await SetHomework.next()
     await update_last(state,  await bot.send_message(callback_query.message.chat.id, "Введите название работы:"))
@@ -130,11 +131,14 @@ async def select_name(message: types.Message, state: FSMContext):
 async def select_deadline(message: types.Message, state: FSMContext):
     hw_date = message.text
 
-    await clear(state)
+    try:
+        await clear(state)
+    except:
+        pass
 
     if await check_date(hw_date):
-        date = strptime(hw_date, '%d/%m')
-        await state.update_data(deadline=hw_date)
+        date = await make_datetime(hw_date)
+        await state.update_data(deadline=date)
         await SetHomework.next()
         text = "Введите описание работы:"
     else:
@@ -149,5 +153,12 @@ async def select_description(message: types.Message, state: FSMContext):
     await clear(state)
 
     await state.update_data(description=hw_description)
+    async with state.proxy() as data:
+        print(data)
+        await message.reply("Задание успешно добавлено!\n"
+                                   "Предмет: {}\n"
+                                   "Название: {}\n"
+                                   "Срок сдачи: {}\n"
+                                   "Описание: {}\n".format(data['subject'], data['name'], data['deadline'], data['description']))
+
     await state.finish()
-    return await message.reply("Задание успешно добавлено!")
