@@ -68,6 +68,7 @@ class SetHomework(StatesGroup):
 class GetHomework(StatesGroup):
     subject = State()
     name = State()
+    choice = State()
     deadline = State()
     description = State()
 

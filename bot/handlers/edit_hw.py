@@ -2,7 +2,7 @@ from bot.loader import dp, bot
 from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard
+from bot.keyboards import subjects_keyboard, edit_hw_keyboard
 from bot.tests.tests_bot.states_test.states_test import GetHomework
 from bot.utils.methods import clear, update_last, check_date
 
@@ -123,5 +123,23 @@ async def edit_name(message, state: FSMContext):
         pass
 
     await state.update_data(name=hw_name)
+    await GetHomework.next()
+    markup = await edit_hw_keyboard()
+    await update_last(state, await message.reply("Выберите что вы хотите обновить или введите данные для замены:", reply_markup=markup))
+
+
+@dp.callback_query_handler(lambda c: c.data is not None, state=GetHomework.choice)
+async def edit_deadline(callback_query: types.CallbackQuery, state: FSMContext):
+    try:
+        await clear(state)
+    except:
+        await state.finish()
+
+    await bot.answer_callback_query(callback_query.id)
     await state.finish()
-    return await message.reply("Выберите что вы хотите обновить или введите данные для замены:")
+    await update_last(state, await bot.send_message(callback_query.message.chat.id, "fff"))
+
+
+@dp.message_handler(state=GetHomework.choice)
+async def pizdos(message, state: FSMContext):
+    await state.finish()
