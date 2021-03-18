@@ -58,7 +58,3 @@ async def callback_finish(callback_query: types.CallbackQuery, state: FSMContext
     await bot.send_message(callback_query.message.chat.id, "Пон")
     await state.finish()
 
-
-@dp.message_handler(state='*')
-async def message_finish(message, state: FSMContext):
-    await state.finish()

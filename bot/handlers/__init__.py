@@ -25,4 +25,6 @@ from .settings import settings
 
 from .command_start import start
 
+from .cancel import cancel
+
 
