@@ -87,7 +87,7 @@ async def add_hw(msg):
     ]
 
 
-@dp.message_handler(Text(equals="показать дз"), chat_id=526497876)
+@dp.message_handler(Text(equals="показать дз"))
 async def show_png(msg):
     chat_id = msg.chat.id
     html_file = f"{datetime.timestamp(datetime.now())}_{chat_id}.html"
@@ -106,17 +106,27 @@ async def show_png(msg):
         await msg.reply("Домашнего задания нет")
         return
 
-    hws_list = HomeworksList()
+    hws_list = HomeworksList(0)
+    await hws_list.set_fields(homeworks)
+    # print(homeworks)
+    # file = open(html_file, "w")
+    # file.write(generate_body(homeworks))
+    # file.close()
+    #
 
-    file = open(html_file, "w")
-    file.write(generate_body(homeworks))
-    file.close()
+    script_dir = os.path.dirname(__file__)
 
-    hw_photo = await generate_png(html_file=html_file, output=photo_file)
-    mes_is = await bot.send_photo(msg.chat.id, hw_photo, reply_to_message_id=msg.message_id)
-
-    os.remove(html_file)
-    os.remove(photo_file)
+    script_dir = "/".join(script_dir.split('/')[:script_dir.split('/').index("bot") + 1])
+    html = script_dir + f"/utils/html_photo/temp_photo/{html_file}"
+    photo = script_dir + f"/utils/html_photo/temp_photo/{photo_file}"
+    hw_photo = await hws_list.generate_photo(html_file=html, photo_file=photo)
+    await msg.answer_photo(hw_photo)
+    os.remove(html)
+    os.remove(photo)
+    # await bot.send_photo(msg.chat.id, hw_photo, reply_to_message_id=msg.message_id)
+    #
+    # os.remove(html_file)
+    # os.remove(photo_file)
 
 
 @dp.message_handler(Text(equals="time"), chat_id=526497876)
