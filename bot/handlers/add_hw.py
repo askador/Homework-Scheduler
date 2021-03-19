@@ -129,7 +129,7 @@ async def select_name(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=SetHomework.deadline)
 async def select_deadline(message: types.Message, state: FSMContext):
-    hw_date = message.text
+    hw_date = message.text.split()
 
     try:
         await clear(state)
