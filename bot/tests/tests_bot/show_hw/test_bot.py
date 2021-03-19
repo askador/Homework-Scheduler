@@ -93,6 +93,11 @@ async def show_png(msg):
     html_file = f"{datetime.timestamp(datetime.now())}_{chat_id}.html"
     photo_file = f"{datetime.timestamp(datetime.now())}_{str(chat_id)}.png"
 
+    script_dir = os.path.dirname(__file__)
+    script_dir = "/".join(script_dir.split('/')[:script_dir.split('/').index("bot") + 1])
+    html = script_dir + f"/utils/html_photo/temp_photo/{html_file}"
+    photo = script_dir + f"/utils/html_photo/temp_photo/{photo_file}"
+
     client = MongoClient(config.mongodb_url)
     db = client["hw_bot_db"]
     col = db["chat"]
@@ -108,17 +113,8 @@ async def show_png(msg):
 
     hws_list = HomeworksList(0)
     await hws_list.set_fields(homeworks)
-    # print(homeworks)
-    # file = open(html_file, "w")
-    # file.write(generate_body(homeworks))
-    # file.close()
-    #
 
-    script_dir = os.path.dirname(__file__)
 
-    script_dir = "/".join(script_dir.split('/')[:script_dir.split('/').index("bot") + 1])
-    html = script_dir + f"/utils/html_photo/temp_photo/{html_file}"
-    photo = script_dir + f"/utils/html_photo/temp_photo/{photo_file}"
     hw_photo = await hws_list.generate_photo(html_file=html, photo_file=photo)
     await msg.answer_photo(hw_photo)
     os.remove(html)
