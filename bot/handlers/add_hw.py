@@ -4,7 +4,7 @@ from bot.loader import dp, bot
 from aiogram import types
 from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard
+from bot.keyboards import subjects_keyboard, calendar_keyboard
 from bot.tests.tests_bot.states_test.states_test import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime
 #from datetime import datetime, timedelta
@@ -124,7 +124,8 @@ async def select_name(message: types.Message, state: FSMContext):
 
     await state.update_data(name=hw_name)
     await SetHomework.next()
-    await update_last(state, await message.reply("Введите срок сдачи в формате ДД/ММ:"))
+    markup = await calendar_keyboard(0, 0)
+    await update_last(state, await message.reply("Введите срок сдачи в формате ДД/ММ:", reply_markup=markup))
 
 
 @dp.message_handler(state=SetHomework.deadline)
@@ -144,6 +145,11 @@ async def select_deadline(message: types.Message, state: FSMContext):
     else:
         text = "Данные введены неверно!\nВведите дату повторно:"
     await update_last(state, await message.reply(text))
+
+
+@dp.callback_query_handler(state=SetHomework.deadline)
+async def test_calendar(callback_query: types.CallbackQuery, state: FSMContext):
+    print(callback_query)
 
 
 @dp.message_handler(state=SetHomework.description)
