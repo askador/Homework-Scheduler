@@ -122,14 +122,15 @@ async def select_name(message: types.Message, state: FSMContext):
 
     await clear(state)
 
-    await state.update_data(name=hw_name)
+    await state.update_data(name=hw_name, month=0)
     await SetHomework.next()
-    markup = await calendar_keyboard(0, 0)
+    markup = await calendar_keyboard(0)
     await update_last(state, await message.reply("Введите срок сдачи в формате ДД/ММ:", reply_markup=markup))
 
 
 @dp.message_handler(state=SetHomework.deadline)
 async def select_deadline(message: types.Message, state: FSMContext):
+    await clear(state)
     hw_date = message.text.split()
 
     try:
@@ -147,9 +148,60 @@ async def select_deadline(message: types.Message, state: FSMContext):
     await update_last(state, await message.reply(text))
 
 
-@dp.callback_query_handler(state=SetHomework.deadline)
-async def test_calendar(callback_query: types.CallbackQuery, state: FSMContext):
-    print(callback_query)
+@dp.callback_query_handler(lambda c: c.data == 'next_month', state=SetHomework.deadline)
+async def calendar_next_month(callback_query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['month'] = data['month'] + 1
+        m = data['month']
+
+    markup = await calendar_keyboard(m)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'prev_month', state=SetHomework.deadline)
+async def calendar_prev_month(callback_query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['month'] = data['month'] - 1
+        m = data['month']
+
+    markup = await calendar_keyboard(m)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'next_year', state=SetHomework.deadline)
+async def calendar_next_year(callback_query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['month'] = data['month'] + 12
+        m = data['month']
+
+    markup = await calendar_keyboard(m)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+
+
+@dp.callback_query_handler(lambda c: c.data == 'prev_year', state=SetHomework.deadline)
+async def calendar_prev_year(callback_query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        data['month'] = data['month'] - 12
+        m = data['month']
+
+    markup = await calendar_keyboard(m)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+
+
+@dp.callback_query_handler(lambda c: len(c.data.split()) > 1, state=SetHomework.deadline)
+async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMContext):
+    print(callback_query.data)
+    date = callback_query.data.split()
+
+    if datetime.datetime.strptime(date[1],'%Y-%m-%d') >= datetime.datetime.now():
+        await clear(state)
+
+        await state.update_data(deadline=datetime.datetime.strptime(date[1],'%Y-%m-%d'))
+        await SetHomework.next()
+
+        await update_last(state, await bot.send_message(callback_query.message.chat.id, "Введите описание работы:"))
+    else:
+        await bot.answer_callback_query(callback_query.id, text='Выбрана уже прошедшая дата')
 
 
 @dp.message_handler(state=SetHomework.description)

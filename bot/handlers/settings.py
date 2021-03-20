@@ -53,8 +53,4 @@ async def callback_select_setting(callback_query: types.CallbackQuery, state: FS
     await update_last(state, await bot.send_message(callback_query.message.chat.id, "Довай ностраивай:", reply_markup=markup))
 
 
-@dp.callback_query_handler(state='*')
-async def callback_finish(callback_query: types.CallbackQuery, state: FSMContext):
-    await bot.send_message(callback_query.message.chat.id, "Пон")
-    await state.finish()
 
