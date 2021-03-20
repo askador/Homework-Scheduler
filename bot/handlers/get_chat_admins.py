@@ -9,5 +9,3 @@ async def get_chat_admins(msg):
 
     for admin in admins_object:
         admins_list.append(admin.user.id)
-
-    await msg.answer(str(admins_list))

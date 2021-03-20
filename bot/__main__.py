@@ -9,6 +9,7 @@ from bot.data import config
 
 # The configuration of the modules using import
 from bot import handlers
+from bot.handlers import inline, error
 
 
 async def on_startup(dispatcher: Dispatcher):
