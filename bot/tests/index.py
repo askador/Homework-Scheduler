@@ -1,17 +1,29 @@
-# from aiogram import Bot,Dispatcher, executor
-# from bot.data import config
-# import logging
+from aiogram import Bot,Dispatcher, executor
+from bot.data import config
+import logging
+
+logging.basicConfig(level=logging.INFO)
+bot = Bot(token = config.token)
+dp = Dispatcher(bot)
+
 #
-# logging.basicConfig(level=logging.INFO)
-# bot = Bot(token = config.token)
-# dp = Dispatcher(bot)
-#
-#
-# @dp.message_handler(user_id=[526497876])
+# @dp.message_handler()
 # async def mes(msg):
-#     await msg.answer("Correct")
 #
+
+from aiogram import filters
+from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
+
+
+
+
+
+
+# async def on_startup(dp):
+#     from bot.utils import set_commands
+#     await set_commands(dp)
 #
-# if __name__ == "__main__":
-#     executor.start_polling(dp, skip_updates=True)
+
+if __name__ == "__main__":
+    executor.start_polling(dp, skip_updates=True)
 

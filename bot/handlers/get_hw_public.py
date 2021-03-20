@@ -15,7 +15,7 @@ CHAT_TYPES = [
     types.ChatType.SUPERGROUP
 ]
 
-@dp.message_handler(filters.Text(equals=ALIAS), filters.ChatTypeFilter(CHAT_TYPES))
+@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), regexp="")
 async def get_hw_public(message):
     date = datetime.now() + timedelta(days=7)
     return await message.reply("Нет дз, Артьомка")

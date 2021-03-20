@@ -88,7 +88,7 @@ async def select_subject(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(lambda c: c.data == 'next', state=SetHomework.subject)
 async def callback_next_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    page = 0
+
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
@@ -99,7 +99,7 @@ async def callback_next_subject(callback_query: types.CallbackQuery, state: FSMC
 @dp.callback_query_handler(lambda c: c.data == 'back', state=SetHomework.subject)
 async def callback_back_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    page = 0
+
     async with state.proxy() as data:
         data['page']=data['page']-1
         page = data['page']
@@ -132,11 +132,6 @@ async def select_name(message: types.Message, state: FSMContext):
 async def select_deadline(message: types.Message, state: FSMContext):
     await clear(state)
     hw_date = message.text.split()
-
-    try:
-        await clear(state)
-    except:
-        pass
 
     if await check_date(hw_date):
         date = await make_datetime(hw_date)
@@ -190,7 +185,6 @@ async def calendar_prev_year(callback_query: types.CallbackQuery, state: FSMCont
 
 @dp.callback_query_handler(lambda c: len(c.data.split()) > 1, state=SetHomework.deadline)
 async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMContext):
-    print(callback_query.data)
     date = callback_query.data.split()
 
     if datetime.datetime.strptime(date[1],'%Y-%m-%d') >= datetime.datetime.now():
@@ -212,7 +206,6 @@ async def select_description(message: types.Message, state: FSMContext):
 
     await state.update_data(description=hw_description)
     async with state.proxy() as data:
-        print(data)
         await message.reply("Задание успешно добавлено!\n"
                                    "Предмет: {}\n"
                                    "Название: {}\n"

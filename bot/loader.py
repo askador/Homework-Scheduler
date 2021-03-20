@@ -21,11 +21,6 @@ dp = Dispatcher(
 )
 
 
-
-
-
-
-
 __all__ = (
     "bot",
     # "storage",

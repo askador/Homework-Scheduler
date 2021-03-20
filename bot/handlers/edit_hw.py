@@ -85,7 +85,7 @@ async def edit_subject(message, state: FSMContext):
 @dp.callback_query_handler(lambda c: c.data == 'next', state=GetHomework.subject)
 async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    page = 0
+
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
@@ -96,7 +96,7 @@ async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMC
 @dp.callback_query_handler(lambda c: c.data == 'back', state=GetHomework.subject)
 async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
-    page = 0
+
     async with state.proxy() as data:
         data['page'] = data['page'] - 1
         page = data['page']

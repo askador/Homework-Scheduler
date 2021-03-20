@@ -37,8 +37,12 @@ admins = [
 materials = "https://drive.google.com/drive/folders/1sirZ5VHO0djffSrOdWcMhMJ30DdSV1zQ?usp=sharing"
 
 commands = {
-    '/start': "",
-    '/help':"",
+    'help': "how to use @itai_hw_bot",
+    'add_hw': "add new homework",
+    'edit_hw': "edit homework",
+    'show_hw': "show homework this week",
+    'cancel': "cancel dialog",
+
 }
 
 postresql_db_url = f"postgres://{postgresql_db_setting['User']}:{postgresql_db_setting['Password']}" \

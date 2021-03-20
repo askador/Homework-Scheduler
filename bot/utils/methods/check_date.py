@@ -2,13 +2,11 @@ import datetime
 
 
 async def compare(date):
-    print(date)
     return date >= datetime.datetime.now()
 
 
 async def check_date(date):
     if len(date) == 1:
-        print(date)
         try:
             selected = datetime.datetime.strptime(date[0], '%d/%m')
             selected = selected.replace(year=datetime.datetime.now().year)

@@ -38,7 +38,7 @@ async def callback_select_setting(callback_query: types.CallbackQuery, state: FS
 
     await clear(state)
 
-    markup = markup = InlineKeyboardMarkup()
+    markup = InlineKeyboardMarkup()
 
     if callback_query.data == '0':
         markup = await settings_keyboard_subjects()
