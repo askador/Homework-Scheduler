@@ -1,7 +1,10 @@
+
+from pymongo import MongoClient
+
 from datetime import datetime, timedelta
+from bot.data import config
 from bot.utils.html_photo.html_wrap import top_block, bottom_block, TRElement, TDElement
 from bot.utils.html_photo.pyppeteer.pyppeteer import launch
-
 
 
 class HomeworksList:
@@ -9,18 +12,33 @@ class HomeworksList:
     Create image of homeworks list
     """
 
-    def __init__(self, page):
+    def __init__(self, chat_id, page):
         """
 
+        :param int chat_id: chat id
         :param int page: week page
         """
+        self.chat_id = chat_id
         self.page = page
         self.hws = {}
         self.week = []
 
-    async def set_fields(self, hws):
+    async def set_fields(self):
+        """
+        Get chat homeworks
+        """
         self.week = await self._get_week_dates()
-        self.hws = await self._filter_hws(hws)
+
+        client = MongoClient(config.mongodb_url)
+        db = client["hw_bot_db"]
+        col = db["chat"]
+
+        homeworks = []
+
+        for x in col.find({"_id": self.chat_id}):
+            homeworks = x["homeworks"]
+
+        self.hws = await self._filter_hws(homeworks)
 
     async def _get_week_dates(self):
         """

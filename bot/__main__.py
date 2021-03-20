@@ -9,10 +9,12 @@ from bot.data import config
 
 # The configuration of the modules using import
 from bot import handlers
+from bot.handlers import inline, error
 
 
-async def on_startup(dispatcher: Dispatcher):
-    pass
+async def on_startup(dp: Dispatcher):
+    from bot.utils import set_commands
+    await set_commands(dp)
     # await utils.setup_default_commands(dispatcher)
     # await utils.notify_admins(config.SUPERUSER_IDS)
 

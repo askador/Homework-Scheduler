@@ -6,15 +6,16 @@ from aiogram.contrib.fsm_storage.mongo import MongoStorage
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from bot.data import config
-from bot.types.MongoDB.Database import Database
 
 bot = Bot(
     token=config.token,
     parse_mode=types.ParseMode.HTML,
 )
 
+
 db_name = config.mongodb_url[config.mongodb_url.rfind("/") + 1:config.mongodb_url.rfind("?")]
 storage = MongoStorage(uri=config.mongodb_url.replace(db_name, "aiogram_fsm"))
+
 
 dp = Dispatcher(
     bot=bot,
@@ -48,6 +49,30 @@ async def process_name(message, state):
         await message.answer(f"Количество подгрупп для {data['subjects'].split(',')[0]}")
 
 
+
+class SetHomework(StatesGroup):
+    subject = State()
+    name = State()
+    deadline = State()
+    description = State()
+
+
+class GetHomework(StatesGroup):
+    subject = State()
+    name = State()
+    choice = State()
+    deadline = State()
+    description = State()
+
+
+class Settings(StatesGroup):
+    choice = State()
+    subjects = State()
+    subgroups = State()
+    notifications = State()
+    terms = State()
+
+
 @dp.message_handler(lambda mes: mes.text.isdigit(), state=AddChat.subgroups)
 async def process_name(message, state):
     async with state.proxy() as data:
@@ -63,9 +88,9 @@ async def process_name(message, state):
 
     await state.reset_state(with_data=True)
 
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
-    # utils.setup_logger("INFO", ["sqlalchemy.engine", "aiogram.bot.api"])
     executor.start_polling(
         dp, skip_updates=True
     )
