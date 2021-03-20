@@ -51,6 +51,7 @@ class Homework:
         hw = {
             "_id": self._increment(self.id),
             "subject": subject,
+            "name",
             "description": description,
             "deadline": deadline,
             "subgroup": subgroup,
