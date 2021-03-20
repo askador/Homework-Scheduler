@@ -1,6 +1,6 @@
 # token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE' #ai4
 token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8' #shishki
-#token = '1173133322:AAG_E7H2IjRypO3dt-pygUjh9V1HP8X8JPk' # test_bot
+test_bot_token = '1173133322:AAG_E7H2IjRypO3dt-pygUjh9V1HP8X8JPk' # test_bot
 
 postgresql_db_setting = {
     "Host": "ec2-34-224-229-81.compute-1.amazonaws.com",
@@ -38,7 +38,7 @@ materials = "https://drive.google.com/drive/folders/1sirZ5VHO0djffSrOdWcMhMJ30Dd
 
 commands = {
     '/start': "",
-    '/help': "",
+    '/help':"",
 }
 
 postresql_db_url = f"postgres://{postgresql_db_setting['User']}:{postgresql_db_setting['Password']}" \

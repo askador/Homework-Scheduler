@@ -89,17 +89,21 @@ class Chat:
 
     def add_hw(self, *,
                subject,
+               name,
                description,
                deadline,
-               subgroup=None
+               subgroup=None,
+               priority=0
                ):
         """
         Add homework
 
         :param str subject: subject
+        :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
+        :param int priority: work priority
         """
 
         last_id = Database().get_sorted(self.__collection_name__, direction=-1, limit=1)
@@ -107,9 +111,12 @@ class Chat:
         hw = Homework(chat_id=self.chat_id, id=last_id,)\
             .create(
             subject=subject,
+            name=name,
             description=description,
             deadline=deadline,
-            subgroup=subgroup)
+            subgroup=subgroup,
+            priority=priority
+        )
 
         Database().update(self.__collection_name__,
                           filters={"_id": self.chat_id},
@@ -118,24 +125,29 @@ class Chat:
     def update_hw(self, *,
                   id,
                   subject=None,
+                  name=None,
                   description=None,
                   deadline=None,
-                  subgroup=None):
+                  subgroup=None,
+                  priority=None):
         """
         Change homework
 
         :param int id: homework id
         :param str subject: subject
+        :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
+        :param int priority: work priority
         """
 
         hw = Homework(chat_id=self.chat_id, id=id)
         hw.update(subject=subject,
                   description=description,
                   deadline=deadline,
-                  subgroup=subgroup)
+                  subgroup=subgroup,
+                  priority=priority)
 
     def get_hws(self, id, amount):
         hw = Database().get(self.__collection_name__, filters={[{"_id": self.chat_id}, {""}]})
@@ -148,4 +160,7 @@ class Chat:
         :param int id: homework id
         """
         hw = Homework(chat_id=self.chat_id, id=id)
-        hw.delete()
+        hw.delete(self.__collection_name__)
+
+
+

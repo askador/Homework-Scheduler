@@ -9,9 +9,11 @@ class Homework:
     columns = [
         "id",
         "subject",
+        "name",
         "description",
         "deadline",
         "subgroup",
+        "priority",
     ]
 
     def __init__(self, *, chat_id=None, id):
@@ -32,9 +34,16 @@ class Homework:
 
         return id + 1
 
-    def create(self, *, subject, description, deadline, subgroup):
+    def create(self, *, subject, name, description, deadline, subgroup, priority=0):
         """
         Add homework
+
+        :param str subject:
+        :param str name:
+        :param str description:
+        :param datetime.datetime deadline:
+        :param int subgroup:
+        :param int priority: priority of work
 
         :return dict hw: homework data
         """
@@ -42,30 +51,42 @@ class Homework:
         hw = {
             "_id": self._increment(self.id),
             "subject": subject,
+            "name",
             "description": description,
             "deadline": deadline,
             "subgroup": subgroup,
+            "priority": priority,
         }
 
         return hw
 
-    def update(self, collection, *, subject=None, description=None, deadline=None, subgroup=None):
+    def update(self, collection, *,
+               subject=None,
+               name=None,
+               description=None,
+               deadline=None,
+               subgroup=None,
+               priority=None):
         """
         Update homework info
 
         :param str collection: collection
         :param str subject: subject
+        :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup
+        :param int priority: work priority
 
         """
 
         fields = {
             "subject": subject,
+            "name": name,
             "description": description,
             "deadline": deadline,
             "subgroup": subgroup,
+            "priority": priority,
         }
 
         db = Database()
