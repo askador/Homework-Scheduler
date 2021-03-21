@@ -13,7 +13,7 @@ CHAT_TYPES = [
 
 
 @dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), commands=['start'], is_chat_admin=True)
-async def start(message):
+async def command_start(message):
     await AddChat.subjects.set()
     await message.reply("Привет, я Homework Scheduler! Сейчас начнется моя настройка!"
                                "\n"

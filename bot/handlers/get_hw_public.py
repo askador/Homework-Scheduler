@@ -38,10 +38,11 @@ async def get_hw_public(message, state):
 
     col.delete_one({"chat": message.chat.id, "user": message.from_user.id})
 
-    await ShowHw.week.set()
     col = db['aiogram_data']
     async with state.proxy() as data:
         data['week_page'] = 0
+    col.delete_one({"chat": message.chat.id, "user": message.from_user.id})
+    await ShowHw.week.set()
     # col.update_one({"chat": message.chat.id, "user": message.from_user.id}, {"$set": {"data": {"week_page": 0}}})
 
     """Generate photo"""

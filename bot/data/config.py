@@ -2,14 +2,6 @@
 token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8' #shishki
 test_bot_token = '1173133322:AAG_E7H2IjRypO3dt-pygUjh9V1HP8X8JPk' # test_bot
 
-postgresql_db_setting = {
-    "Host": "ec2-34-224-229-81.compute-1.amazonaws.com",
-    "Database": "d7kotnui7ubmvq",
-    "User": "rjblaxrzxaxpum",
-    "Port": "5432",
-    "Password": "ea00c427c5ef18079f94af132a47f42fe10ddc81393bdd48ba2c84b708f1a1d1"
-}
-
 mongodb_setting = {
     "User": "test_user",
     "Password": "1234",
@@ -40,13 +32,11 @@ commands = {
     'help': "how to use @itai_hw_bot",
     'add_hw': "add new homework",
     'edit_hw': "edit homework",
+    'del_hw': "delete homework",
     'show_hw': "show homework this week",
     'cancel': "cancel dialog",
 
 }
-
-postresql_db_url = f"postgres://{postgresql_db_setting['User']}:{postgresql_db_setting['Password']}" \
-         f"@{postgresql_db_setting['Host']}:{postgresql_db_setting['Port']}/{postgresql_db_setting['Database']}"
 
 mongodb_url = f"mongodb+srv://{mongodb_setting['User']}:{mongodb_setting['Password']}@" \
              f"{mongodb_setting['Host']}/{mongodb_setting['Database']}?{mongodb_setting['args']}"
