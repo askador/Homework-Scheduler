@@ -1,5 +1,6 @@
 import os
 from aiogram.types import InputMediaPhoto
+from aiogram.utils.exceptions import MessageNotModified
 from pprint import pprint
 
 from bot.loader import dp, bot
@@ -13,7 +14,6 @@ from bot.utils.methods.get_files_pathes import get_files_pathes
 async def next_week(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id
-    # await call.message.answer(call)
     async with state.proxy() as data:
         try:
             if data['week_page']:
@@ -31,10 +31,13 @@ async def next_week(call, state):
         hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
 
         await call.answer(cache_time=0)
-        await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
-                                     chat_id=chat_id,
-                                     message_id=message_id,
-                                     reply_markup=homework_kb_both)
+        try:
+            await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
+                                         chat_id=chat_id,
+                                         message_id=message_id,
+                                         reply_markup=homework_kb_both)
+        except MessageNotModified:
+            pass
 
     os.remove(html_path)
     os.remove(photo_path)

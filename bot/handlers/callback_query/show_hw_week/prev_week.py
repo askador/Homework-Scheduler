@@ -1,5 +1,6 @@
 import os
 from aiogram.types import InputMediaPhoto
+from aiogram.utils.exceptions import MessageNotModified
 
 from bot.loader import dp, bot
 from bot.keyboards.show_homework.show_homework import homework_kb_next_week, homework_kb_both
@@ -34,10 +35,13 @@ async def prev_week(call, state):
         hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
 
         await call.answer(cache_time=0)
-        await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
-                                     chat_id=chat_id,
-                                     message_id=message_id,
-                                     reply_markup=kb)
+        try:
+            await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
+                                         chat_id=chat_id,
+                                         message_id=message_id,
+                                         reply_markup=kb)
+        except MessageNotModified:
+            pass
 
     os.remove(html_path)
     os.remove(photo_path)

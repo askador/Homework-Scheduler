@@ -23,6 +23,17 @@ class HomeworksList:
         self.hws = {}
         self.week = []
 
+    async def _get_week_dates(self):
+        """
+        Generating week
+
+        :return list dates: list of week dates
+        """
+        week_day = datetime.now().isocalendar()[2]
+        start_date = datetime.now() - timedelta(days=week_day)
+        dates = [(start_date + timedelta(days=i)) for i in range(1 + 7*self.page, 8 + 7*self.page)]
+        return dates
+
     async def set_fields(self):
         """
         Get chat homeworks
@@ -38,18 +49,8 @@ class HomeworksList:
         for x in col.find({"_id": self.chat_id}):
             homeworks = x["homeworks"]
 
+
         self.hws = await self._filter_hws(homeworks)
-
-    async def _get_week_dates(self):
-        """
-        Generating week
-
-        :return list dates: list of week dates
-        """
-        week_day = datetime.now().isocalendar()[2]
-        start_date = datetime.now() - timedelta(days=week_day)
-        dates = [(start_date + timedelta(days=i)) for i in range(1 + 7*self.page, 8 + 7*self.page)]
-        return dates
 
     async def _filter_hws(self, hws):
         """
@@ -63,7 +64,8 @@ class HomeworksList:
                         'common': []}
 
         for hw in hws:
-            if self.week[0] <= hw['deadline'] <= self.week[-1] or hw['priority'] == 1:
+            if datetime.isocalendar(self.week[0]) <= datetime.isocalendar(hw['deadline']) <= datetime.isocalendar(self.week[-1])\
+                    or hw['priority'] == 1:
                 """
                 Add both filtered by deadline common hw and important hw
                 """
@@ -95,11 +97,14 @@ class HomeworksList:
     async def _generate_hw_block(class_name, hw):
         tr = TRElement(class_name)
 
+        hw_copy = hw.copy()
         del hw['deadline']
         del hw['subgroup']
         del hw['priority']
         for field, val in hw.items():
             td = TDElement()
+            if field == 'subject' and hw_copy['subgroup'] != '':
+                val = str(val) + f" {hw_copy['subgroup']}пг."
             td.insert_data(val)
             tr.add_element(td)
 

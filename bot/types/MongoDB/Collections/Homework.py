@@ -4,15 +4,17 @@ from bot.types.MongoDB.Database import Database
 class Homework:
     """
     Make convenient interaction with homework
+
+    make sure using correct fields sequence
     """
 
     columns = [
         "id",
         "subject",
+        "subgroup",
         "name",
         "description",
         "deadline",
-        "subgroup",
         "priority",
     ]
 
@@ -34,15 +36,15 @@ class Homework:
 
         return id + 1
 
-    def create(self, *, subject, name, description, deadline, subgroup, priority=0):
+    def create(self, *, subject, subgroup, name, description, deadline, priority=0):
         """
         Add homework
 
         :param str subject:
+        :param int subgroup:
         :param str name:
         :param str description:
         :param datetime.datetime deadline:
-        :param int subgroup:
         :param int priority: priority of work
 
         :return dict hw: homework data
@@ -51,10 +53,10 @@ class Homework:
         hw = {
             "_id": self._increment(self.id),
             "subject": subject,
-            "name",
+            "subgroup": subgroup,
+            "name": '',
             "description": description,
             "deadline": deadline,
-            "subgroup": subgroup,
             "priority": priority,
         }
 
@@ -62,30 +64,30 @@ class Homework:
 
     def update(self, collection, *,
                subject=None,
+               subgroup=None,
                name=None,
                description=None,
                deadline=None,
-               subgroup=None,
                priority=None):
         """
         Update homework info
 
         :param str collection: collection
+        :param int subgroup: subgroup
         :param str subject: subject
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
-        :param int subgroup: subgroup
         :param int priority: work priority
 
         """
 
         fields = {
             "subject": subject,
+            "subgroup": subgroup,
             "name": name,
             "description": description,
             "deadline": deadline,
-            "subgroup": subgroup,
             "priority": priority,
         }
 
