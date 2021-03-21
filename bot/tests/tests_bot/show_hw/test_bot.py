@@ -11,7 +11,7 @@ from bot.loader import bot, dp
 from bot.data import misc, config
 # from bot.handlers.get_hw_public import get_hw_public
 # from bot.handlers.callback_query import next_week, prev_week
-from bot.handlers.commands import command_help
+
 
 
 @dp.message_handler(Text(equals="чек"), user_id=526497876, state='*')
