@@ -37,7 +37,7 @@ TEST = [
 
 @dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
 @dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
-async def command_add_hw(message: types.Message):
+async def add_hw(message: types.Message):
     try:
         arguments = message.get_args().split()
     except Exception as e:

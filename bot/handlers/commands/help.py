@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters import Command
 
 
 @dp.message_handler(commands=['help'], state='*')
-async def command_help(message):
+async def bot_help(message):
     help_message = \
 """
 Бот для упрощения работы с распорядком домашних заданий студентов
