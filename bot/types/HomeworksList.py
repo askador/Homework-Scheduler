@@ -9,7 +9,7 @@ from bot.utils.html_photo.pyppeteer.pyppeteer import launch
 
 class HomeworksList:
     """
-    Create image of homeworks list
+    Create list of homeworks
     """
 
     def __init__(self, chat_id, page):
@@ -49,7 +49,6 @@ class HomeworksList:
         for x in col.find({"_id": self.chat_id}):
             homeworks = x["homeworks"]
 
-
         self.hws = await self._filter_hws(homeworks)
 
     async def _filter_hws(self, hws):
@@ -78,6 +77,12 @@ class HomeworksList:
 
     @staticmethod
     async def _date_row(date):
+        """
+        Generate date table row
+
+        :param datetime.datetime date: date
+        :return html table row
+        """
         from datetime import datetime
         tr_day = TRElement(class_name="week-day")
 
@@ -95,6 +100,13 @@ class HomeworksList:
 
     @staticmethod
     async def _generate_hw_block(class_name, hw):
+        """
+        Generate homework data table row
+
+        :param str class_name: div class name
+        :param dict hw: homework
+        :return html table row
+        """
         tr = TRElement(class_name)
 
         hw_copy = hw.copy()
@@ -111,6 +123,9 @@ class HomeworksList:
         return tr
 
     async def _sort_hws(self, hws, is_important=False):
+        """
+        Sorting homeworks
+        """
         sorted_hws = {}
         prefix = ''
         dates = self.week
@@ -137,6 +152,9 @@ class HomeworksList:
         return sorted_hws
 
     async def _generate_body(self):
+        """
+        Generate html body
+        """
         body = top_block()
 
         important_hws = await self._sort_hws(self.hws['important'], True)
@@ -158,7 +176,65 @@ class HomeworksList:
 
         return body
 
+    @staticmethod
+    async def _generate_text_body(hws_list):
+        importance = {
+            1: 'важное',
+            0: 'обычное'
+        }
+
+        text = ""
+
+        for date, hws in hws_list.items():
+            text += f"""\n📅<b>{datetime.strftime(date, "%A")} {datetime.strftime(date, "%d.%m.%y")}</b>\n"""
+            i = 1
+            for hw in hws:
+                text += f"     📝 <b>{i}</b>\n" \
+                        f"     предмет: {hw['subject']}\n" \
+                        f"     название: {hw['name']}\n" \
+                        f"     приоритетность: {importance[hw['priority']]}\n"
+                if hws.index(hw) + 1 != len(hws):
+                    text += "\n"
+
+                i+=1
+
+        return text
+
+    async def generate_text(self):
+        """
+        Generate homeworks text
+
+        Example:
+
+            <deadline>
+            subj:
+            name:
+            priority:
+            \n
+            subj:
+            name:
+            priority:
+            \n
+            \n
+            <deadline>
+        """
+
+        text = ''
+
+        important_hws = await self._sort_hws(self.hws['important'], True)
+        common_hws = await self._sort_hws(self.hws['common'])
+
+        # Generate important elements
+        text += await self._generate_text_body(important_hws)
+        # Generate important elements
+        text += await  self._generate_text_body(common_hws)
+
+        return text
+
     async def generate_photo(self, html_file, photo_file):
+        """
+        Generate homeworks table photo
+        """
 
         file = open(html_file, "w")
         file.write(await self._generate_body())

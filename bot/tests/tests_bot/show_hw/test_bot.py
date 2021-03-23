@@ -9,8 +9,8 @@ from aiogram.utils import executor
 from aiogram.dispatcher.filters import Text, Command
 from bot.loader import bot, dp
 from bot.data import misc, config
-# from bot.handlers.get_hw_public import get_hw_public
-# from bot.handlers.callback_query import next_week, prev_week
+from bot.handlers.get_hw_public import get_hw_public
+from bot.handlers.callback_query import show_hw_week
 
 
 

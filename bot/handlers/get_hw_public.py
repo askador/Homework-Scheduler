@@ -53,14 +53,17 @@ async def get_hw_public(message, state):
     hws_list = HomeworksList(chat_id=chat_id, page=0)
     await hws_list.set_fields()
 
-    hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+    # hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+    hw_data = await hws_list.generate_text()
 
     await bot.delete_message(chat_id=chat_id, message_id=loading.message_id)
 
-    await message.answer_photo(hw_photo, reply_markup=homework_kb_next_week)
+    await message.reply(hw_data)
 
-    os.remove(html_path)
-    os.remove(photo_path)
+    # await message.answer_photo(hw_photo, reply_markup=homework_kb_next_week)
+
+    # os.remove(html_path)
+    # os.remove(photo_path)
 
 
 
