@@ -1,7 +1,7 @@
 from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.dispatcher import filters, FSMContext
-from bot.tests.tests_bot.states_test.states_test import InlineSettings
+from bot.states import InlineSettings
 
 
 @dp.inline_handler(filters.Text(startswith=['settings appearance']))

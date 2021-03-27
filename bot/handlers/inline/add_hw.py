@@ -2,7 +2,7 @@ from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.dispatcher import filters, FSMContext
 from bot.utils.methods import check_date
-from bot.tests.tests_bot.states_test.states_test import Inline
+from bot.states import Inline
 from aiogram.dispatcher.filters.state import State
 
 
