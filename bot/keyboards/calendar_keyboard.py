@@ -2,10 +2,13 @@ import calendar
 import datetime
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+Months = ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь']
+
 
 async def calendar_keyboard(m):
     now = datetime.datetime.now()
     year = now.year + m//12
+
     if (now.month + m%12)%12 == 0:
         month = 12
     else:
@@ -13,7 +16,7 @@ async def calendar_keyboard(m):
 
     markup = InlineKeyboardMarkup(row_width=7)
 
-    markup.row(InlineKeyboardButton(calendar.month_name[month]+" "+str(year), callback_data='ignore'))
+    markup.row(InlineKeyboardButton(Months[month]+" "+str(year), callback_data='ignore'))
 
     markup.row()
     for day in ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]:

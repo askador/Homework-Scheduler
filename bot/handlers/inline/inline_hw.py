@@ -9,8 +9,9 @@ async def inline_hw(inline_query: InlineQuery):
     input_content = InputTextMessageContent(hw)
     result_id = '1'
     item = InlineQueryResultArticle(
+        title="ДЗ:",
         id=result_id,
-        title=f'ДЗ: {hw!r}',
+        description=f'{hw!r}',
         input_message_content=input_content,
     )
     await bot.answer_inline_query(inline_query.id, results=[item], cache_time=1)
