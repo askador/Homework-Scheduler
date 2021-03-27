@@ -1,13 +1,25 @@
 import pymongo
+from bot.data.config import mongodb_setting
 from bot.data.config import mongodb_url
 
 
 class Database:
 
-    def __init__(self):
+    def __init__(self, db=None):
+        """
+        :param str db: optional
+        """
+        self.user = mongodb_setting['User']
+        self.password = mongodb_setting['Password']
+        self.host = mongodb_setting['Host']
+        self.database = mongodb_setting["Database"] if db is None else db
+        self.args = mongodb_setting['args']
+        self.mongodb_url = f"mongodb+srv://{self.user}:{self.password}@" \
+                           f"{self.host}/{self.database}?{self.args}"
+
         self.client = pymongo.MongoClient(mongodb_url)
 
-    def insert(self, collection, document):
+    async def insert(self, collection, document):
         """
         insert document to collection
 
@@ -16,14 +28,24 @@ class Database:
         :return bool: if successfully inserted
         """
 
-        self.client[collection].insert_one(document)
+        return self.client[self.database][collection].insert_one(document)
 
-    def get(self, collection, filters=None, limit=None):
+    async def find(self, collection, filters=None, projection=None, limit=None):
+        """
+        Get documents
 
-        for doc in self.client[collection].find({filters}):
-            return doc
+        :param str collection: collection name
+        :param dict filters: filters
+        :param dict projection: projection
+        :param int limit: limit
+        :return list data: list of founded documents
+        """
 
-    def get_sorted(self, collection, filters=None, sort_by="_id", direction=None, limit=None):
+        data = list(self.client[self.database][collection].find(filters, projection).limit(limit))
+
+        return data
+
+    async def get_sorted(self, collection, filters=None, sort_by="_id", direction=None, limit=None):
         """
         Get sorted list of collection documents
 
@@ -34,12 +56,24 @@ class Database:
         :param int limit: documents amount
         :return list sorted docs: list of sorted documents
         """
-        sorted_docs = self.client[collection].find(filters).sort([(sort_by, direction)])
+        sorted_docs = self.client[self.database][collection].find(filters).sort([(sort_by, direction)])
 
         return sorted_docs.limit(limit)
 
-    def update(self, collection, filters, changes):
-        # TODO: rewrite
+    async def aggregate(self, collection, pipeline):
+        """
+        Get aggregated data
+
+        :param str collection: collection
+        :param list pipeline: pipeline
+        :return list data: list of founded documents
+        """
+
+        data = list(self.client[self.database][collection].aggregate(pipeline))
+
+        return data
+
+    async def update(self, collection, filters, changes):
         """
         Update document
 
@@ -47,9 +81,9 @@ class Database:
         :param dict filters: filters
         :param dict changes: changes
         """
-        self.client[collection].update_many(filters, changes)
+        return self.client[self.database][collection].update_many(filters, changes)
 
-    def delete(self, collection, filters=None):
+    async def delete(self, collection, filters=None):
         """
         Delete document
 
@@ -57,7 +91,7 @@ class Database:
         :param dict filters: filters
         """
 
-        self.client[collection].delete_many(filters)
+        return self.client[self.database][collection].delete_many(filters)
 
 
 

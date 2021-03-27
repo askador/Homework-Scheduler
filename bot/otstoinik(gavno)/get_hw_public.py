@@ -28,39 +28,33 @@ CHAT_TYPES = [
 
 
 @dp.message_handler(filters.Text(equals=ALIAS), state='*')
+@dp.message_handler(filters.Command(commands=["п", "показать дз"], prefixes=["!"]), state='*')
 async def get_hw_public(message, state):
     chat_id = message.chat.id
 
     """Reset state config"""
-    client = MongoClient(config.mongodb_url)
-    db = client["aiogram_fsm"]
-    col = db["aiogram_state"]
 
-    col.delete_one({"chat": message.chat.id, "user": message.from_user.id})
-
-    col = db['aiogram_data']
     async with state.proxy() as data:
         data['week_page'] = 0
-    col.delete_one({"chat": message.chat.id, "user": message.from_user.id})
 
     await ShowHw.week.set()
     # col.update_one({"chat": message.chat.id, "user": message.from_user.id}, {"$set": {"data": {"week_page": 0}}})
 
-    """Generate photo"""
+    """Generate homeworks"""
     loading = await message.reply("Загрузка...")
-    html_path, photo_path = get_files_pathes(chat_id)
+    # html_path, photo_path = get_files_pathes(chat_id)
 
     hws_list = HomeworksList(chat_id=chat_id, page=0)
-    await hws_list.set_fields()
 
-    # hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+    # hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
     hw_data = await hws_list.generate_text()
 
     await bot.delete_message(chat_id=chat_id, message_id=loading.message_id)
 
-    await message.reply(hw_data)
+    a = await message.answer(hw_data, reply_markup=homework_kb_next_week)
 
-    # await message.answer_photo(hw_photo, reply_markup=homework_kb_next_week)
+    # a = await message.answer_photo(hw_data, reply_markup=homework_kb_next_week)
+    print(a)
 
     # os.remove(html_path)
     # os.remove(photo_path)
