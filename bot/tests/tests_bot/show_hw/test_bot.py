@@ -8,17 +8,18 @@ from pymongo import MongoClient
 from aiogram.utils import executor
 from aiogram.dispatcher.filters import Text, Command
 from bot.loader import bot, dp
-from bot.data import misc, config
 from bot.handlers.get_hw_public import get_hw_public
-from bot.handlers.callback_query import show_hw_week
+from bot.handlers.callback_query.show_hw_week import next_week, prev_week, close_hw
 
+from bot.types import HomeworksList
 
 
 @dp.message_handler(Text(equals="чек"), user_id=526497876, state='*')
 async def add_chat(msg):
-    client = MongoClient(config.mongodb_url)
-    db = client['hw_bot_db']
-    col = db['chat']
+    chat_id = -1001424619068
+    hw = HomeworksList(chat_id, -1)
+    hws = await hw.set_fields()
+
     #
     # col.update_one({"_id": -1001424619068}, {"$push": {"homeworks":
     #     {

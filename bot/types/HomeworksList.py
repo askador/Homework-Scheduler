@@ -1,10 +1,8 @@
-
-from pymongo import MongoClient
-
+from pprint import pprint
 from datetime import datetime, timedelta
-from bot.data import config
 from bot.utils.html_photo.html_wrap import top_block, bottom_block, TRElement, TDElement
 from bot.utils.html_photo.pyppeteer.pyppeteer import launch
+from bot.types.MongoDB.Collections import Chat
 
 
 class HomeworksList:
@@ -31,7 +29,7 @@ class HomeworksList:
         """
         week_day = datetime.now().isocalendar()[2]
         start_date = datetime.now() - timedelta(days=week_day)
-        dates = [(start_date + timedelta(days=i)) for i in range(1 + 7*self.page, 8 + 7*self.page)]
+        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0) for i in range(1 + 7 * self.page, 8 + 7 * self.page)]
         return dates
 
     async def set_fields(self):
@@ -40,18 +38,36 @@ class HomeworksList:
         """
         self.week = await self._get_week_dates()
 
-        client = MongoClient(config.mongodb_url)
-        db = client["hw_bot_db"]
-        col = db["chat"]
+        filters = [
+            {"$or": [
+                {
+                    "homeworks.priority": 1
+                },
+                {
+                    "$and": [
+                        {
+                            "homeworks.deadline": {
+                                "$gte": self.week[0]
+                            }
+                        },
+                        {
+                            "homeworks.deadline": {
+                                "$lte": self.week[-1]
+                            }
+                        }
+                    ]
+                }
+            ]}
+        ]
 
-        homeworks = []
+        chat = Chat(self.chat_id)
 
-        for x in col.find({"_id": self.chat_id}):
-            homeworks = x["homeworks"]
+        homeworks = await chat.get_homeworks(filters=filters)
 
         self.hws = await self._filter_hws(homeworks)
 
-    async def _filter_hws(self, hws):
+    @staticmethod
+    async def _filter_hws(hws):
         """
         Filter homeworks by priority and dates
 
@@ -63,15 +79,13 @@ class HomeworksList:
                         'common': []}
 
         for hw in hws:
-            if datetime.isocalendar(self.week[0]) <= datetime.isocalendar(hw['deadline']) <= datetime.isocalendar(self.week[-1])\
-                    or hw['priority'] == 1:
-                """
-                Add both filtered by deadline common hw and important hw
-                """
-                if hw['priority'] != 0:
-                    filtered_hws['important'].append(hw)
-                else:
-                    filtered_hws['common'].append(hw)
+            """
+            Add both filtered by deadline common hw and important hw
+            """
+            if hw["_id"]['priority'] != 0:
+                filtered_hws['important'].append(hw["_id"])
+            else:
+                filtered_hws['common'].append(hw["_id"])
 
         return filtered_hws
 
@@ -189,14 +203,17 @@ class HomeworksList:
             text += f"""\n📅<b>{datetime.strftime(date, "%A")} {datetime.strftime(date, "%d.%m.%y")}</b>\n"""
             i = 1
             for hw in hws:
-                text += f"     📝 <b>{i}</b>\n" \
+                pin_sign = ''
+                if hw['priority'] != 0:
+                    pin_sign = "📌"
+                text += f"     {pin_sign}📝 <b>{i}</b>\n" \
                         f"     предмет: {hw['subject']}\n" \
                         f"     название: {hw['name']}\n" \
                         f"     приоритетность: {importance[hw['priority']]}\n"
                 if hws.index(hw) + 1 != len(hws):
                     text += "\n"
 
-                i+=1
+                i += 1
 
         return text
 
@@ -206,18 +223,23 @@ class HomeworksList:
 
         Example:
 
-            <deadline>
-            subj:
-            name:
-            priority:
-            \n
-            subj:
-            name:
-            priority:
-            \n
-            \n
-            <deadline>
+        📅 Tuesday 18.05.21
+             📌📝 1
+             предмет: ООП
+             название: Курсовая
+
+        📅 Monday 22.03.21
+             📝 1
+             предмет: матан
+             название: тест
+
+             📝 1
+             предмет: чм
+             название: лаба
+
         """
+
+        await self.set_fields()
 
         text = ''
 
@@ -236,6 +258,8 @@ class HomeworksList:
         Generate homeworks table photo
         """
 
+        await self.set_fields()
+
         file = open(html_file, "w")
         file.write(await self._generate_body())
         file.close()
@@ -253,5 +277,3 @@ class HomeworksList:
         return photo
 
         # hw_photo = await generate_png(html_file=html_file, output=photo_file)
-
-
