@@ -10,7 +10,7 @@ from bot.types.HomeworksList import HomeworksList
 from bot.utils.methods.get_files_pathes import get_files_pathes
 
 
-@dp.callback_query_handler(lambda call: call.data == 'next_week', state=ShowHw.week)
+@dp.callback_query_handler(lambda call: call.data == 'next_week')
 async def next_week(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id

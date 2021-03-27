@@ -19,7 +19,6 @@ mongodb_setting = {
 }
 
 
-
 mongodb_setting1 = {
     "User": "master",
     "Password": "4321",
@@ -46,10 +45,10 @@ commands = {
 
 }
 
-#mongodb_url = f"mongodb+srv://{mongodb_setting['User']}:{mongodb_setting['Password']}@" \
-#              f"{mongodb_setting['Host']}/{mongodb_setting['Database']}?{mongodb_setting['args']}"
-
-mongodb_url = f"mongodb+srv://{mongodb_setting1['User']}:{mongodb_setting1['Password']}@" \
-              f"{mongodb_setting1['Host']}/{mongodb_setting1['Database']}?{mongodb_setting1['args']}"
+mongodb_url = f"mongodb+srv://{mongodb_setting['User']}:{mongodb_setting['Password']}@" \
+             f"{mongodb_setting['Host']}/{mongodb_setting['Database']}?{mongodb_setting['args']}"
+#
+# mongodb_url = f"mongodb+srv://{mongodb_setting1['User']}:{mongodb_setting1['Password']}@" \
+#               f"{mongodb_setting1['Host']}/{mongodb_setting1['Database']}?{mongodb_setting1['args']}"
 
 #mongodb_url = "mongodb+srv://test_user:1234@cluster0.lajfk.mongodb.net/aiogram_fsm?retryWrites=true&w=majority"
