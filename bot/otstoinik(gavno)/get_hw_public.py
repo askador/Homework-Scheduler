@@ -11,7 +11,7 @@ from bot.data import config
 from bot.states.get_public_hw import ShowHw
 from bot.keyboards.show_homework.show_homework import homework_kb_next_week
 from bot.types.HomeworksList import HomeworksList
-from bot.utils.methods.get_files_pathes import get_files_pathes
+from bot.utils.methods.get_files_paths import get_files_pathes
 
 from time import sleep
 

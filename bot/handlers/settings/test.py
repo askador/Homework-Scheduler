@@ -1,3 +1,5 @@
+from aiogram import types
+
 ALIAS = [
     "настройки"
 ]

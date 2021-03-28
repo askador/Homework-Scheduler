@@ -6,7 +6,7 @@ from bot.loader import dp, bot
 from bot.keyboards.show_homework.show_homework import homework_kb_next_week, homework_kb_both
 from bot.states.get_public_hw import ShowHw
 from bot.types.HomeworksList import HomeworksList
-from bot.utils.methods.get_files_pathes import get_files_pathes
+from bot.utils.methods.get_files_paths import get_files_paths
 
 
 @dp.callback_query_handler(lambda call: call.data == 'prev_week')

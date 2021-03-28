@@ -1,7 +1,8 @@
 from pprint import pprint
+import os
 from datetime import datetime, timedelta
-from bot.utils.html_photo.html_wrap import top_block, bottom_block, TRElement, TDElement
-from bot.utils.html_photo.pyppeteer.pyppeteer import launch
+from bot.utils.HTML_photo.HTML_wrap import top_block, bottom_block, TRElement, TDElement
+from bot.utils.HTML_photo.pyppeteer.pyppeteer import launch
 from bot.types.MongoDB.Collections import Chat
 
 
@@ -193,8 +194,8 @@ class HomeworksList:
     @staticmethod
     async def _generate_text_body(hws_list):
         importance = {
-            1: 'важное',
-            0: 'обычное'
+            'important': 'важное',
+            'common': 'обычное'
         }
 
         text = ""
@@ -272,8 +273,7 @@ class HomeworksList:
         await browser.close()
 
         photo = open(photo_file, 'rb')
-        # os.remove(_html)
-        # os.remove(_photo)
+        os.remove(html_file)
+        os.remove(photo_file)
         return photo
 
-        # hw_photo = await generate_png(html_file=html_file, output=photo_file)

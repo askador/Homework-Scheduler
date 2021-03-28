@@ -7,7 +7,7 @@ Months = ['', 'Январь', 'Февраль', 'Март', 'Апрель', 'М�
 
 async def calendar_keyboard(m):
     now = datetime.datetime.now()
-    year = now.year + m//12
+    year = now.year + (now.month + m)//12
 
     if (now.month + m%12)%12 == 0:
         month = 12

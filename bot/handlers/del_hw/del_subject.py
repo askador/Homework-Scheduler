@@ -1,7 +1,7 @@
 from bot.loader import dp, bot
 from aiogram import types
 from aiogram.dispatcher import filters, FSMContext
-from bot.tests.tests_bot.states_test.states_test import DeleteHomework
+from bot.states import DeleteHomework
 from bot.keyboards import subjects_keyboard, subgroups_keyboard
 from bot.utils.methods import update_last, clear
 from .test import COMMANDS, TEST

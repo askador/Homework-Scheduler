@@ -1,6 +1,6 @@
 from bot.loader import dp, bot
 from aiogram.types import ChosenInlineResult
-from bot.tests.tests_bot.states_test.states_test import Inline
+from bot.states import Inline
 from aiogram.dispatcher import filters, FSMContext
 
 

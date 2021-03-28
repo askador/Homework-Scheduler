@@ -30,22 +30,21 @@ class Database:
 
         return self.client[self.database][collection].insert_one(document)
 
-    async def find(self, collection, filters=None, projection=None, limit=None):
+    async def find(self, collection, filters=None, projection=None):
         """
         Get documents
 
         :param str collection: collection name
         :param dict filters: filters
         :param dict projection: projection
-        :param int limit: limit
         :return list data: list of founded documents
         """
 
-        data = list(self.client[self.database][collection].find(filters, projection).limit(limit))
+        data = list(self.client[self.database][collection].find(filters, projection))
 
         return data
 
-    async def get_sorted(self, collection, filters=None, sort_by="_id", direction=None, limit=None):
+    async def get_sorted(self, collection, filters=None, sort_by="_id", direction=None):
         """
         Get sorted list of collection documents
 
@@ -53,12 +52,11 @@ class Database:
         :param dict filters: filters {"key": "value"}
         :param str sort_by: sort by key
         :param int direction: asc = 1; desc = -1
-        :param int limit: documents amount
         :return list sorted docs: list of sorted documents
         """
         sorted_docs = self.client[self.database][collection].find(filters).sort([(sort_by, direction)])
 
-        return sorted_docs.limit(limit)
+        return sorted_docs
 
     async def aggregate(self, collection, pipeline):
         """
@@ -81,7 +79,7 @@ class Database:
         :param dict filters: filters
         :param dict changes: changes
         """
-        return self.client[self.database][collection].update_many(filters, changes)
+        self.client[self.database][collection].update_many(filters, changes)
 
     async def delete(self, collection, filters=None):
         """

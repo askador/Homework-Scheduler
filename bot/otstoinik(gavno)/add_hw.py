@@ -5,7 +5,6 @@ from aiogram import types
 from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.keyboards import subjects_keyboard, calendar_keyboard
-from bot.tests.tests_bot.states_test.states_test import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime
 #from datetime import datetime, timedelta
 

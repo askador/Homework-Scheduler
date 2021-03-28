@@ -43,7 +43,6 @@ async def edit_hw(message):
     except Exception as e:
         arguments = None
 
-    print(arguments)
     text = "Выберите предмет или введите его:"
 
     if arguments is not None and len(arguments) >= 2:

@@ -37,3 +37,21 @@ async def settings_keyboard_terms():
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
     return markup
+
+
+async def settings_keyboard_moderators():
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton('Добавить модераторов', callback_data='add'))
+    markup.add(InlineKeyboardButton('Удалить модераторов', callback_data='remove'))
+    markup.add(InlineKeyboardButton('Назад', callback_data='back'))
+    markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
+    return markup
+
+
+async def settings_keyboard_appearance():
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton('Фото-дз', callback_data='photo-mode'))
+    markup.add(InlineKeyboardButton('Строгий вид', callback_data='simple-mode'))
+    markup.add(InlineKeyboardButton('Назад', callback_data='back'))
+    markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
+    return markup

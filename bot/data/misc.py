@@ -1,7 +1,7 @@
 import datetime
 
 chat_example = {
-    '_id': -1001424619068,
+    '_id': -100,
     'title': 'готовимся к тесту по ковид 2019',
     'admins': [534794338, 526497876],
     'subjects': ['apr', 'matan'],

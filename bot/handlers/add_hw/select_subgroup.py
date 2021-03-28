@@ -15,15 +15,11 @@ async def select_subgroup(message: types.Message, state: FSMContext):
     hw_subg = message.text
     await clear(state)
 
-    if hw_subg in TEST:
+    if hw_subg in TEST or hw_subg == 'any':
         await state.update_data(subgroup=hw_subg)
         await SetHomework.next()
-        await update_last(state, await message.reply("Введите название работы:"))
-        return
-    elif hw_subg == 'any':
-        await state.update_data(subgroup=hw_subg)
-        await SetHomework.next()
-        await update_last(state, await message.reply("Введите название работы:"))
+        markup = await subgroups_keyboard(TEST, 1)
+        await update_last(state, await message.reply("Выберите подгруппу:", reply_markup=markup))
         return
     else:
         async with state.proxy() as data:

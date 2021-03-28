@@ -67,6 +67,7 @@ async def calendar_prev_year(callback_query: types.CallbackQuery, state: FSMCont
 
 @dp.callback_query_handler(lambda c: len(c.data.split()) > 1, state=SetHomework.deadline)
 async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMContext):
+    print(callback_query.data)
     date = callback_query.data.split()
 
     if await check_callback_date(datetime.datetime.strptime(date[1], '%Y-%m-%d')):

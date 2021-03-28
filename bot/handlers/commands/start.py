@@ -1,42 +1,37 @@
-from bot.loader import dp, bot
+from bot.loader import dp
 from bot.scheduler import scheduler
-from aiogram import types
-from aiogram.dispatcher import filters
-from bot.tests.tests_bot.states_test.states_test import AddChat
-from bot.utils.methods import show_hw
-
+from aiogram.types import ChatType
+from aiogram.dispatcher.filters import ChatTypeFilter
+from bot.states import AddChat
+from bot.utils.methods import get_chat_admins
+from bot.types import Database
 
 CHAT_TYPES = [
-    types.ChatType.GROUP,
-    types.ChatType.SUPERGROUP
+    ChatType.GROUP,
+    ChatType.SUPERGROUP
 ]
 
 
-@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), commands=['start'], is_chat_admin=True)
-async def start(message):
+@dp.message_handler(ChatTypeFilter(CHAT_TYPES), commands=['start'], is_chat_admin=True, state="*")
+async def start(message, state):
+    chat_id = message.chat.id
+
+    db = Database()
+    already_exists = await db.find(collection="chat", filters={"_id": chat_id})
+
+    if already_exists:
+        return 0
+
+    chat_title = message.chat.title
+    chat_admins = await get_chat_admins(chat_id)
+
     await AddChat.subjects.set()
-    await message.reply("Привет, я Homework Scheduler! Сейчас начнется моя настройка!"
-                               "\n"
-                               "Предметы через запятую, быстро")
-
-
-@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), state=AddChat.subjects)
-async def process_subjects(message, state):
 
     async with state.proxy() as data:
-        data['subjects'] = message.text
+        data['chat_id'] = chat_id
+        data['chat_title'] = chat_title
+        data['chat_admins'] = chat_admins
 
-    await AddChat.next()
-    await message.reply("Теперь перечислите подгруппы, отправьте None если их нет")
 
-
-@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), state=AddChat.subgroups)
-async def process_subgroups(message, state):
-
-    async with state.proxy() as data:
-        data['subgroups'] = message.text
-
-    await state.finish()
-    scheduler.add_job(show_hw, 'cron', hour=15, minute=19, args={message})
-    await message.reply("Бот запущен с такими настройками:")
-
+    await message.answer("Привет, я Homework Scheduler! \nСейчас начнется моя настройка!\n"
+                         "Пожалуйста введите список ваших предметов через запятую")

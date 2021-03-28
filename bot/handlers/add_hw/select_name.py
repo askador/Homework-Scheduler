@@ -18,7 +18,7 @@ async def select_name(message: types.Message, state: FSMContext):
 
     await state.update_data(name=hw_name)
     await SetHomework.next()
-    await state.update_data(page=1)
+    await state.update_data(month=0)
 
     markup = await subgroups_keyboard(TEST, 1)
     await update_last(state, await message.reply("Выберите подгруппу:", reply_markup=markup))

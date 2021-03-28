@@ -1,2 +1,2 @@
-from .MongoDB import Database, Chat, Homework
+from .MongoDB import Database, Collections
 from .HomeworksList import HomeworksList

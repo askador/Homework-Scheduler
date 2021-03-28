@@ -1,4 +1,5 @@
 from bot.types.MongoDB.Database import Database
+from pprint import pprint
 
 
 class Homework:
@@ -23,18 +24,18 @@ class Homework:
         self.id = id
 
     @staticmethod
-    def _increment(id):
+    def _increment(_id):
         """
         Increment id
 
-        :param int id: last homework id
+        :param int _id: last homework id
         :return int id: incremented id
         """
 
-        if not isinstance(id, int):
+        if not isinstance(_id, int):
             return 1
 
-        return id + 1
+        return _id + 1
 
     async def create(self, collection, *, subject, subgroup, name, description, deadline, priority=0):
         """
@@ -53,7 +54,7 @@ class Homework:
             else - 0
         """
 
-        if not isinstance(id, int):
+        if not isinstance(self.id, int):
             return 0
 
         hw = {
@@ -67,9 +68,9 @@ class Homework:
         }
 
         db = Database()
-        return await db.update(collection,
-                               filters={"_id": self.chat_id},
-                               changes={"$push": {"homeworks": hw}})
+        await db.update(collection,
+                        filters={"_id": self.chat_id},
+                        changes={"$push": {"homeworks": hw}})
 
     async def update(self, collection, *,
                      subject=None,
@@ -94,7 +95,7 @@ class Homework:
             else - 0
         """
 
-        if not isinstance(id, int):
+        if not isinstance(self.id, int):
             return 0
 
         fields = {
