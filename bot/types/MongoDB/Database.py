@@ -30,18 +30,17 @@ class Database:
 
         return self.client[self.database][collection].insert_one(document)
 
-    async def find(self, collection, filters=None, projection=None, limit=None):
+    async def find(self, collection, filters=None, projection=None):
         """
         Get documents
 
         :param str collection: collection name
         :param dict filters: filters
         :param dict projection: projection
-        :param int limit: limit
         :return list data: list of founded documents
         """
 
-        data = list(self.client[self.database][collection].find(filters, projection).limit(limit))
+        data = list(self.client[self.database][collection].find(filters, projection))
 
         return data
 

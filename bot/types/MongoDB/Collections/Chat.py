@@ -1,7 +1,8 @@
 from typing import List, Dict
 
-from bot.types.MongoDB import Database
-from bot.types.MongoDB.Collections import Homework
+from bot.types.MongoDB.Database import Database
+from bot.types.MongoDB.Collections.Homework import Homework
+from datetime import time
 
 
 class Chat:
@@ -17,13 +18,27 @@ class Chat:
         "admins",
         "subjects",
         "subgroups",
+        "notification_time",
+        "emoji_on",
+        "photo_mode"
+        "can_pin",
         "homeworks",
     ]
 
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
-    async def add_chat(self, *, chat_id, title, admins, subjects=None, subgroups=None, homeworks=None):
+    async def add_chat(self, *,
+                       chat_id,
+                       title,
+                       admins,
+                       subjects=[],
+                       subgroups=[],
+                       notification_time=time(hour=12, minute=0),
+                       emoji_on=True,
+                       photo_mode=True,
+                       can_pin=True,
+                       homeworks=None):
         """
         Add new chat
 
@@ -31,25 +46,44 @@ class Chat:
         :param str title: chat title
         :param list admins: list of chat admins
         :param list subjects: list of subjects
-        :param dict subgroups: chat subgroups
-        :param dict homeworks: homeworks
+        :param list subgroups: subgroups
+        :param datetime.time notification_time: do homework notification
+        :param bool emoji_on: can use emoji
+        :param bool photo_mode: show homework as a photo
+        :param bool can_pin: pin homeworks to do at notification time
+        :param list homeworks: homeworks
 
         :return changes
         """
 
+        if homeworks is None:
+            homeworks = []
         chat = {
             "_id": chat_id,
             "title": title,
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notification_time": notification_time,
+            "emoji_on": emoji_on,
+            "photo_mode": photo_mode,
+            "can_pin": can_pin,
             "homeworks": homeworks
         }
 
         db = Database()
         return await db.insert(self.__collection_name__, chat)
 
-    async def update_chat(self, *, title, admins=None, subjects=None, subgroups=None):
+    async def update_chat(self, *,
+                          title,
+                          admins=None,
+                          subjects=None,
+                          subgroups=None,
+                          notification_time=None,
+                          emoji_on=None,
+                          photo_mode=None,
+                          can_pin=None,
+                          ):
         """
         Update chat info
 
@@ -57,7 +91,10 @@ class Chat:
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
-
+        :param datetime.time notification_time: do homework notification
+        :param bool emoji_on:
+        :param bool photo_mode:
+        :param bool can_pin:
         :return changes
         """
 
@@ -66,6 +103,10 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notification_time": notification_time,
+            "emoji_on": emoji_on,
+            "photo_mode": photo_mode,
+            "can_pin": can_pin,
         }
 
         db = Database()
@@ -185,3 +226,10 @@ class Chat:
         """
         hw = Homework(chat_id=self.chat_id, id=id)
         return await hw.delete(self.__collection_name__)
+
+    async def get_field_value(self, field):
+        db = Database()
+
+        return await db.find(collection=self.__collection_name__,
+                             filters={"_id": self.chat_id},
+                             projection={"_id": 0, field: 1})
