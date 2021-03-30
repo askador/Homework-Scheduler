@@ -1,43 +1,76 @@
 import os
 from aiogram.types import InputMediaPhoto
-from aiogram.utils.exceptions import MessageNotModified
+from aiogram.utils.exceptions import MessageNotModified, BadRequest
+
 from pprint import pprint
 
 from bot.loader import dp, bot
 from bot.states.get_public_hw import ShowHw
 from bot.keyboards.show_homework.show_homework import homework_kb_both
 from bot.types.HomeworksList import HomeworksList
-from bot.utils.methods.get_files_pathes import get_files_pathes
+from bot.utils.methods.get_files_paths import get_files_paths
 
 
 @dp.callback_query_handler(lambda call: call.data == 'next_week')
 async def next_week(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id
+    show_hw_mode = ''
     async with state.proxy() as data:
+        data['week_page'] += 1
+        show_hw_mode = data['show_hw_mode']
+
+    hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
+    await hws_list.set_fields()
+
+    html_path, photo_path = get_files_paths(chat_id)
+
+    if show_hw_mode == "photo":
+        hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+
         try:
-            if data['week_page']:
-                pass
-        except KeyError:
-            data['week_page'] = 0
-        else:
-            data['week_page'] += 1
-
-        html_path, photo_path = get_files_pathes(chat_id)
-
-        hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
-        await hws_list.set_fields()
-
-        hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
-
-        await call.answer(cache_time=0)
-        try:
-            await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
+            await bot.edit_message_media(media=InputMediaPhoto(hw_data),
                                          chat_id=chat_id,
                                          message_id=message_id,
                                          reply_markup=homework_kb_both)
         except MessageNotModified:
             pass
+        except BadRequest:
+            await bot.delete_message(chat_id=chat_id,
+                                     message_id=message_id)
 
-    os.remove(html_path)
-    os.remove(photo_path)
+            hw_data = await hws_list.generate_text()
+
+            await call.message.answer(text=hw_data,
+                                      reply_markup=homework_kb_both)
+
+            async with state.proxy() as data:
+                data['show_hw_mode'] = "text"
+
+        os.remove(html_path)
+        os.remove(photo_path)
+    else:
+        hw_data = await hws_list.generate_text()
+
+        try:
+            await bot.edit_message_text(text=hw_data,
+                                        chat_id=chat_id,
+                                        message_id=message_id,
+                                        reply_markup=homework_kb_both)
+        except MessageNotModified:
+            pass
+        except BadRequest:
+            await bot.delete_message(chat_id=chat_id,
+                                     message_id=message_id)
+
+            hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+            await call.message.answer_photo(hw_data, reply_markup=homework_kb_both)
+
+            async with state.proxy() as data:
+                data['show_hw_mode'] = "photo"
+
+            os.remove(html_path)
+            os.remove(photo_path)
+
+    await call.answer(cache_time=0)
+

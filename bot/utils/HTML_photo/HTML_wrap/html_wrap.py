@@ -5,7 +5,7 @@ def top_block():
     <html lang="ru">
         <head>
           <title>img</title>
-            <link rel="stylesheet" type="text/css" href="../html_wrap/main.css">
+            <link rel="stylesheet" type="text/css" href="../HTML_wrap/main.css">
         </head>
         <body>
            <div class="wrapper">

@@ -1,47 +1,78 @@
 import os
 from aiogram.types import InputMediaPhoto
-from aiogram.utils.exceptions import MessageNotModified
+from aiogram.utils.exceptions import MessageNotModified, BadRequest
 
 from bot.loader import dp, bot
 from bot.keyboards.show_homework.show_homework import homework_kb_next_week, homework_kb_both
 from bot.states.get_public_hw import ShowHw
 from bot.types.HomeworksList import HomeworksList
-from bot.utils.methods.get_files_pathes import get_files_pathes
+from bot.utils.methods.get_files_paths import get_files_paths
 
 
 @dp.callback_query_handler(lambda call: call.data == 'prev_week')
 async def prev_week(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id
-
+    show_hw_mode = ''
     kb = homework_kb_both
     async with state.proxy() as data:
-        try:
-            if data['week_page']:
-                pass
-        except KeyError:
-            data['week_page'] = 0
-        else:
-            data['week_page'] -= 1
+        data['week_page'] -= 1
+        show_hw_mode = data['show_hw_mode']
 
-        if data['week_page'] == 0:
+        if data['week_page'] <= 0:
             kb = homework_kb_next_week
 
-        hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
-        await hws_list.set_fields()
+    hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
+    await hws_list.set_fields()
 
-        html_path, photo_path = get_files_pathes(chat_id)
+    html_path, photo_path = get_files_paths(chat_id)
 
-        hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+    if show_hw_mode == "photo":
+        hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
 
-        await call.answer(cache_time=0)
         try:
-            await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
+            await bot.edit_message_media(media=InputMediaPhoto(hw_data),
                                          chat_id=chat_id,
                                          message_id=message_id,
                                          reply_markup=kb)
         except MessageNotModified:
             pass
+        except BadRequest:
+            await bot.delete_message(chat_id=chat_id,
+                                     message_id=message_id)
 
-    os.remove(html_path)
-    os.remove(photo_path)
+            hw_data = await hws_list.generate_text()
+
+            await call.message.answer(text=hw_data,
+                                      reply_markup=homework_kb_both)
+
+            async with state.proxy() as data:
+                data['show_hw_mode'] = "text"
+
+        os.remove(html_path)
+        os.remove(photo_path)
+    else:
+        hw_data = await hws_list.generate_text()
+
+        try:
+            await bot.edit_message_text(text=hw_data,
+                                        chat_id=chat_id,
+                                        message_id=message_id,
+                                        reply_markup=kb)
+        except MessageNotModified:
+            pass
+        except BadRequest:
+            await bot.delete_message(chat_id=chat_id,
+                                     message_id=message_id)
+
+            hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+            await call.message.answer_photo(hw_data, reply_markup=homework_kb_both)
+
+            async with state.proxy() as data:
+                data['show_hw_mode'] = "photo"
+
+            os.remove(html_path)
+            os.remove(photo_path)
+
+    await call.answer(cache_time=0)
+
