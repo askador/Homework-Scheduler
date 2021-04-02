@@ -4,7 +4,7 @@ from bot.data import config
 
 
 bot = Bot(
-    token=config.test_bot_token,
+    token=config.token,
     parse_mode=types.ParseMode.HTML,
 )
 

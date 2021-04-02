@@ -13,7 +13,7 @@ TEST = [
 async def inline_del_hw(inline_query: InlineQuery, state: FSMContext):
     await state.finish()
     args = inline_query.query.split()
-    print(args)
+    # print(args)
 
     hw = 'kek'
 

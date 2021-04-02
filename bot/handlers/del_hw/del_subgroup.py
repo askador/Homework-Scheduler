@@ -4,23 +4,29 @@ from aiogram.dispatcher import filters, FSMContext
 from bot.states import DeleteHomework
 from bot.keyboards import subjects_keyboard, subgroups_keyboard
 from bot.utils.methods import update_last, clear
-from .test import COMMANDS, TEST
+from .test import COMMANDS
+from bot.types.MongoDB.Collections import Chat
+
+SUBGROUPS = []
 
 
 @dp.message_handler(state=DeleteHomework.subgroup)
 async def delete_subgroup(message: types.Message, state: FSMContext):
+    global SUBGROUPS
+    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
+
     await clear(state)
     text = ''
     markup = None
     subg = message.text
 
-    if subg in TEST:
+    if subg in SUBGROUPS:
         await state.update_data(subgroup=subg)
         text = 'Удаление работы'
         await state.finish()
     else:
         text = 'Подгруппа введена неверно!\nВыберите подгруппу или введите её:'
-        markup = await subjects_keyboard(TEST, 1)
+        markup = await subjects_keyboard(SUBGROUPS, 1)
 
     await update_last(state, await message.reply(text, reply_markup=markup))
 
@@ -32,7 +38,7 @@ async def callback_next_subgroup(callback_query: types.CallbackQuery, state: FSM
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
-    markup = await subgroups_keyboard(TEST, page)
+    markup = await subgroups_keyboard(SUBGROUPS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 
@@ -43,7 +49,7 @@ async def callback_back_subgroup(callback_query: types.CallbackQuery, state: FSM
     async with state.proxy() as data:
         data['page'] = data['page']-1
         page = data['page']
-    markup = await subgroups_keyboard(TEST, page)
+    markup = await subgroups_keyboard(SUBGROUPS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 

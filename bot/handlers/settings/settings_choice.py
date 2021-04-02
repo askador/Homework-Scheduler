@@ -8,6 +8,7 @@ from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from .test import COMMANDS, CHAT_TYPES
+from bot.types.MongoDB.Collections import Chat
 
 
 @dp.callback_query_handler(state=Settings.choice)
@@ -27,7 +28,10 @@ async def callback_select_setting(callback_query: types.CallbackQuery, state: FS
         markup = await settings_keyboard_subgroups()
     elif callback_query.data == '2':
         await Settings.notifications.set()
-        markup = await settings_keyboard_notifications()
+        chat = Chat(callback_query.message.chat.id)
+        pin = await chat.get_field_value("can_pin")
+        pin = pin[0]["can_pin"]
+        markup = await settings_keyboard_notifications(pin)
     elif callback_query.data == '3':
         await Settings.terms.set()
         markup = await settings_keyboard_terms()

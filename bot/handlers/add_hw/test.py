@@ -1,3 +1,5 @@
+from bot.types.MongoDB.Collections import Chat
+
 ALIAS = [
     "добавить дз"
 ]
@@ -5,20 +7,4 @@ ALIAS = [
 COMMANDS = [
     "add_hw",
     "add_homework"
-]
-
-TEST = [
-    '1',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    '11',
-    '12',
-    '13'
 ]

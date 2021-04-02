@@ -6,24 +6,29 @@ from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard
 from bot.states import GetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 import datetime
-from .test import TEST, COMMANDS, ALIAS
+from .test import COMMANDS, ALIAS
+from bot.types.MongoDB.Collections import Chat
+
+SUBGROUPS = []
 
 
 @dp.message_handler(state=GetHomework.subgroup)
 async def edit_subgroup(message, state: FSMContext):
+    global SUBGROUPS
+    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
     hw_subg = message.text
 
     await clear(state)
 
     markup = None
-    if hw_subg in TEST:
+    if hw_subg in SUBGROUPS:
         await state.update_data(subgroup=hw_subg)
         await GetHomework.next()
         markup = await edit_hw_keyboard()
         text = "Выберите что вы хотите отредактировать:"
     else:
         text = "Данные введены неверно!\nВыберите подгруппу или введите её:"
-        markup = await subgroups_keyboard(TEST, 1)
+        markup = await subgroups_keyboard(SUBGROUPS, 1)
     await update_last(state, await message.reply(text, reply_markup=markup))
 
 
@@ -34,7 +39,7 @@ async def callback_edit_subgroup(callback_query: types.CallbackQuery, state: FSM
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
-    markup = await subgroups_keyboard(TEST, page)
+    markup = await subgroups_keyboard(SUBGROUPS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 
@@ -45,7 +50,7 @@ async def callback_edit_subgroup(callback_query: types.CallbackQuery, state: FSM
     async with state.proxy() as data:
         data['page'] = data['page'] - 1
         page = data['page']
-    markup = await subgroups_keyboard(TEST, page)
+    markup = await subgroups_keyboard(SUBGROUPS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 

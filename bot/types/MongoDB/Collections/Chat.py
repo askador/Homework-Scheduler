@@ -17,13 +17,23 @@ class Chat:
         "admins",
         "subjects",
         "subgroups",
+        "notification_time",
+        "emoji_on",
+        "photo_modo"
+        "pin",
         "homeworks",
     ]
 
     def __init__(self, chat_id):
         self.chat_id = chat_id
 
-    async def add(self, *, title, admins, subjects=None, subgroups=None, homeworks=None):
+    async def add(self, *,
+                  title,
+                  admins,
+                  subjects=None,
+                  subgroups=None,
+                  notification_time=None,
+                  homeworks=None):
         """
         Add new chat
 
@@ -179,6 +189,24 @@ class Chat:
 
         return data
 
+    async def get_subjects(self):
+        """
+        Get list of subjects in this chat
+        """
+
+        db = Database()
+        data = await db.find(self.__collection_name__, projection={"_id": 0, "subjects": 1})
+        return data[0]["subjects"]
+
+    async def get_subgroups(self):
+        """
+        Get list of subgroups in this chat
+        """
+
+        db = Database()
+        data = await db.find(self.__collection_name__, projection={"_id": 0, "subgroups": 1})
+        return data[0]["subgroups"]
+
     async def delete_hw(self, _id):
         """
         Delete homework
@@ -189,3 +217,17 @@ class Chat:
         """
         hw = Homework(chat_id=self.chat_id, id=_id)
         return await hw.delete(self.__collection_name__)
+
+    async def get_field_value(self, field):
+        db = Database()
+
+        return await db.find(collection=self.__collection_name__,
+                             filters={"_id": self.chat_id},
+                             projection={"_id": 0, field: 1})
+
+    async def set_field_value(self, field, value):
+        db = Database()
+
+        return await db.update(collection=self.__collection_name__,
+                             filters={"_id": self.chat_id},
+                             changes={"$set": {field: value}})

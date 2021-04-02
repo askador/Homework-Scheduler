@@ -25,7 +25,7 @@ async def subgroups_keyboard(subjects, page):
     else:
         async for sub in asrange((5 * (page - 1)), (5 * (page))):
             markup.add(InlineKeyboardButton(subjects[sub], callback_data=subjects[sub]))
-        markup.add(InlineKeyboardButton('Предыдущая страница', callback_data='back'))
-        markup.add(InlineKeyboardButton('Следующая страница', callback_data='next'))
+        markup.add(InlineKeyboardButton('⬅️ Предыдущая страница', callback_data='back'))
+        markup.add(InlineKeyboardButton('Следующая страница  ➡️', callback_data='next'))
 
     return markup

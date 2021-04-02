@@ -34,13 +34,13 @@ async def calendar_keyboard(m):
 
     markup.row()
     if m > 0:
-        markup.insert(InlineKeyboardButton('<<< Предыдущий месяц', callback_data='prev_month'))
-    markup.insert(InlineKeyboardButton('Следующий месяц >>>', callback_data='next_month'))
+        markup.insert(InlineKeyboardButton('⬅️ Предыдущий месяц', callback_data='prev_month'))
+    markup.insert(InlineKeyboardButton('Следующий месяц  ➡️', callback_data='next_month'))
 
     markup.row()
     if m//12 > 0:
-        markup.insert(InlineKeyboardButton('<<< Предыдущий год', callback_data='prev_year'))
-    markup.insert(InlineKeyboardButton('Следующий год >>>', callback_data='next_year'))
+        markup.insert(InlineKeyboardButton('⬅️ Предыдущий год', callback_data='prev_year'))
+    markup.insert(InlineKeyboardButton('Следующий год  ➡️', callback_data='next_year'))
 
     #print(markup)
     return markup

@@ -2,7 +2,7 @@ from bot.loader import dp, bot
 from bot.states.get_public_hw import ShowHw
 
 
-@dp.callback_query_handler(lambda call: call.data == 'close')
+@dp.callback_query_handler(lambda call: call.data == 'close', state="*")
 async def close_hw(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id

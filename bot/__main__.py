@@ -4,7 +4,7 @@ from aiogram import Dispatcher
 from aiogram.utils import executor
 from bot.loader import dp
 
-from bot.handlers import commands
+from bot.handlers import commands, callback_query
 
 
 async def on_startup(dp: Dispatcher):

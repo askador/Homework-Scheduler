@@ -30,7 +30,8 @@ class HomeworksList:
         """
         week_day = datetime.now().isocalendar()[2]
         start_date = datetime.now() - timedelta(days=week_day)
-        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0) for i in range(1 + 7 * self.page, 8 + 7 * self.page)]
+        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
+                 for i in range(1 + 7 * self.page, 8 + 7 * self.page)]
         return dates
 
     async def set_fields(self):
@@ -42,7 +43,7 @@ class HomeworksList:
         filters = [
             {"$or": [
                 {
-                    "homeworks.priority": 1
+                    "homeworks.priority": "important"
                 },
                 {
                     "$and": [
@@ -83,7 +84,7 @@ class HomeworksList:
             """
             Add both filtered by deadline common hw and important hw
             """
-            if hw["_id"]['priority'] != 0:
+            if hw["_id"]['priority'] != 'common':
                 filtered_hws['important'].append(hw["_id"])
             else:
                 filtered_hws['common'].append(hw["_id"])
@@ -205,7 +206,7 @@ class HomeworksList:
             i = 1
             for hw in hws:
                 pin_sign = ''
-                if hw['priority'] != 0:
+                if hw['priority'] != "common":
                     pin_sign = "📌"
                 text += f"     {pin_sign}📝 <b>{i}</b>\n" \
                         f"     предмет: {hw['subject']}\n" \
@@ -250,7 +251,7 @@ class HomeworksList:
         # Generate important elements
         text += await self._generate_text_body(important_hws)
         # Generate important elements
-        text += await  self._generate_text_body(common_hws)
+        text += await self._generate_text_body(common_hws)
 
         return text
 
@@ -276,4 +277,3 @@ class HomeworksList:
         os.remove(html_file)
         os.remove(photo_file)
         return photo
-

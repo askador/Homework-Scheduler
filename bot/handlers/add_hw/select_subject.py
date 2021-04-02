@@ -7,15 +7,21 @@ from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboa
 from bot.states import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 # from datetime import datetime, timedelta
-from .test import TEST, ALIAS, COMMANDS
+from .test import ALIAS, COMMANDS
+from bot.types.MongoDB.Collections import Chat
+
+SUBJECTS = []
 
 
 @dp.message_handler(state=SetHomework.subject)
 async def select_subject(message: types.Message, state: FSMContext):
     hw_subj = message.text
+
+    global SUBJECTS
+    SUBJECTS = await Chat(message.chat.id).get_subjects()
     await clear(state)
 
-    if hw_subj in TEST:
+    if hw_subj in SUBJECTS:
         await state.update_data(subject=hw_subj)
         await SetHomework.next()
         await update_last(await message.reply("Введите название работы:"))
@@ -23,7 +29,7 @@ async def select_subject(message: types.Message, state: FSMContext):
     else:
         async with state.proxy() as data:
             page = data['page']
-        markup = await subjects_keyboard(TEST, page)
+        markup = await subjects_keyboard(SUBJECTS, page)
         await update_last(state, await message.reply("Данные введены неверно!\nВыберите предмет или введите его:",reply_markup=markup))
 
 
@@ -34,7 +40,7 @@ async def callback_next_subject(callback_query: types.CallbackQuery, state: FSMC
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
-    markup = await subjects_keyboard(TEST, page)
+    markup = await subjects_keyboard(SUBJECTS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 
@@ -45,7 +51,7 @@ async def callback_back_subject(callback_query: types.CallbackQuery, state: FSMC
     async with state.proxy() as data:
         data['page'] = data['page']-1
         page = data['page']
-    markup = await subjects_keyboard(TEST, page)
+    markup = await subjects_keyboard(SUBJECTS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 

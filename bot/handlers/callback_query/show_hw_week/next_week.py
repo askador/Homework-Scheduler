@@ -10,7 +10,7 @@ from bot.types.HomeworksList import HomeworksList
 from bot.utils.methods.get_files_paths import get_files_paths
 
 
-@dp.callback_query_handler(lambda call: call.data == 'next_week')
+@dp.callback_query_handler(lambda call: call.data == 'next_week', state=ShowHw.week)
 async def next_week(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id
@@ -23,21 +23,26 @@ async def next_week(call, state):
         else:
             data['week_page'] += 1
 
-        html_path, photo_path = get_files_pathes(chat_id)
+        # html_path, photo_path = get_files_paths(chat_id)
 
         hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
         await hws_list.set_fields()
 
-        hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+        hw_data = await hws_list.generate_text()
+        # hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
 
         await call.answer(cache_time=0)
-        try:
-            await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
-                                         chat_id=chat_id,
-                                         message_id=message_id,
-                                         reply_markup=homework_kb_both)
-        except MessageNotModified:
-            pass
+        await bot.edit_message_text(text=hw_data,
+                                    chat_id=chat_id,
+                                    message_id=message_id,
+                                    reply_markup=homework_kb_both)
+        # try:
+        #     await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
+        #                                  chat_id=chat_id,
+        #                                  message_id=message_id,
+        #                                  reply_markup=homework_kb_both)
+        # except MessageNotModified:
+        #     pass
 
-    os.remove(html_path)
-    os.remove(photo_path)
+    # os.remove(html_path)
+    # os.remove(photo_path)

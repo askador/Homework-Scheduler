@@ -19,7 +19,7 @@ ANSWERS = {
 @dp.inline_handler(filters.Text(startswith=['edit_hw']), state=Inline.edit)
 async def inline_edit_hw(inline_query: InlineQuery, state: FSMContext):
     args = inline_query.query.split()
-    print(args)
+    # print(args)
     await state.finish()
 
     n = 'ok'

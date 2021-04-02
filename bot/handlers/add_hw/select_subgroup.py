@@ -7,24 +7,30 @@ from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboa
 from bot.states import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 # from datetime import datetime, timedelta
-from .test import TEST, ALIAS, COMMANDS
+from .test import ALIAS, COMMANDS
+from bot.types.MongoDB.Collections import Chat
+
+SUBGROUPS = []
 
 
 @dp.message_handler(state=SetHomework.subgroup)
 async def select_subgroup(message: types.Message, state: FSMContext):
     hw_subg = message.text
+
+    global SUBGROUPS
+    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
     await clear(state)
 
-    if hw_subg in TEST or hw_subg == 'any':
+    if hw_subg in SUBGROUPS or hw_subg == 'any':
         await state.update_data(subgroup=hw_subg)
         await SetHomework.next()
-        markup = await subgroups_keyboard(TEST, 1)
+        markup = await subgroups_keyboard(SUBGROUPS, 1)
         await update_last(state, await message.reply("Выберите подгруппу:", reply_markup=markup))
         return
     else:
         async with state.proxy() as data:
             page = data['page']
-        markup = await subgroups_keyboard(TEST, page)
+        markup = await subgroups_keyboard(SUBGROUPS, page)
         await update_last(state, await message.reply("Данные введены неверно!\nВыберите подгруппу или введите её:", reply_markup=markup))
 
 
@@ -35,7 +41,7 @@ async def callback_next_subgroup(callback_query: types.CallbackQuery, state: FSM
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
-    markup = await subgroups_keyboard(TEST, page)
+    markup = await subgroups_keyboard(SUBGROUPS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 
@@ -46,7 +52,7 @@ async def callback_back_subgroup(callback_query: types.CallbackQuery, state: FSM
     async with state.proxy() as data:
         data['page'] = data['page']-1
         page = data['page']
-    markup = await subgroups_keyboard(TEST, page)
+    markup = await subgroups_keyboard(SUBGROUPS, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 
 

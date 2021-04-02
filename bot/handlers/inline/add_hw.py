@@ -16,7 +16,7 @@ TEST = [
 async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
     # state = dp.get_current().current_state()
     await state.finish()
-    print(inline_query)
+    # print(inline_query)
 
     args = inline_query.query.split()
 

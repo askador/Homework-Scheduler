@@ -25,7 +25,7 @@ async def edit_parse_hw(hw_string, to_dict):
         args = args[args.find(':')+1:]
         if args.find(' ') != -1:
             HW['deadline'] = args[:args.find(' ')+1]
-        print(args)
+        # print(args)
         if not (await check_date([args])):
             return 'date_error'
         args = hw_string
@@ -35,7 +35,7 @@ async def edit_parse_hw(hw_string, to_dict):
         args = args[args.find(':')+1:]
         if args.find(' ') != -1:
             HW['description'] = args[:args.find(' ') + 1]
-        print(args)
+        # print(args)
         args = hw_string
 
     if args.find('приоритет:') != -1:
@@ -43,7 +43,7 @@ async def edit_parse_hw(hw_string, to_dict):
         args = args[args.find(':')+1:]
         if args.find(' ') != -1:
             HW['priority'] = args[:args.find(' ') + 1]
-        print(args)
+        # print(args)
         if not (args in PRIORITIES):
             return 'prior_error'
 

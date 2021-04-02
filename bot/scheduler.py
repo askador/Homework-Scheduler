@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.mongodb import MongoDBJobStore
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
+from bot.utils.methods.scheduler.scheduled_hw import show_daily_hw
 
 from bot.data import config
 
@@ -27,6 +28,7 @@ def show_hw():
 
 
 # print('scheduling')
-#scheduler.add_job(show_hw, 'cron', hour=14, minute=13)
-#scheduler.add_job(show_hw, 'interval', seconds=5)
-# scheduler.start()
+for time in range(24):
+    scheduler.add_job(show_daily_hw, 'cron', args=[time], hour=time)
+#scheduler.add_job(show_daily_hw, 'interval', args=[12],  seconds=5)
+scheduler.start()

@@ -9,7 +9,7 @@ from bot.types.HomeworksList import HomeworksList
 from bot.utils.methods.get_files_paths import get_files_paths
 
 
-@dp.callback_query_handler(lambda call: call.data == 'prev_week')
+@dp.callback_query_handler(lambda call: call.data == 'prev_week', state=ShowHw.week)
 async def prev_week(call, state):
     message_id = call.message.message_id
     chat_id = call.message.chat.id
@@ -30,18 +30,23 @@ async def prev_week(call, state):
         hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
         await hws_list.set_fields()
 
-        html_path, photo_path = get_files_pathes(chat_id)
+        # html_path, photo_path = get_files_paths(chat_id)
 
-        hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+        # hw_photo = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+        hw_data = await hws_list.generate_text()
 
         await call.answer(cache_time=0)
-        try:
-            await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
-                                         chat_id=chat_id,
-                                         message_id=message_id,
-                                         reply_markup=kb)
-        except MessageNotModified:
-            pass
+        await bot.edit_message_text(text=hw_data,
+                                    chat_id=chat_id,
+                                    message_id=message_id,
+                                    reply_markup=kb)
+        # try:
+        #     await bot.edit_message_media(media=InputMediaPhoto(hw_photo),
+        #                                  chat_id=chat_id,
+        #                                  message_id=message_id,
+        #                                  reply_markup=kb)
+        # except MessageNotModified:
+        #     pass
 
-    os.remove(html_path)
-    os.remove(photo_path)
+    # os.remove(html_path)
+    # os.remove(photo_path)
