@@ -4,7 +4,7 @@ from bot.loader import dp, bot
 from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard, subgroups_keyboard
+from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard, subgroups_keyboard, list_keyboard
 from bot.states import GetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 import datetime
@@ -21,9 +21,13 @@ async def edit_hw(message):
 
     chat = Chat(chat_id)
 
-    homeworks = await chat.get_homeworks(filters=[{}], full_info=False)
+    # homeworks = await chat.get_homeworks(filters=[{}], full_info=False)
 
-    kb = await generate_hws_kb(homeworks)
+    await GetHomework.homework.set()
+    state = dp.get_current().current_state()
+    await state.update_data(page=1)
+
+    kb = await list_keyboard(message.chat.id, 'homework', 1)
     await message.answer(text="Выберите задание, которое Вы хотите редактировать",
                          reply_markup=kb)
 

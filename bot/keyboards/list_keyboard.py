@@ -3,23 +3,34 @@ from bot.types.MongoDB.Collections import Chat
 from bot.utils.methods.generate_hws_kb import generate_hws_kb
 
 
-async def list_keyboard(chat_id, filter, page):
+async def list_keyboard(chat_id, filters, page):
+    """
+
+    :param int chat_id: chat id
+    :param str filters:
+    :param str filters: either subject or subgroup or homeworks
+    :param int page: keyboard page
+    """
 
     async def asrange(a, b):
         for i in range(a, b):
-            yield (i)
+            yield i
 
-    list_height = 3
+    list_height = 7
 
     chat = Chat(chat_id)
 
     array = []
-    if filter == 'subject':
+    data = []
+    if filters == 'subject':
         array = await chat.get_field_value("subjects")
-    elif filter == 'subgroup':
+        data = array
+    elif filters == 'subgroup':
         array.append("Все")
+        data.append("any")
         array += await chat.get_field_value("subgroups")
-    elif filter == 'homeworks':
+        data += await chat.get_field_value("subgroups")
+    elif filters == 'homework':
         homeworks = await chat.get_homeworks(filters=[{}], full_info=False)
 
         index = 1
@@ -34,6 +45,7 @@ async def list_keyboard(chat_id, filter, page):
             button_text += f"{hw['name']}"
 
             array.append(button_text)
+            data.append('{}'.format(index))
 
             index += 1
 
@@ -41,18 +53,18 @@ async def list_keyboard(chat_id, filter, page):
 
     if len(array) <= list_height:
         async for elem in asrange(0, len(array)):
-            markup.add(InlineKeyboardButton(array[elem], callback_data=array[elem]))
+            markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
     elif page == 1:
         async for elem in asrange(0, (list_height-1)):
-            markup.add(InlineKeyboardButton(array[elem], callback_data=array[elem]))
+            markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
         markup.add(InlineKeyboardButton('Следующая страница', callback_data='next'))
     elif len(array) <= (2*(list_height-1)) + ((list_height-2) * (page - 2)):
         async for elem in asrange(((list_height-2) * (page - 2) + (list_height-1)), len(array)):
-            markup.add(InlineKeyboardButton(array[elem], callback_data=array[elem]))
+            markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
         markup.add(InlineKeyboardButton('Предыдущая страница', callback_data='back'))
     else:
         async for elem in asrange(((list_height-2)*(page-2)+(list_height-1)), ((list_height-2)*(page-1)+(list_height-1))):
-            markup.add(InlineKeyboardButton(array[elem], callback_data=array[elem]))
+            markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
         markup.add(InlineKeyboardButton('⬅️ Предыдущая страница', callback_data='back'))
         markup.add(InlineKeyboardButton('Следующая страница  ➡️', callback_data='next'))
 

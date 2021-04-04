@@ -18,6 +18,7 @@ class SetHomework(StatesGroup):
 
 
 class GetHomework(StatesGroup):
+    homework = State()
     subject = State()
     name = State()
     subgroup = State()
