@@ -1,5 +1,4 @@
 from pprint import pprint
-import os
 from datetime import datetime, timedelta
 from bot.utils.HTML_photo.HTML_wrap import top_block, bottom_block, TRElement, TDElement
 from bot.utils.HTML_photo.pyppeteer.pyppeteer import launch
@@ -30,8 +29,7 @@ class HomeworksList:
         """
         week_day = datetime.now().isocalendar()[2]
         start_date = datetime.now() - timedelta(days=week_day)
-        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0)
-                 for i in range(1 + 7 * self.page, 8 + 7 * self.page)]
+        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0) for i in range(1 + 7 * self.page, 8 + 7 * self.page)]
         return dates
 
     async def set_fields(self):
@@ -84,7 +82,7 @@ class HomeworksList:
             """
             Add both filtered by deadline common hw and important hw
             """
-            if hw["_id"]['priority'] != 'common':
+            if hw["_id"]['priority'] != "common":
                 filtered_hws['important'].append(hw["_id"])
             else:
                 filtered_hws['common'].append(hw["_id"])
@@ -140,7 +138,7 @@ class HomeworksList:
 
     async def _sort_hws(self, hws, is_important=False):
         """
-        Sorting homeworks
+        Sorting homeworks by date
         """
         sorted_hws = {}
         prefix = ''
@@ -149,7 +147,7 @@ class HomeworksList:
         if is_important:
             dates = []
             for hw in hws:
-                dates.append(hw["deadline"])
+                dates.append(hw["deadline"].replace(hour=0, minute=0, second=0, microsecond=0))
 
             dates = list(set(dates))
             dates.sort()
@@ -193,10 +191,23 @@ class HomeworksList:
         return body
 
     @staticmethod
+    async def _check_insert_into_common_week(important_list, common_list):
+
+        imp_list_copy = important_list.copy()
+        cmn_list_copy = common_list.copy()
+
+        for date in imp_list_copy.keys():
+            if date in cmn_list_copy.keys():
+                common_list[date] = common_list[date] + important_list[date]
+                del important_list[date]
+
+        return [important_list, common_list]
+
+    @staticmethod
     async def _generate_text_body(hws_list):
         importance = {
-            'important': 'важное',
-            'common': 'обычное'
+            "important": 'важное',
+            "common": 'обычное'
         }
 
         text = ""
@@ -248,6 +259,9 @@ class HomeworksList:
         important_hws = await self._sort_hws(self.hws['important'], True)
         common_hws = await self._sort_hws(self.hws['common'])
 
+        # check if pinned hw deadline is in the current week
+        important_hws, common_hws = await self._check_insert_into_common_week(important_hws, common_hws)
+
         # Generate important elements
         text += await self._generate_text_body(important_hws)
         # Generate important elements
@@ -274,6 +288,8 @@ class HomeworksList:
         await browser.close()
 
         photo = open(photo_file, 'rb')
-        os.remove(html_file)
-        os.remove(photo_file)
+        # os.remove(_html)
+        # os.remove(_photo)
         return photo
+
+        # hw_photo = await generate_png(html_file=html_file, output=photo_file)

@@ -1,2 +1,3 @@
-from .MongoDB import Database, Collections
+from .MongoDB import Database
+from .MongoDB import Collections
 from .HomeworksList import HomeworksList

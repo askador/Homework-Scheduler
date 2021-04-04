@@ -9,13 +9,10 @@ import datetime
 from .test import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
-SUBGROUPS = []
-
 
 @dp.message_handler(state=GetHomework.subgroup)
 async def edit_subgroup(message, state: FSMContext):
-    global SUBGROUPS
-    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
+    SUBGROUPS = await Chat(message.chat.id).get_field_value("subgroups")
     hw_subg = message.text
 
     await clear(state)
@@ -36,6 +33,7 @@ async def edit_subgroup(message, state: FSMContext):
 async def callback_edit_subgroup(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBGROUPS = await Chat(callback_query.message.chat.id).get_field_value("subgroups")
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
@@ -47,6 +45,7 @@ async def callback_edit_subgroup(callback_query: types.CallbackQuery, state: FSM
 async def callback_edit_subgroup(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBGROUPS = await Chat(callback_query.message.chat.id).get_field_value("subgroups")
     async with state.proxy() as data:
         data['page'] = data['page'] - 1
         page = data['page']

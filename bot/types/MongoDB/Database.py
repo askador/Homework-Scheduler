@@ -44,7 +44,7 @@ class Database:
 
         return data
 
-    async def get_sorted(self, collection, filters=None, sort_by="_id", direction=None):
+    async def get_sorted(self, collection, filters=None, sort_by="_id", direction=None, limit=None):
         """
         Get sorted list of collection documents
 
@@ -52,11 +52,12 @@ class Database:
         :param dict filters: filters {"key": "value"}
         :param str sort_by: sort by key
         :param int direction: asc = 1; desc = -1
+        :param int limit: documents amount
         :return list sorted docs: list of sorted documents
         """
         sorted_docs = self.client[self.database][collection].find(filters).sort([(sort_by, direction)])
 
-        return sorted_docs
+        return sorted_docs.limit(limit)
 
     async def aggregate(self, collection, pipeline):
         """
@@ -79,7 +80,7 @@ class Database:
         :param dict filters: filters
         :param dict changes: changes
         """
-        self.client[self.database][collection].update_many(filters, changes)
+        return self.client[self.database][collection].update_many(filters, changes)
 
     async def delete(self, collection, filters=None):
         """

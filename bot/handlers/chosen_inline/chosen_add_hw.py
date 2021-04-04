@@ -17,7 +17,7 @@ async def chosen_add_hw(chosen_inline_query: ChosenInlineResult, state: FSMConte
                            "Срок сдачи: {}\n"
                            "Описание: {}\n"
                            "Приоритет: {}".format(data['subj'], data['name'],
-                                                  data['subg'],
+                                                  data['subgroup'],
                                                   data['deadline'],
                                                   data['description'],
                                                   data['priority']))

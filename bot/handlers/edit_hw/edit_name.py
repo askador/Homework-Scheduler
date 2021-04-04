@@ -9,13 +9,10 @@ import datetime
 from .test import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
-SUBGROUPS = []
-
 
 @dp.message_handler(state=GetHomework.name)
 async def edit_name(message, state: FSMContext):
-    global SUBGROUPS
-    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
+    SUBGROUPS = await Chat(message.chat.id).get_field_value("subgroups")
     hw_name = message.text
 
     await clear(state)

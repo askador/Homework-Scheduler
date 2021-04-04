@@ -4,16 +4,12 @@ from aiogram.dispatcher import filters, FSMContext
 from bot.states import DeleteHomework
 from bot.keyboards import subjects_keyboard, subgroups_keyboard
 from bot.utils.methods import update_last, clear
-from .test import COMMANDS
 from bot.types.MongoDB.Collections import Chat
-
-SUBGROUPS = []
 
 
 @dp.message_handler(state=DeleteHomework.subgroup)
 async def delete_subgroup(message: types.Message, state: FSMContext):
-    global SUBGROUPS
-    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
+    SUBGROUPS = await Chat(message.chat.id).get_field_value("subgroups")
 
     await clear(state)
     text = ''
@@ -23,6 +19,10 @@ async def delete_subgroup(message: types.Message, state: FSMContext):
     if subg in SUBGROUPS:
         await state.update_data(subgroup=subg)
         text = 'Удаление работы'
+
+        # TODO implement database interaction
+        # hw.delete()
+
         await state.finish()
     else:
         text = 'Подгруппа введена неверно!\nВыберите подгруппу или введите её:'
@@ -35,6 +35,7 @@ async def delete_subgroup(message: types.Message, state: FSMContext):
 async def callback_next_subgroup(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBGROUPS = await Chat(callback_query.message.chat.id).get_field_value("subgroups")
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
@@ -46,6 +47,7 @@ async def callback_next_subgroup(callback_query: types.CallbackQuery, state: FSM
 async def callback_back_subgroup(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBGROUPS = await Chat(callback_query.message.chat.id).get_field_value("subgroups")
     async with state.proxy() as data:
         data['page'] = data['page']-1
         page = data['page']

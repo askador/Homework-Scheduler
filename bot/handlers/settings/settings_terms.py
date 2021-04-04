@@ -7,14 +7,16 @@ from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, se
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from .test import COMMANDS, CHAT_TYPES, ALIAS
 
 
 @dp.callback_query_handler(lambda c: c.data == 'select', state=Settings.terms)
 async def set_term(callback_query: types.CallbackQuery, state: FSMContext):
-    await clear(state)
+    # await clear(state)
     markup = await select_time_keyboard()
     markup.row(InlineKeyboardButton('Назад', callback_data='back'))
     markup.insert(InlineKeyboardButton('Завершить', callback_data='done'))
     await update_last(state,
-                      await bot.send_message(callback_query.message.chat.id, "Изменить время обновления", reply_markup=markup))
+                      await bot.edit_message_text("Изменить время обновления",
+                                                             callback_query.message.chat.id,
+                                                             callback_query.message.message_id,
+                                                             reply_markup=markup))

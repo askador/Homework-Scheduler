@@ -7,12 +7,11 @@ from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboa
 from bot.states import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 # from datetime import datetime, timedelta
-from .test import ALIAS, COMMANDS
 
 
 @dp.message_handler(state=SetHomework.deadline)
 async def select_deadline(message: types.Message, state: FSMContext):
-    await clear(state)
+    # await clear(state)
     hw_date = message.text.split()
 
     if await check_date(hw_date):
@@ -22,7 +21,7 @@ async def select_deadline(message: types.Message, state: FSMContext):
         text = "Введите описание работы:"
     else:
         text = "Данные введены неверно!\nВведите дату повторно:"
-    await update_last(state, await message.reply(text))
+    await update_last(state, await bot.edit_message_text(text, message.chat.id, message.message_id))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'next_month', state=SetHomework.deadline)
@@ -71,7 +70,7 @@ async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMCo
     date = callback_query.data.split()
 
     if await check_callback_date(datetime.datetime.strptime(date[1], '%Y-%m-%d')):
-        await clear(state)
+        # await clear(state)
 
         await state.update_data(deadline=datetime.datetime.strptime(date[1], '%Y-%m-%d'))
         await SetHomework.next()
@@ -79,18 +78,20 @@ async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMCo
         markup = InlineKeyboardMarkup()
         markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
         await state.update_data(noskip=0)
-        await update_last(state, await bot.send_message(callback_query.message.chat.id, "Введите время в "
-                                                                                        "формате HH:MM или нажмите "
-                                                                                        "дальше чтобы добавить с "
-                                                                                        "временем по умолчанию:",
-                                                        reply_markup=markup))
+        await update_last(state, await bot.edit_message_text("Введите время в "
+                                                            "формате HH:MM или нажмите "
+                                                            "дальше чтобы добавить с "
+                                                            "временем по умолчанию:",
+                                                            callback_query.message.chat.id,
+                                                            callback_query.message.message_id,
+                                                             reply_markup=markup))
     else:
         await bot.answer_callback_query(callback_query.id, text='Выбрана уже прошедшая дата')
 
 
 @dp.message_handler(state=SetHomework.deadline_precise)
 async def select_deadline_precise(message: types.Message, state: FSMContext):
-    await clear(state)
+    # await clear(state)
 
     time = message.text
     async with state.proxy() as data:
@@ -114,13 +115,14 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
         if noskip != 1:
             markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
 
-    await update_last(state, await message.reply(text, reply_markup=markup))
+    await update_last(state, await bot.edit_message_text(text, message.chat.id, message.message_id,
+                                                         reply_markup=markup))
 
 
 @dp.callback_query_handler(state=SetHomework.deadline_precise)
 async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
 
-    await clear(state)
+    # await clear(state)
 
     async with state.proxy() as data:
         date = data['deadline']
@@ -132,4 +134,5 @@ async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
     else:
         await state.update_data(noskip=1)
         text = "Данные введены неверно!\nВведите время повторно:"
-    await update_last(state, await bot.send_message(callback_query.message.chat.id, text))
+    await update_last(state, await bot.edit_message_text(text, callback_query.message.chat.id,
+                                                         callback_query.message.message_id))

@@ -2,6 +2,7 @@ from typing import List, Dict
 
 from bot.types.MongoDB.Database import Database
 from bot.types.MongoDB.Collections.Homework import Homework
+from datetime import time
 
 
 class Chat:
@@ -19,8 +20,9 @@ class Chat:
         "subgroups",
         "notification_time",
         "emoji_on",
-        "photo_modo"
-        "pin",
+        "photo_mode",
+        "can_pin",
+        "pin_message_id",
         "homeworks",
     ]
 
@@ -28,37 +30,65 @@ class Chat:
         self.chat_id = chat_id
 
     async def add(self, *,
+                  chat_id,
                   title,
                   admins,
-                  subjects=None,
-                  subgroups=None,
-                  notification_time=None,
+                  subjects=[],
+                  subgroups=[],
+                  notification_time=time(hour=12, minute=0),
+                  emoji_on=True,
+                  photo_mode=True,
+                  can_pin=True,
+                  pin_message_id=0,
                   homeworks=None):
         """
         Add new chat
 
+        :param int chat_id: chat id
         :param str title: chat title
         :param list admins: list of chat admins
         :param list subjects: list of subjects
-        :param dict subgroups: chat subgroups
-        :param dict homeworks: homeworks
+        :param list subgroups: subgroups
+        :param datetime.time notification_time: do homework notification
+        :param bool emoji_on: can use emoji
+        :param bool photo_mode: show homework as a photo
+        :param bool can_pin: pin homeworks to do at notification time
+        :param int pin_message_id: last pinned bot message
+        :param list homeworks: homeworks
 
         :return changes
         """
 
+        if homeworks is None:
+            homeworks = []
         chat = {
-            "_id": self.chat_id,
+            "_id": chat_id,
             "title": title,
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notification_time": notification_time,
+            "emoji_on": emoji_on,
+            "photo_mode": photo_mode,
+            "can_pin": can_pin,
+            "pin_message_id": pin_message_id,
             "homeworks": homeworks
         }
 
         db = Database()
         return await db.insert(self.__collection_name__, chat)
 
-    async def update(self, *, title, admins=None, subjects=None, subgroups=None):
+    async def update(self, *,
+                     title,
+                     admins=None,
+                     subjects=None,
+                     subgroups=None,
+                     notification_time=None,
+                     emoji_on=None,
+                     photo_mode=None,
+                     can_pin=None,
+                     pin_message_id=None,
+                     ):
         """
         Update chat info
 
@@ -66,6 +96,11 @@ class Chat:
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
+        :param datetime.time notification_time: do homework notification
+        :param bool emoji_on: can use emoji
+        :param bool photo_mode: show homework as a photo
+        :param bool can_pin: pin homeworks to do at notification time
+        :param int pin_message_id: last pinned bot message
 
         :return changes
         """
@@ -75,6 +110,11 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notification_time": notification_time,
+            "emoji_on": emoji_on,
+            "photo_mode": photo_mode,
+            "can_pin": can_pin,
+            "pin_message_id": pin_message_id,
         }
 
         db = Database()
@@ -82,29 +122,32 @@ class Chat:
         changes_log = []
 
         for field, val in fields.items():
-            if val:
-                changes_log.append(await db.update(self.__collection_name__,
-                                                   filters={"_id": self.chat_id},
-                                                   changes={"$set": {f"{field}": f"{val}"}}))
-
-        return changes_log
+            if val is not None:
+                if type(val) is bool:
+                    await db.update(self.__collection_name__,
+                                    filters={"_id": self.chat_id},
+                                    changes={"$set": {f"{field}": val}})
+                else:
+                    await db.update(self.__collection_name__,
+                                    filters={"_id": self.chat_id},
+                                    changes={"$set": {f"{field}": f"{val}"}})
 
     async def add_hw(self, *,
                      subject,
-                     subgroup=None,
                      name,
                      description,
                      deadline,
+                     subgroup=None,
                      priority=0
                      ):
         """
         Add homework
 
         :param str subject: subject
-        :param int subgroup: subgroup id
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
+        :param int subgroup: subgroup id
         :param int priority: work priority
 
         :return changes
@@ -119,13 +162,8 @@ class Chat:
             {"$group": {"_id": "$homeworks._id"}}
         ])
 
-        if last_id:
-            last_id = last_id[0]["_id"]
-        else:
-            last_id = 0
-
-        hw = Homework(chat_id=self.chat_id, id=last_id)
-        await hw.create(
+        hw = Homework(chat_id=self.chat_id, _id=last_id[0]["_id"])
+        return await hw.create(
             collection=self.__collection_name__,
             subject=subject,
             subgroup=subgroup,
@@ -156,7 +194,7 @@ class Chat:
         :return changes
         """
 
-        hw = Homework(chat_id=self.chat_id, id=_id)
+        hw = Homework(chat_id=self.chat_id, _id=_id)
         return await hw.update(
             collection=self.__collection_name__,
             subject=subject,
@@ -166,7 +204,7 @@ class Chat:
             deadline=deadline,
             priority=priority)
 
-    async def get_homeworks(self, _id=None, filters: List[Dict] = None, full_info=False):
+    async def get_homeworks(self, _id=None, filters: List[Dict] = None, full_info=True):
         """
         Get homeworks either by id or by list of dates or other filters
 
@@ -183,29 +221,11 @@ class Chat:
             filters = [{'homeworks._id': _id}]
         for _filter in filters:
             if full_info:
-                data = await hw.get_brief_info(self.__collection_name__, filters=_filter)
-            else:
                 data = await hw.get_full_info(self.__collection_name__, filters=_filter)
+            else:
+                data = await hw.get_brief_info(self.__collection_name__, filters=_filter)
 
         return data
-
-    async def get_subjects(self):
-        """
-        Get list of subjects in this chat
-        """
-
-        db = Database()
-        data = await db.find(self.__collection_name__, projection={"_id": 0, "subjects": 1})
-        return data[0]["subjects"]
-
-    async def get_subgroups(self):
-        """
-        Get list of subgroups in this chat
-        """
-
-        db = Database()
-        data = await db.find(self.__collection_name__, projection={"_id": 0, "subgroups": 1})
-        return data[0]["subgroups"]
 
     async def delete_hw(self, _id):
         """
@@ -215,19 +235,13 @@ class Chat:
 
         :return changes
         """
-        hw = Homework(chat_id=self.chat_id, id=_id)
+        hw = Homework(chat_id=self.chat_id, _id=_id)
         return await hw.delete(self.__collection_name__)
 
     async def get_field_value(self, field):
         db = Database()
-
-        return await db.find(collection=self.__collection_name__,
+        data = await db.find(collection=self.__collection_name__,
                              filters={"_id": self.chat_id},
                              projection={"_id": 0, field: 1})
-
-    async def set_field_value(self, field, value):
-        db = Database()
-
-        return await db.update(collection=self.__collection_name__,
-                             filters={"_id": self.chat_id},
-                             changes={"$set": {field: value}})
+        data = [d[field] for d in data]
+        return data[0]

@@ -7,7 +7,9 @@ async def settings_keyboard():
     markup.add(InlineKeyboardButton('🚻 Подгруппы', callback_data='1'))
     markup.add(InlineKeyboardButton('🔔 Уведомления', callback_data='2'))
     markup.add(InlineKeyboardButton('📅 Сроки', callback_data='3'))
-    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='4'))
+    markup.add(InlineKeyboardButton('🔑 Модераторы', callback_data='4'))
+    markup.add(InlineKeyboardButton('🖼 Внешний вид', callback_data='5'))
+    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='6'))
     return markup
 
 
@@ -15,6 +17,7 @@ async def settings_keyboard_subjects():
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('➕ Добавить предметы', callback_data='add'))
     markup.add(InlineKeyboardButton('➖ Убрать предметы', callback_data='remove'))
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
@@ -23,6 +26,7 @@ async def settings_keyboard_subgroups():
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('➖ Изменить состав', callback_data='add'))
     markup.add(InlineKeyboardButton('❌ Удалить подгруппу', callback_data='remove'))
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
@@ -40,6 +44,7 @@ async def settings_keyboard_notifications(pin):
 
 async def settings_keyboard_terms():
     markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
@@ -48,15 +53,21 @@ async def settings_keyboard_moderators():
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('➕ Добавить модераторов', callback_data='add'))
     markup.add(InlineKeyboardButton('➖ Удалить модераторов', callback_data='remove'))
-    markup.add(InlineKeyboardButton('⬅️ Назад', callback_data='back'))
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
 
-async def settings_keyboard_appearance():
+async def settings_keyboard_appearance(photo, emoji):
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('📷 Фото-дз', callback_data='photo-mode'))
-    markup.add(InlineKeyboardButton('🧑‍✈️Строгий вид', callback_data='simple-mode'))
-    markup.add(InlineKeyboardButton('⬅️ Назад', callback_data='back'))
+    if photo:
+        markup.add(InlineKeyboardButton('📷 Фото-дз', callback_data='photo'))
+    else:
+        markup.add(InlineKeyboardButton('📝 Дз текстом', callback_data='photo'))
+    if emoji:
+        markup.add(InlineKeyboardButton('🧑‍✈️Строгий вид', callback_data='emoji'))
+    else:
+        markup.add(InlineKeyboardButton('🤪 Забавный вид', callback_data='emoji'))
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup

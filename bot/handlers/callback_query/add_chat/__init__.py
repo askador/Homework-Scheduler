@@ -8,6 +8,6 @@ from aiogram import types
 @dp.callback_query_handler(lambda c: c.data == 'none', state=AddChat.subgroups)
 async def no_subgroups(callback_query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        data['chat_subgroups'] = None
+        data['chat_subgroups'] = []
 
     await callback_query.answer()

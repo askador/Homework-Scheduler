@@ -1,16 +1,13 @@
-from bot.handlers.add_hw.test import ALIAS, COMMANDS
+from bot.data.commands.add_hw import ALIAS, COMMANDS
 
 from bot.loader import dp
 from aiogram import types
 from aiogram.dispatcher import filters, FSMContext
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboard
+from bot.keyboards import subjects_keyboard, list_keyboard, calendar_keyboard, subgroups_keyboard
 from bot.states import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 from bot.types.MongoDB.Collections import Chat
-from bot.types.MongoDB.Database import Database
-
-SUBJECTS = []
 
 
 @dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
@@ -21,8 +18,7 @@ async def add_hw(message: types.Message):
     except Exception as e:
         arguments = None
 
-    global SUBJECTS
-    SUBJECTS = await Chat(message.chat.id).get_subjects()
+    SUBJECTS = await Chat(message.chat.id).get_field_value("subjects")
 
     text = "Выберите предмет или введите его:"
 
@@ -42,5 +38,5 @@ async def add_hw(message: types.Message):
     state = dp.get_current().current_state()
     await state.update_data(page=1)
 
-    markup = await subjects_keyboard(SUBJECTS, 1)
+    markup = await list_keyboard(message.chat.id, 'subject', 1)
     await update_last(state, await message.reply(text, reply_markup=markup))

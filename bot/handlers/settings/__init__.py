@@ -4,6 +4,7 @@ from .settings_terms import set_term
 from .settings_moderators import moderators_add, moderators_remove
 from .settings_choice import callback_select_setting
 from .settings_notifications import setting_pin
+from .settings_appearance import setting_emoji, setting_photo
 
 from bot.loader import dp, bot
 from aiogram.dispatcher import filters, FSMContext
@@ -28,14 +29,16 @@ async def settings(message):
 
 @dp.callback_query_handler(lambda c: c.data == 'back', state='*')
 async def back_to_choice(callback_query: types.CallbackQuery, state: FSMContext):
-    await clear(state)
+    # await clear(state)
     await Settings.choice.set()
     markup = await settings_keyboard()
-    await update_last(state, await bot.send_message(callback_query.message.chat.id,"Меню настроек", reply_markup=markup))
+    await update_last(state, await bot.edit_message_text("Меню настроек", callback_query.message.chat.id,
+                                                         callback_query.message.message_id, reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'done', state='*')
 async def back_to_choice(callback_query: types.CallbackQuery, state: FSMContext):
-    await clear(state)
+    # await clear(state)
     await state.finish()
-    await bot.send_message(callback_query.message.chat.id, "Настройка завершена")
+    await bot.edit_message_text("Удачно завершено", callback_query.message.chat.id,
+                                                         callback_query.message.message_id)

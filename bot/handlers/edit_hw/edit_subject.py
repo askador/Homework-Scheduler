@@ -9,14 +9,12 @@ import datetime
 from .test import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
-SUBJECTS = []
-
 
 @dp.message_handler(state=GetHomework.subject)
 async def edit_subject(message, state: FSMContext):
-    global SUBJECTS
-    SUBJECTS = await Chat(message.chat.id).get_subjects()
+    SUBJECTS = await Chat(message.chat.id).get_field_value("subjects")
     hw_subj = message.text
+    text = ''
 
     await clear(state)
 
@@ -35,6 +33,7 @@ async def edit_subject(message, state: FSMContext):
 async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBJECTS = await Chat(callback_query.message.chat.id).get_field_value("subjects")
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
@@ -46,6 +45,7 @@ async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMC
 async def callback_edit_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBJECTS = await Chat(callback_query.message.chat.id).get_field_value("subjects")
     async with state.proxy() as data:
         data['page'] = data['page'] - 1
         page = data['page']

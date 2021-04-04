@@ -4,16 +4,12 @@ from aiogram.dispatcher import filters, FSMContext
 from bot.states import DeleteHomework
 from bot.keyboards import subjects_keyboard, subgroups_keyboard
 from bot.utils.methods import update_last, clear
-from .test import COMMANDS
 from bot.types.MongoDB.Collections import Chat
-
-SUBJECTS = []
 
 
 @dp.message_handler(state=DeleteHomework.subject)
 async def delete_subject(message: types.Message, state: FSMContext):
-    global SUBJECTS
-    SUBJECTS = await Chat(message.chat.id).get_subjects()
+    SUBJECTS = await Chat(message.chat.id).get_field_value("subjects")
 
     await clear(state)
     text = ''
@@ -35,6 +31,7 @@ async def delete_subject(message: types.Message, state: FSMContext):
 async def callback_next_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBJECTS = await Chat(callback_query.message.chat.id).get_field_value("subjects")
     async with state.proxy() as data:
         data['page'] = data['page'] + 1
         page = data['page']
@@ -46,6 +43,7 @@ async def callback_next_subject(callback_query: types.CallbackQuery, state: FSMC
 async def callback_back_subject(callback_query: types.CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(callback_query.id)
 
+    SUBJECTS = await Chat(callback_query.message.chat.id).get_field_value("subjects")
     async with state.proxy() as data:
         data['page'] = data['page']-1
         page = data['page']

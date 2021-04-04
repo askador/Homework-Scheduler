@@ -12,19 +12,28 @@ from .test import COMMANDS, CHAT_TYPES, ALIAS
 
 @dp.callback_query_handler(lambda c: c.data == 'add', state=Settings.subjects)
 async def subject_add(callback_query: types.CallbackQuery, state: FSMContext):
-    await clear(state)
+    # await clear(state)
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
+    """await callback_query.message.edit_text(
+        text="dsf",
+        reply_markup=markup
+    )"""
     await update_last(state,
-                      await bot.send_message(callback_query.message.chat.id, "Добавить предметы", reply_markup=markup))
+                      await bot.edit_message_text(
+                          "Добавить предметы",
+                          callback_query.message.chat.id,
+                          callback_query.message.message_id,
+                          reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'remove', state=Settings.subjects)
 async def subject_remove(callback_query: types.CallbackQuery, state: FSMContext):
-    await clear(state)
+    # await clear(state)
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
     await update_last(state,
-                      await bot.send_message(callback_query.message.chat.id, "Удалить предметы", reply_markup=markup))
+                      await bot.edit_message_text("Удалить предметы", callback_query.message.chat.id,
+                                                         callback_query.message.message_id, reply_markup=markup))

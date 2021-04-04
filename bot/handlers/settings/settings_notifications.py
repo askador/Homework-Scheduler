@@ -7,7 +7,6 @@ from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, se
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from .test import COMMANDS, CHAT_TYPES, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
 
@@ -15,8 +14,9 @@ from bot.types.MongoDB.Collections import Chat
 async def setting_pin(callback_query: types.CallbackQuery, state: FSMContext):
     chat = Chat(callback_query.message.chat.id)
     pin = await chat.get_field_value("can_pin")
-    pin = not pin[0]["can_pin"]
-    await chat.set_field_value("can_pin", pin)
+    print(type(pin))
+    pin = not pin
+    await chat.update(title=callback_query.message.chat.title, can_pin=pin)
     markup = await settings_keyboard_notifications(pin)
 
     await update_last(state,

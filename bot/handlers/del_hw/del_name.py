@@ -4,18 +4,14 @@ from aiogram.dispatcher import filters, FSMContext
 from bot.states import DeleteHomework
 from bot.keyboards import subjects_keyboard, subgroups_keyboard
 from bot.utils.methods import update_last, clear
-from .test import COMMANDS
 from bot.types.MongoDB.Collections import Chat
-
-SUBGROUPS = []
 
 
 @dp.message_handler(state=DeleteHomework.name)
 async def delete_name(message: types.Message, state: FSMContext):
     await clear(state)
 
-    global SUBGROUPS
-    SUBGROUPS = await Chat(message.chat.id).get_subgroups()
+    SUBGROUPS = await Chat(message.chat.id).get_field_value("subgroups")
 
     markup = await subgroups_keyboard(SUBGROUPS, 1)
     await DeleteHomework.subgroup.set()

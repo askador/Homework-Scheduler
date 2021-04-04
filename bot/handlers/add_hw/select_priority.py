@@ -10,12 +10,12 @@ from bot.types.MongoDB.Collections import Chat
 @dp.callback_query_handler(state=SetHomework.priority)
 async def set_priority(callback_query: types.CallbackQuery, state: FSMContext):
     if callback_query.data == 'common' or callback_query.data == 'important':
-        await clear(state)
+        # await clear(state)
 
         await state.update_data(priority=callback_query.data)
 
         async with state.proxy() as data:
-            await bot.send_message(callback_query.message.chat.id, "Задание успешно добавлено!\n\n"
+            await bot.edit_message_text("Задание успешно добавлено!\n\n"
                                                                    "<b>Предмет</b>: <i>{}</i>\n"
                                                                    "<b>Название</b>: <i>{}</i>\n"
                                                                    "<b>Подгруппа</b>: <i>{}</i>\n"
@@ -27,7 +27,8 @@ async def set_priority(callback_query: types.CallbackQuery, state: FSMContext):
                                                                                                     data['subgroup'],
                                                                                                     data['deadline'],
                                                                                                     data['description'],
-                                                                                                    data['priority']))
+                                                                                                    data['priority']),
+            callback_query.message.chat.id, callback_query.message.message_id)
 
             chat = Chat(callback_query.message.chat.id)
             await chat.add_hw(subject=data['subject'],

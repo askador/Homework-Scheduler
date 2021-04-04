@@ -7,7 +7,11 @@ from .commands import del_hw
 from .commands import edit_hw
 from . import error
 from . import inline
-from .settings import settings
+# from .settings import settings
+from .add_hw import *
+from .edit_hw import *
+from .del_hw import *
+from .settings import *
 
 
 

@@ -7,4 +7,3 @@ from aiogram import types
 from aiogram.dispatcher import filters
 from bot.states import AddChat
 from bot.utils.methods import show_hw
-# from .test import CHAT_TYPES

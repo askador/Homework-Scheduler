@@ -1,7 +1,5 @@
 from bot.loader import dp, bot
 
-from aiogram.dispatcher.filters import Command
-
 
 @dp.message_handler(commands=['help'], state='*')
 async def bot_help(message):
