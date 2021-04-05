@@ -42,6 +42,7 @@ class DeleteHomework(StatesGroup):
     subject = State()
     name = State()
     subgroup = State()
+    homework = State()
 
 
 class Inline(StatesGroup):

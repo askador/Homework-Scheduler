@@ -22,9 +22,15 @@ ALLOWS = [
 async def get_hw(date):
     return "Лаба на часик"
 
+    # Todo
+    # ызвать метод показа дз
+
 
 async def remove_hw(date):
     print('removed some hw')
+
+    # Todo
+    # удалить дз по полю даты
 
 
 async def show_daily_hw(time):

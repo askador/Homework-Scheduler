@@ -27,6 +27,8 @@ async def edit_hw(message):
     state = dp.get_current().current_state()
     await state.update_data(page=1)
 
+
+
     kb = await list_keyboard(message.chat.id, 'homework', 1)
     await message.answer(text="Выберите задание, которое Вы хотите редактировать",
                          reply_markup=kb)
