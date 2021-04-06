@@ -16,12 +16,12 @@ CHAT_TYPES = [
 ]
 
 
-@dp.message_handler(filters.Text(equals=ALIAS), state='*')
+@dp.message_handler(filters.Text(startswith=ALIAS), state='*')
 @dp.message_handler(filters.Command(commands=COMMANDS), state='*')
 async def show_hw(message, state):
     chat_id = message.chat.id
 
-    show_hw_mode = "photo" if (await Chat(chat_id).get_field_value("photo_mode"))[0]["photo_mode"] else "text"
+    show_hw_mode = "photo" if (await Chat(chat_id).get_field_value("photo_mode")) else "text"
 
     if "текст" in message.text.split():
         show_hw_mode = 'text'

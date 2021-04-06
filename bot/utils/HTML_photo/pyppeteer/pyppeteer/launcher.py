@@ -165,7 +165,6 @@ class Launcher(object):
 
         connectionDelay = self.slowMo
         self.browserWSEndpoint = get_ws_endpoint(self.url)
-        logger.info(f'Browser listening on: {self.browserWSEndpoint}')
         self.connection = Connection(self.browserWSEndpoint, self._loop, connectionDelay, )
         browser = await Browser.create(self.connection, [], self.ignoreHTTPSErrors, self.defaultViewport, self.proc,
                                        self.killChrome)
@@ -204,7 +203,6 @@ class Launcher(object):
 
     async def killChrome(self) -> None:
         """Terminate chromium process."""
-        logger.info('terminate chrome process...')
         if self.connection and self.connection._connected:
             try:
                 await self.connection.send('Browser.close')

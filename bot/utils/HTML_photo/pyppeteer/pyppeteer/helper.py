@@ -12,6 +12,7 @@ from typing import Any, Awaitable, Callable, Dict, List
 from pyee import EventEmitter
 
 import bot.utils.HTML_photo.pyppeteer.pyppeteer
+from bot.utils.HTML_photo.pyppeteer import pyppeteer
 from bot.utils.HTML_photo.pyppeteer.pyppeteer.connection import CDPSession
 from bot.utils.HTML_photo.pyppeteer.pyppeteer.errors import ElementHandleError, TimeoutError
 
