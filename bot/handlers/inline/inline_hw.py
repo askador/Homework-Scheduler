@@ -3,7 +3,7 @@ from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResul
 from aiogram.dispatcher import filters
 
 
-@dp.inline_handler(filters.Text(startswith=['дз']))
+@dp.inline_handler(filters.Text(startswith=['дз']), access_level='member')
 async def inline_hw(inline_query: InlineQuery):
     hw = 'купи слона'
     input_content = InputTextMessageContent(hw)

@@ -12,7 +12,7 @@ CHAT_TYPES = [
 ]
 
 
-@dp.message_handler(ChatTypeFilter(CHAT_TYPES), commands=['start'], is_chat_admin=True, state="*")
+@dp.message_handler(ChatTypeFilter(CHAT_TYPES), commands=['start'], access_level='creator', state="*")
 async def start(message, state):
     chat_id = message.chat.id
 

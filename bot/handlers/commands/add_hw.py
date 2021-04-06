@@ -10,8 +10,8 @@ from bot.utils.methods import clear, update_last, check_date, make_datetime, che
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
-@dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
+@dp.message_handler(commands=COMMANDS,  access_level='moderator')
+@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
 async def add_hw(message: types.Message):
     try:
         arguments = message.get_args().split()

@@ -8,8 +8,8 @@ TEST = [
 ]
 
 
-@dp.inline_handler(filters.Text(startswith=['del_hw']))
-@dp.inline_handler(filters.Text(startswith=['del_hw']), state=Inline.delete)
+@dp.inline_handler(filters.Text(startswith=['del_hw']), access_level='moderator')
+@dp.inline_handler(filters.Text(startswith=['del_hw']), state=Inline.delete, access_level='moderator')
 async def inline_del_hw(inline_query: InlineQuery, state: FSMContext):
     await state.finish()
     args = inline_query.query.split()

@@ -15,8 +15,8 @@ ANSWERS = {
 }
 
 
-@dp.inline_handler(filters.Text(startswith=['edit_hw']))
-@dp.inline_handler(filters.Text(startswith=['edit_hw']), state=Inline.edit)
+@dp.inline_handler(filters.Text(startswith=['edit_hw']), access_level='moderator')
+@dp.inline_handler(filters.Text(startswith=['edit_hw']), state=Inline.edit, access_level='moderator')
 async def inline_edit_hw(inline_query: InlineQuery, state: FSMContext):
     args = inline_query.query.split()
     # print(args)

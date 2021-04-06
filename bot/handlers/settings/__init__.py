@@ -18,8 +18,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from .test import COMMANDS, CHAT_TYPES, ALIAS
 
 
-@dp.message_handler(commands=COMMANDS,  is_chat_admin=True)
-@dp.message_handler(filters.Text(startswith=ALIAS),  is_chat_admin=True)
+@dp.message_handler(commands=COMMANDS,  access_level='admin')
+@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='admin')
 async def settings(message):
     markup = await settings_keyboard()
     await Settings.choice.set()

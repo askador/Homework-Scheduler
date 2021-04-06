@@ -11,8 +11,8 @@ TEST = [
 ]
 
 
-@dp.inline_handler(filters.Text(startswith=['add_hw']))
-@dp.inline_handler(filters.Text(startswith=['add_hw']), state=Inline.add)
+@dp.inline_handler(filters.Text(startswith=['add_hw']), access_level='moderator')
+@dp.inline_handler(filters.Text(startswith=['add_hw']), access_level='moderator', state=Inline.add)
 async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
     # state = dp.get_current().current_state()
     await state.finish()
