@@ -1,4 +1,4 @@
-aiogram==2.12
+aiogram==2.12.1
 pyTelegramBotAPI==3.7.6
 pymongo==3.11.3
 asyncpg==0.22.0
@@ -7,3 +7,10 @@ dnspython == 2.1.0
 apscheduler==3.7.0
 datetime==4.3
 
+
+pyee==8.1.0
+urllib3==1.26.4
+tqdm==4.60.0
+pytz==2021.1
+websockets==8.1
+appdirs==1.4.4

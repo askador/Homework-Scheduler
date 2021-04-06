@@ -8,8 +8,8 @@ from bot.data.commands.del_hw import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
-@dp.message_handler(commands=COMMANDS,  access_level='moderator')
+@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator', state='*')
+@dp.message_handler(commands=COMMANDS,  access_level='moderator', state='*')
 async def delete_hw(message: types.Message):
     chat_id = message.chat.id
 

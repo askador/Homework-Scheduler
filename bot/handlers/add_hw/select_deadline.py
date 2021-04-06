@@ -6,6 +6,8 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboard
 from bot.states import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
+
+
 # from datetime import datetime, timedelta
 
 
@@ -31,7 +33,8 @@ async def calendar_next_month(callback_query: types.CallbackQuery, state: FSMCon
         m = data['month']
 
     markup = await calendar_keyboard(m)
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
+                                        reply_markup=markup)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'prev_month', state=SetHomework.deadline)
@@ -41,7 +44,8 @@ async def calendar_prev_month(callback_query: types.CallbackQuery, state: FSMCon
         m = data['month']
 
     markup = await calendar_keyboard(m)
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
+                                        reply_markup=markup)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'next_year', state=SetHomework.deadline)
@@ -51,7 +55,8 @@ async def calendar_next_year(callback_query: types.CallbackQuery, state: FSMCont
         m = data['month']
 
     markup = await calendar_keyboard(m)
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
+                                        reply_markup=markup)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'prev_year', state=SetHomework.deadline)
@@ -61,7 +66,8 @@ async def calendar_prev_year(callback_query: types.CallbackQuery, state: FSMCont
         m = data['month']
 
     markup = await calendar_keyboard(m)
-    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
+    await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
+                                        reply_markup=markup)
 
 
 @dp.callback_query_handler(lambda c: len(c.data.split()) > 1, state=SetHomework.deadline)
@@ -79,11 +85,11 @@ async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMCo
         markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
         await state.update_data(noskip=0)
         await update_last(state, await bot.edit_message_text("Введите время в "
-                                                            "формате HH:MM или нажмите "
-                                                            "дальше чтобы добавить с "
-                                                            "временем по умолчанию:",
-                                                            callback_query.message.chat.id,
-                                                            callback_query.message.message_id,
+                                                             "формате HH:MM или нажмите "
+                                                             "'Дальше' чтобы добавить с "
+                                                             "временем по умолчанию:",
+                                                             callback_query.message.chat.id,
+                                                             callback_query.message.message_id,
                                                              reply_markup=markup))
     else:
         await bot.answer_callback_query(callback_query.id, text='Выбрана уже прошедшая дата')
@@ -121,7 +127,6 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(state=SetHomework.deadline_precise)
 async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
-
     # await clear(state)
 
     async with state.proxy() as data:
