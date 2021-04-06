@@ -13,15 +13,18 @@ from bot.types.MongoDB.Collections import Chat
 async def edit_choice(callback_query: types.CallbackQuery, state: FSMContext):
 
     await clear(state)
+    text = 'Sample'
 
     markup = InlineKeyboardMarkup()
     if callback_query.data == 'deadline':
         text = "Установите новый срок сдачи:"
         await GetHomework.deadline.set()
         markup = await calendar_keyboard(0)
+        markup.add(InlineKeyboardButton("Назад", callback_data="back"))
         await state.update_data(month=0)
     elif callback_query.data == 'description':
         text = "Введите новое описание:"
+        markup.add(InlineKeyboardButton("Назад", callback_data="back"))
         await GetHomework.description.set()
     elif callback_query.data == 'delete':
         text = "Задание успешно удалено"
@@ -51,7 +54,7 @@ async def edit_choice(callback_query: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(state=GetHomework.choice)
 async def choice_dialogue(message, state: FSMContext):
     await clear(state)
-    text = ''
+    text = 'Sample'
     markup = InlineKeyboardMarkup()
 
     if message.text.lower() == 'Срок сдачи':

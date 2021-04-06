@@ -23,16 +23,15 @@ async def select_subgroup(message: types.Message, state: FSMContext):
         await state.update_data(subgroup=hw_subg)
         await SetHomework.next()
         markup = await list_keyboard(message.chat.id, 'subgroup', 1)
-        await update_last(state, await bot.edit_message_text("Выберите подгруппу:", message.chat.id,
-                                                             message.message_id, reply_markup=markup))
+        await update_last(state, await bot.send_message(message.chat.id, "Выберите подгруппу:",
+                                                             reply_markup=markup))
         return
     else:
         async with state.proxy() as data:
             page = data['page']
         markup = await list_keyboard(message.chat.id, 'subgroup', page)
-        await update_last(state, await bot.edit_message_text("Данные введены неверно!\nВыберите подгруппу или введите её:",
-                                                     message.chat.id,
-                                                     message.message_id,
+        await update_last(state, await bot.send_message(message.chat.id,
+                                                             "Данные введены неверно!\nВыберите подгруппу или введите её:",
                                                      reply_markup=markup))
 
 

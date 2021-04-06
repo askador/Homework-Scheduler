@@ -26,8 +26,8 @@ class Chat:
         "homeworks",
     ]
 
-    def __init__(self, chat_id):
-        self.chat_id = chat_id
+    def __init__(self, _id):
+        self.id = _id
 
     async def add(self, *,
                   chat_id,
@@ -119,18 +119,11 @@ class Chat:
 
         db = Database()
 
-        changes_log = []
-
         for field, val in fields.items():
             if val is not None:
-                if type(val) is bool:
-                    await db.update(self.__collection_name__,
-                                    filters={"_id": self.chat_id},
-                                    changes={"$set": {f"{field}": val}})
-                else:
-                    await db.update(self.__collection_name__,
-                                    filters={"_id": self.chat_id},
-                                    changes={"$set": {f"{field}": f"{val}"}})
+                await db.update(self.__collection_name__,
+                                filters={"_id": self.id},
+                                changes={"$set": {f"{field}": val}})
 
     async def add_hw(self, *,
                      subject,
@@ -162,7 +155,7 @@ class Chat:
             {"$group": {"_id": "$homeworks._id"}}
         ])
 
-        hw = Homework(chat_id=self.chat_id, _id=last_id[0]["_id"])
+        hw = Homework(chat_id=self.id, _id=last_id[0]["_id"])
         return await hw.create(
             collection=self.__collection_name__,
             subject=subject,
@@ -194,7 +187,7 @@ class Chat:
         :return changes
         """
 
-        hw = Homework(chat_id=self.chat_id, _id=_id)
+        hw = Homework(chat_id=self.id, _id=_id)
         return await hw.update(
             collection=self.__collection_name__,
             subject=subject,
@@ -215,7 +208,7 @@ class Chat:
         :return list data: homeworks
         """
         data = []
-        hw = Homework(chat_id=self.chat_id)
+        hw = Homework(chat_id=self.id)
 
         if _id:
             filters = [{'homeworks._id': _id}]
@@ -235,13 +228,15 @@ class Chat:
 
         :return changes
         """
-        hw = Homework(chat_id=self.chat_id, _id=_id)
+        hw = Homework(chat_id=self.id, _id=_id)
         return await hw.delete(self.__collection_name__)
 
     async def get_field_value(self, field):
         db = Database()
         data = await db.find(collection=self.__collection_name__,
-                             filters={"_id": self.chat_id},
+                             filters={"_id": self.id},
                              projection={"_id": 0, field: 1})
         data = [d[field] for d in data]
+        if not data:
+            return []
         return data[0]

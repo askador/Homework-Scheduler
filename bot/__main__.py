@@ -4,7 +4,7 @@ from aiogram import Dispatcher
 from aiogram.utils import executor
 from bot.loader import dp
 
-from bot.filters.bound_filters import AccessLevelFilter
+from bot.filters.bound_filters import *
 from bot.handlers import commands, callback_query
 
 

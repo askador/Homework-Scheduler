@@ -14,7 +14,7 @@ from .test import ALIAS, COMMANDS
 async def select_description(message: types.Message, state: FSMContext):
     hw_description = message.text
 
-    #await clear(state)
+    await clear(state)
 
     await state.update_data(description=hw_description)
     await SetHomework.priority.set()
@@ -24,5 +24,5 @@ async def select_description(message: types.Message, state: FSMContext):
     markup.add(InlineKeyboardButton('Важное', callback_data='important'))
 
     async with state.proxy() as data:
-        await update_last(state, await bot.edit_message_text('Уточните важность задания', message.chat.id,
-                                                         data['last_message_id'], reply_markup=markup))
+        await update_last(state, await bot.send_message(message.chat.id, 'Уточните важность задания',
+                                                        reply_markup=markup))

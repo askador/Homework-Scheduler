@@ -6,6 +6,7 @@ from bot.utils.methods import update_last
 from bot.keyboards import edit_hw_keyboard
 
 
+@dp.callback_query_handler(lambda c: c.data == 'back', state=[GetHomework.deadline, GetHomework.description])
 @dp.callback_query_handler(lambda c: c.data is not None, state=GetHomework.homework)
 async def callback_select_homework(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)

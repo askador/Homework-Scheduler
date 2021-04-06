@@ -17,25 +17,22 @@ async def select_subject(message: types.Message, state: FSMContext):
     hw_subj = message.text
 
     SUBJECTS = await Chat(message.chat.id).get_field_value("subjects")
-    print(SUBJECTS)
     #await clear(state)
 
 
     if hw_subj in SUBJECTS:
         await state.update_data(subject=hw_subj)
         await SetHomework.next()
-        await update_last(await bot.edit_message_text("Введите название работы:",
-                              message.chat.id, message.message_id))
+        await update_last(await bot.send_message(message.chat.id, "Введите название работы:"))
         return
     else:
         async with state.proxy() as data:
             page = data['page']
         markup = await list_keyboard(message.chat.id, 'subject', page)
         await update_last(state,
-                          await bot.edit_message_text(
+                          await bot.send_message(message.chat.id,
                               "Данные введены неверно!\n"
                               "Выберите предмет или введите его:",
-                              message.chat.id, message.message_id,
                               reply_markup=markup
                           ))
 

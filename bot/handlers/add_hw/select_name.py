@@ -15,20 +15,16 @@ async def select_name(message: types.Message, state: FSMContext):
     hw_name = message.text
 
     SUBGROUPS = await Chat(message.chat.id).get_field_value("subgroups")
-    print('name')
     # await clear(state)
 
     await state.update_data(name=hw_name)
     await SetHomework.next()
     await state.update_data(month=0)
-    print('issue1')
 
     markup = await list_keyboard(message.chat.id, 'subgroup', 1)
-    print('issue2')
 
     async with state.proxy() as data:
-        await update_last(state, await bot.edit_message_text("Выберите подгруппу:", message.chat.id,
-                                                         data['last_message_id'], reply_markup=markup))
+        await update_last(state, await bot.send_message(message.chat.id, "Выберите подгруппу:",
+                                                             reply_markup=markup))
 
 
-    print('issue0')

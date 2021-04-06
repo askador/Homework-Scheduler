@@ -40,7 +40,7 @@ commands = {
     'add_hw': "add new homework",
     'edit_hw': "edit homework",
     'del_hw': "delete homework",
-    'show_hw': "show homework this week",
+    'show_hws': "show homework this week",
     'cancel': "cancel dialog",
 
 }

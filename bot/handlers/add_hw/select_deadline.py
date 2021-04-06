@@ -21,7 +21,7 @@ async def select_deadline(message: types.Message, state: FSMContext):
         text = "Введите описание работы:"
     else:
         text = "Данные введены неверно!\nВведите дату повторно:"
-    await update_last(state, await bot.edit_message_text(text, message.chat.id, message.message_id))
+    await update_last(state, await bot.send_message(message.chat.id, text))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'next_month', state=SetHomework.deadline)
@@ -91,7 +91,7 @@ async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMCo
 
 @dp.message_handler(state=SetHomework.deadline_precise)
 async def select_deadline_precise(message: types.Message, state: FSMContext):
-    # await clear(state)
+    await clear(state)
 
     time = message.text
     async with state.proxy() as data:
@@ -115,7 +115,7 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
         if noskip != 1:
             markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
 
-    await update_last(state, await bot.edit_message_text(text, message.chat.id, message.message_id,
+    await update_last(state, await bot.send_message(message.chat.id, text,
                                                          reply_markup=markup))
 
 

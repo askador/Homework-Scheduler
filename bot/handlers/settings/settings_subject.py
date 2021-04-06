@@ -8,6 +8,7 @@ from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from .test import COMMANDS, CHAT_TYPES, ALIAS
+from bot.types.MongoDB.Collections import Chat
 
 
 @dp.callback_query_handler(lambda c: c.data == 'add', state=Settings.subjects)
@@ -22,10 +23,31 @@ async def subject_add(callback_query: types.CallbackQuery, state: FSMContext):
     )"""
     await update_last(state,
                       await bot.edit_message_text(
-                          "Добавить предметы",
+                          "Введите список новых предметов через запятую",
                           callback_query.message.chat.id,
                           callback_query.message.message_id,
                           reply_markup=markup))
+
+
+@dp.message_handler(state=Settings.subjects)
+async def add_subjects(message: types.Message, state: FSMContext):
+    await clear(state)
+
+    subjs = message.text.split(',')
+    filtered_subjects = []
+
+    for subject in subjs:
+        if subject.strip() != '':
+            filtered_subjects.append(subject.strip())
+
+    chat = Chat(message.chat.id)
+    subjects = await chat.get_field_value('subjects') + filtered_subjects
+    await chat.update(title=message.chat.title, subjects=subjects)
+
+    await Settings.choice.set()
+    markup = await settings_keyboard()
+    await update_last(state, await bot.send_message(message.chat.id, "Добавлено!\nМеню настроек",
+                                                    reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'remove', state=Settings.subjects)

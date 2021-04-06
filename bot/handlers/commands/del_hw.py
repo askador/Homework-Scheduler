@@ -10,7 +10,7 @@ from bot.types.MongoDB.Collections import Chat
 
 @dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
-async def delete_hw(message: types.Message):
+async def del_hw(message: types.Message):
     chat_id = message.chat.id
 
     chat = Chat(chat_id)

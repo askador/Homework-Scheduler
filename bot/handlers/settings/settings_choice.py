@@ -14,7 +14,6 @@ from bot.types.MongoDB.Collections import Chat
 async def callback_select_setting(callback_query: types.CallbackQuery, state: FSMContext):
     # await bot.answer_callback_query(callback_query.id)
 
-    print('choice')
     # await clear(state)
 
     markup = InlineKeyboardMarkup()

@@ -24,7 +24,8 @@ async def settings_keyboard_subjects():
 
 async def settings_keyboard_subgroups():
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➖ Изменить состав', callback_data='add'))
+    markup.add(InlineKeyboardButton('➕ Добавить подгруппу', callback_data='add'))
+    markup.add(InlineKeyboardButton('➖ Изменить состав', callback_data='edit'))
     markup.add(InlineKeyboardButton('❌ Удалить подгруппу', callback_data='remove'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
