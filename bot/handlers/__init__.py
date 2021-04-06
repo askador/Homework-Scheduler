@@ -10,7 +10,6 @@ from . import inline
 from .add_hw import *
 from .edit_hw import *
 from .del_hw import *
-from .settings import *
 
 
 
