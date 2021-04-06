@@ -15,9 +15,6 @@ async def on_startup(dp: Dispatcher):
     # await utils.notify_admins(config.SUPERUSER_IDS)
 
 
-
-
-
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     executor.start_polling(

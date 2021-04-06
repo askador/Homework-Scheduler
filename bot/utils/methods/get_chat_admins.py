@@ -1,12 +1,11 @@
-from bot.loader import bot
+from bot.loader import dp, bot
 
 
-async def get_chat_admins(chat_id):
-    admins_object = await bot.get_chat_administrators(chat_id)
+@dp.message_handler(lambda msg: msg.text.lower() == "админы")
+async def get_chat_admins(msg):
+    admins_object = await bot.get_chat_administrators(msg.chat.id)
 
     admins_list = []
 
     for admin in admins_object:
         admins_list.append(admin.user.id)
-
-    return admins_list
