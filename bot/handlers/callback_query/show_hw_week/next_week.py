@@ -1,6 +1,6 @@
 import os
 from aiogram.types import InputMediaPhoto
-from aiogram.utils.exceptions import MessageNotModified
+from aiogram.utils.exceptions import MessageNotModified, BadRequest
 from pprint import pprint
 
 from bot.loader import dp, bot
@@ -15,8 +15,12 @@ async def next_week(call, state):
     chat_id = call.message.chat.id
     show_hw_mode = ''
     async with state.proxy() as data:
-        data['week_page'] += 1
-        show_hw_mode = data['show_hw_mode']
+        try:
+            data['week_page'] += 1
+            show_hw_mode = data['show_hw_mode']
+        except KeyError:
+            data['week_page'] = 0
+            data['show_hw_mode'] = "photo"
 
     hws_list = HomeworksList(chat_id=chat_id, page=data['week_page'])
     await hws_list.set_fields()

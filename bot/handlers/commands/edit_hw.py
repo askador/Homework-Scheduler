@@ -14,8 +14,8 @@ from bot.types.MongoDB.Collections import Chat
 from bot.utils.methods.generate_hws_kb import generate_hws_kb
 
 
-@dp.message_handler(commands=COMMANDS,  access_level='moderator', state='*')
-@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator', state='*')
+@dp.message_handler(filters.Text(startswith=ALIAS), access_level='moderator', state='*')
+@dp.message_handler(commands=COMMANDS, access_level='moderator', state='*')
 async def edit_hw(message):
     chat_id = message.chat.id
 

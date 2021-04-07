@@ -29,19 +29,21 @@ async def edit_choice(callback_query: types.CallbackQuery, state: FSMContext):
     elif callback_query.data == 'delete':
         text = "Задание успешно удалено"
 
-        # TODO implement database interaction
-        # hw.delete(_id)
-
         chat = Chat(callback_query.message.chat.id)
         await chat.update(title=callback_query.message.chat.title)
-        # await chat.delete_hw()
+
+        async with state.proxy() as data:
+            await chat.delete_hw(data['hw_id'])
 
         await state.finish()
     else:
         text = "Успешно завершено"
 
-        # TODO implement database interaction
-        # hw.update(data[fields])
+        # chat = Chat(callback_query.message.chat.id)
+        # await chat.update(title=callback_query.message.chat.title)
+        #
+        # async with state.proxy() as data:
+        #     await chat.update_hw(data['hw_id'])
 
         await state.finish()
 

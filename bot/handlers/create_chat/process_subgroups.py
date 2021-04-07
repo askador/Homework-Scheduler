@@ -27,15 +27,15 @@ async def process_subgroups(message, state):
         chat_subjects = data['chat_subjects']
         chat_subgroups = data['chat_subgroups']
 
+    chat_id = message.chat.id
     chat = Chat(chat_id)
     await chat.add(title=chat_title,
                    admins=chat_admins,
                    subjects=chat_subjects,
-                   subgroups=chat_subgroups,
-                   homeworks={})
+                   subgroups=chat_subgroups)
 
     await state.finish()
 
-    await message.answer("Вы успешно настроили бота!\n"
+    await message.answer("Вы успешно настроили бота!\n\n"
                          "Чтобы узнать подробнее про возможности Homework Scheduler, введите /help")
     # scheduler.add_job(show_hw, 'cron', hour=15, minute=19, args={message}) добавить в список определенного времени

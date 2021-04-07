@@ -4,6 +4,7 @@ from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard, subgroups_keyboard
 from bot.states import GetHomework
+from bot.types.MongoDB import Chat
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 import datetime
 
@@ -87,7 +88,7 @@ async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMCo
         await bot.answer_callback_query(callback_query.id, text='Выбрана уже прошедшая дата')
 
 
-@dp.message_handler(lambda c: c.data == 'next', state=GetHomework.deadline_precise)
+@dp.message_handler(state=GetHomework.deadline_precise)
 async def select_deadline_precise(message: types.Message, state: FSMContext):
     await clear(state)
 
@@ -116,7 +117,7 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
     await update_last(state, await message.reply(text, reply_markup=markup))
 
 
-@dp.callback_query_handler(state=GetHomework.deadline_precise)
+@dp.callback_query_handler(lambda c: c.data == 'next', state=GetHomework.deadline_precise)
 async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
 
     await clear(state)
@@ -130,6 +131,11 @@ async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
         date = date.replace(minute=time.minute)
 
         await state.update_data(deadline=date)
+
+        chat = Chat(callback_query.message.chat.id)
+        async with state.proxy() as data:
+            print(data['hw_id'], data['deadline'])
+            await chat.update_hw(_id=int(data['hw_id']), deadline=data['deadline'])
 
         await GetHomework.choice.set()
 

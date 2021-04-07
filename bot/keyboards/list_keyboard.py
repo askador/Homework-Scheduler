@@ -61,15 +61,15 @@ async def list_keyboard(chat_id, filters, page, arr=None):
     elif page == 1:
         async for elem in asrange(0, (list_height-1)):
             markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
-        markup.add(InlineKeyboardButton('Следующая страница', callback_data='next'))
+        markup.add(InlineKeyboardButton('Следующая страница  ➡️', callback_data='next'))
     elif len(array) <= (2*(list_height-1)) + ((list_height-2) * (page - 2)):
         async for elem in asrange(((list_height-2) * (page - 2) + (list_height-1)), len(array)):
             markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
-        markup.add(InlineKeyboardButton('Предыдущая страница', callback_data='back'))
+        markup.add(InlineKeyboardButton('⬅️ Предыдущая страница', callback_data='back'))
     else:
         async for elem in asrange(((list_height-2)*(page-2)+(list_height-1)), ((list_height-2)*(page-1)+(list_height-1))):
             markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
-        markup.add(InlineKeyboardButton('⬅️ Предыдущая страница', callback_data='back'))
-        markup.add(InlineKeyboardButton('Следующая страница  ➡️', callback_data='next'))
+        markup.row(InlineKeyboardButton('⬅️ Предыдущая страница', callback_data='back'))
+        markup.insert(InlineKeyboardButton('Следующая страница  ➡️', callback_data='next'))
 
     return markup

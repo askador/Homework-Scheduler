@@ -30,26 +30,24 @@ class Chat:
         self.id = _id
 
     async def add(self, *,
-                  chat_id,
                   title,
                   admins,
                   subjects=[],
                   subgroups=[],
-                  notification_time=time(hour=12, minute=0),
+                  notification_time=12,
                   emoji_on=True,
                   photo_mode=True,
                   can_pin=True,
                   pin_message_id=0,
-                  homeworks=None):
+                  homeworks=[]):
         """
         Add new chat
 
-        :param int chat_id: chat id
         :param str title: chat title
         :param list admins: list of chat admins
         :param list subjects: list of subjects
         :param list subgroups: subgroups
-        :param datetime.time notification_time: do homework notification
+        :param int notification_time: to do homework notification time
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
         :param bool can_pin: pin homeworks to do at notification time
@@ -59,10 +57,8 @@ class Chat:
         :return changes
         """
 
-        if homeworks is None:
-            homeworks = []
         chat = {
-            "_id": chat_id,
+            "_id": self.id,
             "title": title,
             "admins": admins,
             "subjects": subjects,
@@ -96,7 +92,7 @@ class Chat:
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
-        :param datetime.time notification_time: do homework notification
+        :param int notification_time: to do homework notification hour
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
         :param bool can_pin: pin homeworks to do at notification time
@@ -188,7 +184,7 @@ class Chat:
         """
 
         hw = Homework(chat_id=self.id, _id=_id)
-        return await hw.update(
+        await hw.update(
             collection=self.__collection_name__,
             subject=subject,
             subgroup=subgroup,

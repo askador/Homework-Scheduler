@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from .select_time import select_time_keyboard
 
 
 async def settings_keyboard():
@@ -43,10 +44,10 @@ async def settings_keyboard_notifications(pin):
     return markup
 
 
-async def settings_keyboard_terms():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
-    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
+async def settings_keyboard_terms(selected):
+    markup = await select_time_keyboard(selected)
+    # markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
+    # markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
 

@@ -6,7 +6,6 @@ from bot.types import Database
 
 @dp.message_handler(content_types=["new_chat_members"])
 async def process_bot_join(message, state):
-    print(message)
     chat_id = message.chat.id
 
     db = Database()
@@ -27,7 +26,7 @@ async def process_bot_join(message, state):
                 data['chat_title'] = chat_title
                 data['chat_admins'] = chat_admins
 
-            await message.answer("Привет, я Homework Scheduler! \n"
+            await message.answer("Привет, я Homework Scheduler!\n\n"
                                  "Сейчас начнется моя настройка!\n"
                                  "Пожалуйста введите список ваших предметов через запятую")
 

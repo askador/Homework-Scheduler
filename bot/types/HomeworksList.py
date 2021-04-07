@@ -129,7 +129,7 @@ class HomeworksList:
         del hw['priority']
         for field, val in hw.items():
             td = TDElement()
-            if field == 'subject' and hw_copy['subgroup'] != '':
+            if field == 'subject' and hw_copy['subgroup'] != 'any':
                 val = str(val) + f" {hw_copy['subgroup']}пг."
             td.insert_data(val)
             tr.add_element(td)

@@ -1,10 +1,21 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-async def select_time_keyboard():
+async def select_time_keyboard(selected):
     markup = InlineKeyboardMarkup()
 
-    markup.row(InlineKeyboardButton('00:00', callback_data='0'),
+    for r in range(4):
+        markup.row()
+        for c in range(6):
+            id = 6*r + c
+            if id != selected:
+                text = str(id)+":00"
+            else:
+                text = "✅" + str(id)+":00"
+            markup.insert(InlineKeyboardButton(text, callback_data=str(id)))
+
+
+    """markup.row(InlineKeyboardButton('00:00', callback_data='0'),
                InlineKeyboardButton('01:00', callback_data='1'),
                InlineKeyboardButton('02:00', callback_data='2'),
                InlineKeyboardButton('03:00', callback_data='3'),)
@@ -32,5 +43,5 @@ async def select_time_keyboard():
     markup.row(InlineKeyboardButton('20:00', callback_data='20'),
                InlineKeyboardButton('21:00', callback_data='21'),
                InlineKeyboardButton('22:00', callback_data='22'),
-               InlineKeyboardButton('23:00', callback_data='23'), )
+               InlineKeyboardButton('23:00', callback_data='23'), )"""
     return markup

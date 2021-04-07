@@ -14,8 +14,13 @@ async def prev_week(call, state):
     show_hw_mode = ''
     kb = homework_kb_both
     async with state.proxy() as data:
-        data['week_page'] -= 1
-        show_hw_mode = data['show_hw_mode']
+
+        try:
+            data['week_page'] -= 1
+            show_hw_mode = data['show_hw_mode']
+        except KeyError:
+            data['week_page'] = 0
+            data['show_hw_mode'] = "photo"
 
         if data['week_page'] <= 0:
             kb = homework_kb_next_week

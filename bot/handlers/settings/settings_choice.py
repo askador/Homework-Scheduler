@@ -34,9 +34,11 @@ async def callback_select_setting(callback_query: types.CallbackQuery, state: FS
         pin = await chat.get_field_value("can_pin")
         markup = await settings_keyboard_notifications(pin)
     elif callback_query.data == '3':
-        text = "Время обновления"
+        text = "Изменить время обновления"
         await Settings.terms.set()
-        markup = await settings_keyboard_terms()
+        markup = await settings_keyboard_terms(await chat.get_field_value("notification_time"))
+        markup.add(InlineKeyboardButton('Назад', callback_data='back'))
+        markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
     elif callback_query.data == '4':
         text = "Управление модераторами"
         await Settings.moderators.set()
