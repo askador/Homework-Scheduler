@@ -3,7 +3,7 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, settings_keyboard_moderators, \
     settings_keyboard, settings_keyboard_subjects, settings_keyboard_subgroups, settings_keyboard_notifications, \
-    settings_keyboard_terms
+    settings_keyboard_terms, list_keyboard
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -54,9 +54,35 @@ async def add_subjects(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(lambda c: c.data == 'remove', state=Settings.subjects)
 async def subject_remove(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
-    markup = InlineKeyboardMarkup()
+
+    await Settings.remove_subjects.set()
+    chat = Chat(callback_query.message.chat.id)
+    await state.update_data(page=1, subjects=await chat.get_field_value('subjects'), to_display=[])
+    async with state.proxy() as data:
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subjects'])
     markup.add(InlineKeyboardButton('Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
     await update_last(state,
                       await bot.edit_message_text("Удалить предметы", callback_query.message.chat.id,
                                                          callback_query.message.message_id, reply_markup=markup))
+
+
+@dp.callback_query_handler(lambda c: isinstance(int(c.data), int), state=Settings.remove_subjects)
+async def picked_subject(callback_query: types.CallbackQuery, state: FSMContext):
+    chat = Chat(callback_query.message.chat.id)
+
+    subj_id = int(callback_query.data)
+    async with state.proxy() as data:
+        subjects = data['subjects']
+        data['to_display'] += [subjects[subj_id]]
+        subjects.pop(subj_id)
+        data['subjects'] = subjects
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subjects'])
+        markup.add(InlineKeyboardButton('Сохранить изменения', callback_data='save'))
+        to_display = ""
+        for i in range(len(data['to_display'])-1):
+            to_display += data['to_display'][i] + ', '
+        to_display += data['to_display'][len(data['to_display'])-1]
+        await update_last(state,
+                          await bot.edit_message_text("Удалить предметы \n Выбраны:{}".format(to_display), callback_query.message.chat.id,
+                                                      callback_query.message.message_id, reply_markup=markup))
