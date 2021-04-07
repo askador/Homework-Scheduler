@@ -1,4 +1,3 @@
-from pprint import pprint
 from datetime import datetime, timedelta
 from bot.utils.HTML_photo.HTML_wrap import top_block, bottom_block, TRElement, TDElement
 from bot.utils.HTML_photo.pyppeteer.pyppeteer import launch

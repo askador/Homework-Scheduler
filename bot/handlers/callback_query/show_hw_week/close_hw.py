@@ -1,5 +1,4 @@
 from bot.loader import dp, bot
-from bot.states.get_public_hw import ShowHw
 
 
 @dp.callback_query_handler(lambda call: call.data == 'close', state="*")

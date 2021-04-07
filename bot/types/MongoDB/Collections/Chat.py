@@ -2,7 +2,6 @@ from typing import List, Dict
 
 from bot.types.MongoDB.Database import Database
 from bot.types.MongoDB.Collections.Homework import Homework
-from datetime import time
 
 
 class Chat:
@@ -27,7 +26,7 @@ class Chat:
     ]
 
     def __init__(self, _id):
-        self.id = _id
+        self.id = int(_id)
 
     async def add(self, *,
                   title,
@@ -183,7 +182,7 @@ class Chat:
         :return changes
         """
 
-        hw = Homework(chat_id=self.id, _id=_id)
+        hw = Homework(chat_id=self.id, _id=int(_id))
         await hw.update(
             collection=self.__collection_name__,
             subject=subject,
@@ -224,7 +223,7 @@ class Chat:
 
         :return changes
         """
-        hw = Homework(chat_id=self.id, _id=_id)
+        hw = Homework(chat_id=self.id, _id=int(_id))
         return await hw.delete(self.__collection_name__)
 
     async def get_field_value(self, field):

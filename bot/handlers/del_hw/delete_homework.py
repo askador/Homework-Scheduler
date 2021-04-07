@@ -1,7 +1,7 @@
 from bot.states import DeleteHomework
 from bot.loader import dp, bot
 from aiogram import types
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import FSMContext
 from bot.keyboards import list_keyboard
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -35,7 +35,7 @@ async def approve_choice(callback_query: types.CallbackQuery, state: FSMContext)
     # text может быть данными выбранного дз
 
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton("Обратно к списку", callback_data='back'))
-    markup.add(InlineKeyboardButton("Удалить", callback_data='delete'))
+    markup.add(InlineKeyboardButton("⏪ Обратно к списку", callback_data='back'))
+    markup.add(InlineKeyboardButton("❌ Удалить", callback_data='delete'))
     await bot.edit_message_text("Чи треба видаляти копчене?", callback_query.message.chat.id, callback_query.message.message_id,
                                 reply_markup=markup)

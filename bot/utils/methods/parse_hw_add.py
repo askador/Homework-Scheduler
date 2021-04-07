@@ -1,5 +1,3 @@
-from bot.loader import dp
-import datetime
 
 
 async def add_parse_hw(args):

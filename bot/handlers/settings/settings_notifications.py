@@ -1,12 +1,9 @@
 from bot.loader import dp, bot
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import FSMContext
 from aiogram import types
-from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, settings_keyboard_moderators, \
-    settings_keyboard, settings_keyboard_subjects, settings_keyboard_subgroups, settings_keyboard_notifications, \
-    settings_keyboard_terms
+from bot.keyboards import settings_keyboard_notifications
 from bot.states import Settings
-from bot.utils.methods import clear, update_last
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from bot.utils.methods import update_last
 from bot.types.MongoDB.Collections import Chat
 
 

@@ -5,5 +5,3 @@ from .select_name import select_name
 from .select_subgroup import select_subgroup
 from .select_priority import set_priority
 
-
-# from datetime import datetime, timedelta

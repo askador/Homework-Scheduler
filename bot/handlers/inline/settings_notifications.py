@@ -1,6 +1,6 @@
 from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import filters
 
 
 @dp.inline_handler(filters.Text(startswith=['settings notifications']))

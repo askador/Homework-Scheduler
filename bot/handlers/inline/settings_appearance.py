@@ -1,13 +1,12 @@
 from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.dispatcher import filters, FSMContext
-from bot.states import InlineSettings
 
 
 @dp.inline_handler(filters.Text(startswith=['settings appearance']))
 async def inline_settings_appearance(inline_query: InlineQuery, state: FSMContext):
 
-    state.finish()
+    await state.finish()
 
     photo = InlineQueryResultArticle(
         id='1',

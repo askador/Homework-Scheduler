@@ -5,5 +5,5 @@ ALIAS = [
 
 COMMANDS = [
     "show_homework",
-    "show_hw"
+    "show_hws"
 ]

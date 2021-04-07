@@ -108,16 +108,12 @@ class Homework:
 
         db = Database()
 
-        changes_log = []
-
         for field, val in fields.items():
             if val:
-                changes_log.append(await db.update(collection,
-                                                   filters={"_id": self.chat_id,
-                                                            "homeworks": {"$elemMatch": {"_id": self.id}}},
-                                                   changes={"$set": {f"homeworks.$.{field}": f"{val}"}}))
-
-        return changes_log
+                await db.update(collection,
+                                filters={"_id": self.chat_id,
+                                         "homeworks": {"$elemMatch": {"_id": self.id}}},
+                                changes={"$set": {f"homeworks.$.{field}": f"{val}"}})
 
     async def get_brief_info(self, collection, by_id=False, filters=None):
         """

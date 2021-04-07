@@ -1,12 +1,9 @@
-import datetime
 from bot.loader import dp, bot
 from aiogram import types
-from aiogram.dispatcher import filters, FSMContext
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboard, list_keyboard
+from aiogram.dispatcher import FSMContext
+from bot.keyboards import calendar_keyboard, list_keyboard
 from bot.states import SetHomework
-from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
-# from datetime import datetime, timedelta
+from bot.utils.methods import update_last
 from bot.types.MongoDB.Collections import Chat
 
 
@@ -24,15 +21,15 @@ async def select_subgroup(message: types.Message, state: FSMContext):
         await SetHomework.next()
         markup = await list_keyboard(message.chat.id, 'subgroup', 1)
         await update_last(state, await bot.send_message(message.chat.id, "Выберите подгруппу:",
-                                                             reply_markup=markup))
+                                                        reply_markup=markup))
         return
     else:
         async with state.proxy() as data:
             page = data['page']
         markup = await list_keyboard(message.chat.id, 'subgroup', page)
         await update_last(state, await bot.send_message(message.chat.id,
-                                                             "Данные введены неверно!\nВыберите подгруппу или введите её:",
-                                                     reply_markup=markup))
+                                                        "Данные введены неверно!\nВыберите подгруппу или введите её:",
+                                                        reply_markup=markup))
 
 
 """@dp.callback_query_handler(lambda c: c.data == 'next', state=SetHomework.subgroup)
@@ -58,6 +55,7 @@ async def callback_back_subgroup(callback_query: types.CallbackQuery, state: FSM
     markup = await list_keyboard(callback_query.message.chat.id, 'subgroup', 1)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id, reply_markup=markup)
 """
+
 
 @dp.callback_query_handler(lambda c: c.data is not None, state=SetHomework.subgroup)
 async def callback_select_subgroup(callback_query: types.CallbackQuery, state: FSMContext):

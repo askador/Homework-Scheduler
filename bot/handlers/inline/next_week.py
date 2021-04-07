@@ -1,6 +1,4 @@
-from bot.loader import dp, bot
-from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
-from aiogram.dispatcher import filters
+from bot.loader import dp
 
 
 @dp.inline_handler()

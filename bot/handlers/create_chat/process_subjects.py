@@ -1,8 +1,6 @@
 from bot.loader import dp
 from bot.scheduler import scheduler
 from bot.states import AddChat
-from aiogram.dispatcher.filters import ChatTypeFilter
-from aiogram.types import ChatType
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 

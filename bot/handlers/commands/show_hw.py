@@ -1,6 +1,5 @@
 import os
 from aiogram.dispatcher import filters
-from aiogram.types import InputMediaPhoto, ChatType
 
 from bot.loader import dp, bot
 from bot.data.commands.show_hw import COMMANDS, ALIAS
@@ -11,9 +10,14 @@ from bot.utils.methods.get_files_paths import get_files_paths
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Text(startswith=ALIAS), state='*')
+@dp.message_handler(filters.Command(commands=ALIAS, prefixes=['!']), state='*')
 @dp.message_handler(filters.Command(commands=COMMANDS), state='*')
 async def show_hw(message, state):
+
+    if message.text.split() == 1 and message.text != "!п":
+        return
+    if message.text.split() == 2 and message.text.split()[0] != "!показать" and message.text.split()[1] != "дз":
+        return
 
     # # Todo implement hw search
     # text_entities = message.text.replace("!показать дз", "").replace('!п', "").strip().split()

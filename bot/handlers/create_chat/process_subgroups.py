@@ -1,9 +1,6 @@
-from bot.loader import dp, bot
+from bot.loader import dp
 from bot.scheduler import scheduler
-from aiogram.dispatcher import filters
 from bot.states import AddChat
-from aiogram.dispatcher.filters import ChatTypeFilter
-from aiogram.types import ChatType
 from bot.types.MongoDB.Collections import Chat
 
 

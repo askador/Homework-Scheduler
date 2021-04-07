@@ -8,3 +8,5 @@ async def get_chat_admins(chat_id):
 
     for admin in admins_object:
         admins_list.append(admin.user.id)
+
+    return admins_list

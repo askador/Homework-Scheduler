@@ -2,16 +2,15 @@ from bot.data.commands.add_hw import ALIAS, COMMANDS
 
 from bot.loader import dp
 from aiogram import types
-from aiogram.dispatcher import filters, FSMContext
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard, list_keyboard, calendar_keyboard, subgroups_keyboard
+from aiogram.dispatcher import filters
+from bot.keyboards import list_keyboard
 from bot.states import SetHomework
-from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
+from bot.utils.methods import update_last, check_date
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(commands=COMMANDS,  access_level='moderator', state='*')
-@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator', state='*')
+@dp.message_handler(commands=COMMANDS,  access_level='moderator')
+@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
 async def add_hw(message: types.Message):
     try:
         arguments = message.get_args().split()

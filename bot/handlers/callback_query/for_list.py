@@ -1,6 +1,5 @@
-from bot.types.MongoDB.Collections import Chat
 from bot.keyboards import list_keyboard
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import FSMContext
 from aiogram import types
 from bot.loader import dp, bot
 from bot.states import SetHomework, GetHomework, DeleteHomework

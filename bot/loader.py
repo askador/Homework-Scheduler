@@ -19,6 +19,6 @@ dp = Dispatcher(
 
 __all__ = (
     "bot",
-    # "storage",
+    "storage",
     "dp",
 )

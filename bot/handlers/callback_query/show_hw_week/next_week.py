@@ -1,10 +1,8 @@
 import os
 from aiogram.types import InputMediaPhoto
 from aiogram.utils.exceptions import MessageNotModified, BadRequest
-from pprint import pprint
 
-from bot.loader import dp, bot
-from bot.states.get_public_hw import ShowHw
+from bot.loader import dp
 from bot.keyboards.show_homework.show_homework import homework_kb_both
 from bot.types.HomeworksList import HomeworksList
 from bot.utils.methods.get_files_paths import get_files_paths

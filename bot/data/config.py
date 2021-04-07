@@ -23,7 +23,7 @@ commands = {
     'edit_hw': "edit homework",
     'del_hw': "delete homework",
     'show_hws': "show homework this week",
-    'cancel': "cancel dialog",
+    'ca ncel': "cancel dialog",
     'settings': "bot settings",
 
 }

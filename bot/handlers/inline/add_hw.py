@@ -3,7 +3,6 @@ from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResul
 from aiogram.dispatcher import filters, FSMContext
 from bot.utils.methods import check_date
 from bot.states import Inline
-from aiogram.dispatcher.filters.state import State
 
 
 TEST = [

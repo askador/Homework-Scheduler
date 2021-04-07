@@ -9,3 +9,4 @@ from .settings import settings
 from .promote import promote
 from .demote import demote
 from .for_private_commands import for_private_commands
+from .getid import get_id

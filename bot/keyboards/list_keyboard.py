@@ -1,7 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.types.MongoDB.Collections import Chat
-from bot.utils.methods.generate_hws_kb import generate_hws_kb
-
 
 async def list_keyboard(chat_id, filters, page, arr=None):
     """
@@ -31,7 +29,7 @@ async def list_keyboard(chat_id, filters, page, arr=None):
         array += await chat.get_field_value("subgroups")
         data += await chat.get_field_value("subgroups")
     elif filters == 'homework':
-        homeworks = await chat.get_homeworks(filters=[{}], full_info=False)
+        homeworks = sorted(await chat.get_homeworks(filters=[{}], full_info=False), key=lambda x: x["_id"]["_id"])
 
         index = 1
 

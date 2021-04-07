@@ -1,21 +1,13 @@
-from pprint import pprint
-
-from bot.loader import dp, bot
-from aiogram.dispatcher import filters, FSMContext
-from aiogram import types
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard, subgroups_keyboard, list_keyboard
+from bot.loader import dp
+from aiogram.dispatcher import filters
+from bot.keyboards import list_keyboard
 from bot.states import GetHomework
-from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
-import datetime
 from bot.data.commands.edit_hw import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
-from bot.utils.methods.generate_hws_kb import generate_hws_kb
 
-
-@dp.message_handler(filters.Text(startswith=ALIAS), access_level='moderator', state='*')
-@dp.message_handler(commands=COMMANDS, access_level='moderator', state='*')
+@dp.message_handler(filters.Text(startswith=ALIAS), access_level='moderator')
+@dp.message_handler(commands=COMMANDS, access_level='moderator')
 async def edit_hw(message):
     chat_id = message.chat.id
 

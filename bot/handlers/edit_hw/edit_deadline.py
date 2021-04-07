@@ -2,7 +2,7 @@ from bot.loader import dp, bot
 from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard, subgroups_keyboard
+from bot.keyboards import edit_hw_keyboard, calendar_keyboard
 from bot.states import GetHomework
 from bot.types.MongoDB import Chat
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
@@ -77,7 +77,7 @@ async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMCo
         await GetHomework.next()
 
         markup = InlineKeyboardMarkup()
-        markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
+        markup.add(InlineKeyboardButton('Дальше ⏭', callback_data='next'))
         await state.update_data(noskip=0)
         await update_last(state, await bot.send_message(callback_query.message.chat.id, "Введите время в "
                                                                                         "формате HH:MM или нажмите "
@@ -112,7 +112,7 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
         markup = InlineKeyboardMarkup()
 
         if noskip != 1:
-            markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
+            markup.add(InlineKeyboardButton('Дальше ⏭', callback_data='next'))
 
     await update_last(state, await message.reply(text, reply_markup=markup))
 

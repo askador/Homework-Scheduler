@@ -1,8 +1,7 @@
-from bot.loader import dp, bot
+from bot.loader import bot
 import datetime
 import asyncio
 from bot.types import Database
-from aiogram import types
 
 """
 CHATS = [

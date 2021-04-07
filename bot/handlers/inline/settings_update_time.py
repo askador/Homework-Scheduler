@@ -2,7 +2,6 @@ from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.dispatcher import filters, FSMContext
 from bot.states import InlineSettings
-from bot.keyboards import select_time_keyboard
 import datetime
 
 

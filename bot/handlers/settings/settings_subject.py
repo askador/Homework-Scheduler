@@ -1,9 +1,7 @@
 from bot.loader import dp, bot
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import FSMContext
 from aiogram import types
-from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, settings_keyboard_moderators, \
-    settings_keyboard, settings_keyboard_subjects, settings_keyboard_subgroups, settings_keyboard_notifications, \
-    settings_keyboard_terms, list_keyboard
+from bot.keyboards import settings_keyboard, list_keyboard
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -15,8 +13,8 @@ async def subject_add(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
     await Settings.add_subjects.set()
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('Назад', callback_data='back'))
-    markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
+    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     """await callback_query.message.edit_text(
         text="dsf",
         reply_markup=markup
@@ -59,8 +57,8 @@ async def subject_remove(callback_query: types.CallbackQuery, state: FSMContext)
     await state.update_data(page=1, subjects=await chat.get_field_value('subjects'), to_display=[])
     async with state.proxy() as data:
         markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subjects'])
-    markup.add(InlineKeyboardButton('Назад', callback_data='back'))
-    markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
+    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
+    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     await update_last(state,
                       await bot.edit_message_text("Удалить предметы", callback_query.message.chat.id,
                                                          callback_query.message.message_id, reply_markup=markup))

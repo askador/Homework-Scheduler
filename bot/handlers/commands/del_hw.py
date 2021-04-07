@@ -1,14 +1,13 @@
-from bot.loader import dp, bot
+from bot.loader import dp
 from aiogram import types
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import filters
 from bot.states import DeleteHomework
-from bot.keyboards import subjects_keyboard, subgroups_keyboard, list_keyboard
-from bot.utils.methods import update_last, clear
+from bot.keyboards import list_keyboard
 from bot.data.commands.del_hw import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
+@dp.message_handler(filters.Text(startswith=ALIAS), access_level='moderator')
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
 async def del_hw(message: types.Message):
     chat_id = message.chat.id

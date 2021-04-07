@@ -2,7 +2,7 @@ from bot.loader import dp, bot
 from aiogram.types import ChosenInlineResult
 from bot.utils.methods import add_parse_hw
 from bot.states import Inline
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import FSMContext
 
 
 @dp.chosen_inline_handler(lambda chosen_inline_query: True, state=Inline.add)

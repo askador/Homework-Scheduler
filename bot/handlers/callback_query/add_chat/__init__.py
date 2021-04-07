@@ -1,6 +1,6 @@
 from bot.loader import dp
 from bot.scheduler import scheduler
-from aiogram.dispatcher import filters, FSMContext
+from aiogram.dispatcher import FSMContext
 from bot.states import AddChat
 from aiogram import types
 
