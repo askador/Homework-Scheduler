@@ -3,7 +3,7 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, settings_keyboard_moderators, \
     settings_keyboard, settings_keyboard_subjects, settings_keyboard_subgroups, settings_keyboard_notifications, \
-    settings_keyboard_terms
+    settings_keyboard_terms, list_keyboard
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
@@ -43,16 +43,54 @@ async def add_subjects(message: types.Message, state: FSMContext):
                                                     reply_markup=markup))
 
 
-
 @dp.callback_query_handler(lambda c: c.data == 'remove', state=Settings.subgroups)
 async def subgroup_remove(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
-    markup = InlineKeyboardMarkup()
+
+    await Settings.remove_subgroups.set()
+    chat = Chat(callback_query.message.chat.id)
+    await state.update_data(page=1, subgroups=await chat.get_field_value('subgroups'), to_display=[])
+    async with state.proxy() as data:
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subgroups'])
     markup.add(InlineKeyboardButton('Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
     await update_last(state,
-                      await bot.edit_message_text("Удалить подгруппу", callback_query.message.chat.id,
+                      await bot.edit_message_text("Удалить подгруппы", callback_query.message.chat.id,
                                                          callback_query.message.message_id, reply_markup=markup))
+
+
+@dp.callback_query_handler(lambda c: c.data.isdigit(), state=Settings.remove_subgroups)
+async def picked_subgroup(callback_query: types.CallbackQuery, state: FSMContext):
+    chat = Chat(callback_query.message.chat.id)
+
+    subg_id = int(callback_query.data)
+    async with state.proxy() as data:
+        subgroups = data['subgroups']
+        data['to_display'] += [subgroups[subg_id]]
+        subgroups.pop(subg_id)
+        data['subgroups'] = subgroups
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subgroups'])
+        markup.add(InlineKeyboardButton('Сохранить изменения', callback_data='save'))
+        to_display = ""
+        for i in range(len(data['to_display'])-1):
+            to_display += data['to_display'][i] + ', '
+        to_display += data['to_display'][len(data['to_display'])-1]
+        await update_last(state,
+                          await bot.edit_message_text("Удалить подгруппы \n Выбраны:{}".format(to_display), callback_query.message.chat.id,
+                                                      callback_query.message.message_id, reply_markup=markup))
+
+
+@dp.callback_query_handler(lambda c: c.data == 'save', state=Settings.remove_subgroups)
+async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
+    # Todo
+    # deleting, checking for hw
+
+    await clear(state)
+
+    await Settings.choice.set()
+    markup = await settings_keyboard()
+    await update_last(state, await bot.send_message(callback_query.message.chat.id, "Удалено!\nМеню настроек",
+                                                    reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'edit', state=Settings.subgroups)

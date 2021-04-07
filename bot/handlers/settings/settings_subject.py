@@ -67,7 +67,7 @@ async def subject_remove(callback_query: types.CallbackQuery, state: FSMContext)
                                                          callback_query.message.message_id, reply_markup=markup))
 
 
-@dp.callback_query_handler(lambda c: isinstance(int(c.data), int), state=Settings.remove_subjects)
+@dp.callback_query_handler(lambda c: c.data.isdigit(), state=Settings.remove_subjects)
 async def picked_subject(callback_query: types.CallbackQuery, state: FSMContext):
     chat = Chat(callback_query.message.chat.id)
 
@@ -86,3 +86,16 @@ async def picked_subject(callback_query: types.CallbackQuery, state: FSMContext)
         await update_last(state,
                           await bot.edit_message_text("Удалить предметы \n Выбраны:{}".format(to_display), callback_query.message.chat.id,
                                                       callback_query.message.message_id, reply_markup=markup))
+
+
+@dp.callback_query_handler(lambda c: c.data == 'save', state=Settings.remove_subjects)
+async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
+    # Todo
+    # deleting, checking for hw
+
+    await clear(state)
+
+    await Settings.choice.set()
+    markup = await settings_keyboard()
+    await update_last(state, await bot.send_message(callback_query.message.chat.id, "Удалено!\nМеню настроек",
+                                                    reply_markup=markup))
