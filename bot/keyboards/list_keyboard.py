@@ -45,7 +45,7 @@ async def list_keyboard(chat_id, filters, page, arr=None):
             button_text += f"{hw['name']}"
 
             array.append(button_text)
-            data.append('{}'.format(index))
+            data.append('{}'.format(hw['_id']))
 
             index += 1
     elif filters == 'special':
