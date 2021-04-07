@@ -10,7 +10,7 @@ from bot.utils.methods.get_files_paths import get_files_paths
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Command(commands=ALIAS, prefixes=['!']), state='*')
+@dp.message_handler(filters.Text(startswith=ALIAS), state='*')
 @dp.message_handler(filters.Command(commands=COMMANDS), state='*')
 async def show_hw(message, state):
 
