@@ -10,7 +10,7 @@ from bot.types import Database
 
 
 @dp.message_handler(content_types=["new_chat_members"], commands=['start'], access_level='creator')
-async def new_chat(message, state):
+async def process_bot_join(message, state):
     chat_id = message.chat.id
 
     db = Database()

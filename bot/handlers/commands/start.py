@@ -8,7 +8,7 @@ from aiogram.types import ChatType
 async def start(message):
 
     await message.answer(
-        f"Привет, я Homework Scheduler!\n"
+        f"Привет, я Homework Scheduler!\n\n"
         f"Я создан для упрощения работы с распорядком домашних заданий студентов\n"
         f"Чтобы посмотреть мой функционал введите /help"
     )
