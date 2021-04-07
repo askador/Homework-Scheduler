@@ -4,7 +4,7 @@ from bot.utils.methods import get_chat_admins
 from bot.types import Database
 
 
-@dp.message_handler(content_types=["new_chat_members"], commands=['start'], access_level='creator')
+@dp.message_handler(content_types=["new_chat_members"])
 async def process_bot_join(message, state):
     print(message)
     chat_id = message.chat.id
