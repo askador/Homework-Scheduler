@@ -1,16 +1,12 @@
-
 from bot.loader import bot, dp
-from bot.scheduler import scheduler
-from aiogram.types import ChatType
-from aiogram.dispatcher.filters import ChatTypeFilter
 from bot.states import AddChat
 from bot.utils.methods import get_chat_admins
-from bot.types.MongoDB.Collections import Chat
 from bot.types import Database
 
 
 @dp.message_handler(content_types=["new_chat_members"], commands=['start'], access_level='creator')
 async def process_bot_join(message, state):
+    print(message)
     chat_id = message.chat.id
 
     db = Database()
