@@ -3,7 +3,7 @@ from bot.keyboards import list_keyboard
 from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from bot.loader import dp, bot
-from bot.states import SetHomework, GetHomework
+from bot.states import SetHomework, GetHomework, DeleteHomework
 
 
 async def change_page(callback_query: types.CallbackQuery, state: FSMContext, text):
@@ -16,7 +16,11 @@ async def change_page(callback_query: types.CallbackQuery, state: FSMContext, te
 
     async with state.proxy() as data:
         data['page'] = data['page'] + page_shift[callback_query.data]
-        page = data['page']
+        if data['page'] <= 0:
+            data['page'] = 1
+            page = 1
+        else:
+            page = data['page']
     markup = await list_keyboard(callback_query.message.chat.id, text, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
                                         reply_markup=markup)
@@ -32,6 +36,6 @@ async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'subject')
 
 
-@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[GetHomework.homework])
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[GetHomework.homework, DeleteHomework.homework])
 async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'homework')

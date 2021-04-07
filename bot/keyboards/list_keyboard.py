@@ -3,7 +3,7 @@ from bot.types.MongoDB.Collections import Chat
 from bot.utils.methods.generate_hws_kb import generate_hws_kb
 
 
-async def list_keyboard(chat_id, filters, page):
+async def list_keyboard(chat_id, filters, page, arr=None):
     """
 
     :param int chat_id: chat id
@@ -48,8 +48,12 @@ async def list_keyboard(chat_id, filters, page):
             data.append('{}'.format(index))
 
             index += 1
+    elif filters == 'special':
+        array = arr
+        data = [i for i in range(0, len(arr))]
 
     markup = InlineKeyboardMarkup()
+
 
     if len(array) <= list_height:
         async for elem in asrange(0, len(array)):

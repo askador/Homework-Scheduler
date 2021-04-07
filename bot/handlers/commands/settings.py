@@ -7,7 +7,7 @@ from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, se
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from bot.handlers.settings.test import COMMANDS, CHAT_TYPES, ALIAS
+from bot.data.commands.settings import COMMANDS, ALIAS
 
 
 @dp.message_handler(commands=COMMANDS,  access_level='admin')

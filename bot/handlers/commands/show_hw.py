@@ -10,21 +10,38 @@ from bot.types.HomeworksList import HomeworksList
 from bot.utils.methods.get_files_paths import get_files_paths
 from bot.types.MongoDB.Collections import Chat
 
-CHAT_TYPES = [
-    ChatType.GROUP,
-    ChatType.SUPERGROUP
-]
-
 
 @dp.message_handler(filters.Text(startswith=ALIAS), state='*')
 @dp.message_handler(filters.Command(commands=COMMANDS), state='*')
 async def show_hw(message, state):
+
+    # # Todo implement hw search
+    # text_entities = message.text.replace("!показать дз", "").replace('!п', "").strip().split()
+    # command_entities = [arg.strip() for arg in text_entities]
+    #
+    # # if text_entities[0] == "!п":
+    # #     if len(text_entities) != 1:
+    # #         command_entities = text_entities[1:]
+    # # elif text_entities[0] == "!показать":
+    # #     if len(text_entities) != 2:
+    # #         command_entities = text_entities[2:]
+    #
+    # await message.reply(message.text.split())
+    # await message.reply(command_entities)
+    #
+    # return
+
     chat_id = message.chat.id
 
-    show_hw_mode = "photo" if (await Chat(chat_id).get_field_value("photo_mode")) else "text"
+    show_hw_mode = "text"
+
+    if await Chat(chat_id).get_field_value("photo_mode"):
+        show_hw_mode = "photo"
 
     if "текст" in message.text.split():
         show_hw_mode = 'text'
+    elif "фото" in message.text.split():
+        show_hw_mode = 'photo'
 
     await ShowHw.week.set()
 

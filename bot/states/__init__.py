@@ -31,7 +31,11 @@ class GetHomework(StatesGroup):
 class Settings(StatesGroup):
     choice = State()
     subjects = State()
+    add_subjects = State()
+    remove_subjects = State()
     subgroups = State()
+    add_subgroups = State()
+    remove_subgroups = State()
     notifications = State()
     terms = State()
     moderators = State()

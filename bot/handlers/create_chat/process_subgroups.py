@@ -7,13 +7,7 @@ from aiogram.types import ChatType
 from bot.types.MongoDB.Collections import Chat
 
 
-CHAT_TYPES = [
-    ChatType.GROUP,
-    ChatType.SUPERGROUP
-]
-
-
-@dp.message_handler(filters.ChatTypeFilter(CHAT_TYPES), state=AddChat.subgroups)
+@dp.message_handler(state=AddChat.subgroups)
 async def process_subgroups(message, state):
 
     subgroups = message.text.split(',')

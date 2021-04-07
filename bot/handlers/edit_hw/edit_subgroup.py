@@ -6,7 +6,6 @@ from bot.keyboards import subjects_keyboard, edit_hw_keyboard, calendar_keyboard
 from bot.states import GetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 import datetime
-from .test import COMMANDS, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
 

@@ -7,7 +7,6 @@ from bot.keyboards import subjects_keyboard, calendar_keyboard, subgroups_keyboa
 from bot.states import SetHomework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 # from datetime import datetime, timedelta
-from .test import ALIAS, COMMANDS
 
 
 @dp.message_handler(state=SetHomework.description)
