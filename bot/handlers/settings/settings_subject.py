@@ -30,7 +30,7 @@ async def subject_add(callback_query: types.CallbackQuery, state: FSMContext):
                           reply_markup=markup))
 
 
-@dp.message_handler(state=Settings.add_subjectssubjects)
+@dp.message_handler(state=Settings.add_subjects)
 async def add_subjects(message: types.Message, state: FSMContext):
     await clear(state)
 
