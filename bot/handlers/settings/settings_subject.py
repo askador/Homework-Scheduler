@@ -14,6 +14,7 @@ from bot.types.MongoDB.Collections import Chat
 @dp.callback_query_handler(lambda c: c.data == 'add', state=Settings.subjects)
 async def subject_add(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
+    await Settings.add_subjects.set()
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton('Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('Завершить', callback_data='done'))
@@ -29,7 +30,7 @@ async def subject_add(callback_query: types.CallbackQuery, state: FSMContext):
                           reply_markup=markup))
 
 
-@dp.message_handler(state=Settings.subjects)
+@dp.message_handler(state=Settings.add_subjectssubjects)
 async def add_subjects(message: types.Message, state: FSMContext):
     await clear(state)
 
