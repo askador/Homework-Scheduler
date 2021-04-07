@@ -7,9 +7,11 @@ def get_files_paths(chat_id):
     photo_file = f"{datetime.timestamp(datetime.now())}_{str(chat_id)}.png"
 
     script_dir = os.path.dirname(__file__)
+    print(script_dir)
     script_dir = "/".join(script_dir.split('\\')[:script_dir.split('\\').index("bot") + 1])
 
-    script_dir += "/utils/HTML_photo/temp_photo/"
+    script_dir = "bot/utils/HTML_photo/temp_photo/"
+
 
     html_path = script_dir + html_file
     photo_path = script_dir + photo_file
