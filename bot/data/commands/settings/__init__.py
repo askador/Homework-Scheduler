@@ -1,3 +1,7 @@
+ALIAS = [
+    '!настройки'
+]
+
 COMMANDS = [
     "settings",
 ]

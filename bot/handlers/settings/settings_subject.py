@@ -7,7 +7,6 @@ from bot.keyboards import select_time_keyboard, settings_keyboard_appearance, se
 from bot.states import Settings
 from bot.utils.methods import clear, update_last
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from .test import COMMANDS, CHAT_TYPES, ALIAS
 from bot.types.MongoDB.Collections import Chat
 
 

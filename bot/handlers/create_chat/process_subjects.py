@@ -6,13 +6,7 @@ from aiogram.types import ChatType
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
-CHAT_TYPES = [
-    ChatType.GROUP,
-    ChatType.SUPERGROUP
-]
-
-
-@dp.message_handler(ChatTypeFilter(CHAT_TYPES), state=AddChat.subjects)
+@dp.message_handler(state=AddChat.subjects)
 async def process_subjects(message, state):
 
     subjects = message.text.split(',')

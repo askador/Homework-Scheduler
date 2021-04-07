@@ -1,9 +1,9 @@
 from . import commands
 from . import callback_query
-from . import chosen_inline
+# from . import chosen_inline
 from . import create_chat
 from . import error
-from . import inline
+# from . import inline
 from . import add_hw
 from . import edit_hw
 from . import del_hw
