@@ -13,8 +13,10 @@ async def edit_description(message, state: FSMContext):
 
     chat = Chat(message.chat.id)
     async with state.proxy() as data:
+        print(data)
         await chat.update_hw(_id=data["hw_id"], description=data['description'])
+        text = "Новое описание: {} \n Выберите что вы хотите отредактировать: ".format(data['description'])
 
     markup = await edit_hw_keyboard()
-    await update_last(state, await message.reply("Описание успешно изменено!", reply_markup=markup))
+    await update_last(state, await message.reply(text, reply_markup=markup))
     await GetHomework.choice.set()

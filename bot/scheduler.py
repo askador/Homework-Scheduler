@@ -18,7 +18,7 @@ executors = {
 
 
 #scheduler = AsyncIOScheduler(jobstores=jobstores, executors=executors, timezone='Europe/Kiev')
-scheduler = AsyncIOScheduler()
+scheduler = AsyncIOScheduler(timezone='Europe/Kiev')
 
 
 def show_hw():
@@ -28,5 +28,6 @@ def show_hw():
 # print('scheduling')
 for time in range(24):
     scheduler.add_job(show_daily_hw, 'cron', args=[time], hour=time)
+    # scheduler.add_job(show_hw, 'cron', hour=10, minute=42)
 #scheduler.add_job(show_daily_hw, 'interval', args=[12],  seconds=5)
 scheduler.start()

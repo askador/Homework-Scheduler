@@ -209,10 +209,20 @@ class HomeworksList:
             "common": 'обычное'
         }
 
+        days_of_week = {
+            "Monday": "Понедельник",
+            "Tuesday": "Вторник",
+            "Wednesday": "Среда",
+            "Thursday": "Четверг",
+            "Friday": "Пятница",
+            "Saturday": "Суббота",
+            "Sunday": "Воскресенье"
+        }
+
         text = ""
 
         for date, hws in hws_list.items():
-            text += f"""\n📅<b>{datetime.strftime(date, "%A")} {datetime.strftime(date, "%d.%m.%y")}</b>\n"""
+            text += f"""\n📅<b>{days_of_week[datetime.strftime(date, "%A")]} {datetime.strftime(date, "%d.%m.%y")}</b>\n"""
             i = 1
             for hw in hws:
                 pin_sign = ''

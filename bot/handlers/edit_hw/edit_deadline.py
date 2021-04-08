@@ -109,9 +109,9 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
             print(data['hw_id'], data['deadline'])
             await chat.update_hw(_id=int(data['hw_id']), deadline=date)
 
-        await GetHomework.choice.set()
+            await GetHomework.choice.set()
+            text = "Установлен новый срок сдачи:{} \n Выберите что вы хотите отредактировать: ".format(date)
 
-        text = "Выберите что вы хотите отредактировать: "
         markup = await edit_hw_keyboard()
     else:
         text = "Данные введены неверно!\nВведите время повторно:"
@@ -143,9 +143,9 @@ async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
             print(data['hw_id'], data['deadline'])
             await chat.update_hw(_id=int(data['hw_id']), deadline=date)
 
-        await GetHomework.choice.set()
+            await GetHomework.choice.set()
+            text = "Установлен новый срок сдачи:{} \n Выберите что вы хотите отредактировать: ".format(date)
 
-        text = "Выберите что вы хотите отредактировать: "
         markup = await edit_hw_keyboard()
     else:
         await state.update_data(noskip=1)

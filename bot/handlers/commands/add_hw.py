@@ -12,6 +12,7 @@ from bot.types.MongoDB.Collections import Chat
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
 @dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
 async def add_hw(message: types.Message):
+    """
     try:
         arguments = message.get_args().split()
     except Exception as e:
@@ -32,6 +33,8 @@ async def add_hw(message: types.Message):
             return await message.reply("все сразу, круто")
         else:
             text = "Введенные данные не подходят, вызываю стандартный диалог.\nВыберите предмет или введите его:"
+    """
+    text = "Выберите предмет или введите его:"
 
     await SetHomework.subject.set()
     state = dp.get_current().current_state()

@@ -25,7 +25,7 @@ async def delete_homework(callback_query: types.CallbackQuery, state: FSMContext
         await chat.delete_hw(data['hw_id'])
 
     await state.finish()
-    await bot.edit_message_text("Видалив копчене", callback_query.message.chat.id, callback_query.message.message_id)
+    await bot.edit_message_text("Задание было удалено", callback_query.message.chat.id, callback_query.message.message_id)
 
 
 @dp.callback_query_handler(lambda c: c.data.isdigit(), state=DeleteHomework.homework)
@@ -37,5 +37,5 @@ async def approve_choice(callback_query: types.CallbackQuery, state: FSMContext)
     markup = InlineKeyboardMarkup()
     markup.add(InlineKeyboardButton("⏪ Обратно к списку", callback_data='back'))
     markup.add(InlineKeyboardButton("❌ Удалить", callback_data='delete'))
-    await bot.edit_message_text("Чи треба видаляти копчене?", callback_query.message.chat.id, callback_query.message.message_id,
+    await bot.edit_message_text("Уверены что хотите удалить это задание?", callback_query.message.chat.id, callback_query.message.message_id,
                                 reply_markup=markup)

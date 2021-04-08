@@ -10,3 +10,4 @@ async def close_hw(call, state):
         data['week_page'] = 0
 
     await bot.delete_message(chat_id, message_id)
+    await state.finish()
