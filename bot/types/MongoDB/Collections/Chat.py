@@ -74,7 +74,7 @@ class Chat:
         return await db.insert(self.__collection_name__, chat)
 
     async def update(self, *,
-                     title,
+                     title=None,
                      admins=None,
                      subjects=None,
                      subgroups=None,
@@ -192,13 +192,14 @@ class Chat:
             deadline=deadline,
             priority=priority)
 
-    async def get_homeworks(self, _id=None, filters: List[Dict] = None, full_info=True):
+    async def get_homeworks(self, _id=None, filters: List[Dict] = None, full_info=True, custom_query=None):
         """
         Get homeworks either by id or by list of dates or other filters
 
         :param int _id: homework id
         :param filters: list of filters
         :param bool full_info:
+        :param list custom_query:
 
         :return list data: homeworks
         """
@@ -208,12 +209,10 @@ class Chat:
         if _id:
             filters = [{'homeworks._id': _id}]
         for _filter in filters:
-            if full_info:
-                data = await hw.get_full_info(self.__collection_name__, filters=_filter)
-            else:
-                data = await hw.get_brief_info(self.__collection_name__, filters=_filter)
-
-        return data
+            return await hw.get_info(self.__collection_name__,
+                                     filters=_filter,
+                                     full_info=full_info,
+                                     custom_query=custom_query)
 
     async def delete_hw(self, _id):
         """

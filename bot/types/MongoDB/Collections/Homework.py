@@ -115,81 +115,59 @@ class Homework:
                                          "homeworks": {"$elemMatch": {"_id": self.id}}},
                                 changes={"$set": {f"homeworks.$.{field}": f"{val}"}})
 
-    async def get_brief_info(self, collection, by_id=False, filters=None):
+    async def get_info(self, collection, by_id=False, filters=None, full_info=True, custom_query=None):
         """
         Get homework info
 
         :param str collection:
         :param dict filters: filters
         :param bool by_id: search by hw id
+        :param bool full_info: show full hw info
+        :param list custom_query: create custom_query
 
         :return dict brief_info: homework(s) brief info
         """
 
-        db = Database()
-
-        if by_id:
-            filters = {'homeworks._id': self.id}
-
-        brief_info = await db.aggregate(collection=collection,
-                                        pipeline=[
-                                            {"$match": {"_id": self.chat_id}},
-                                            {"$unwind": "$homeworks"},
-                                            {"$match": filters},
-                                            {
-                                                "$group": {
-                                                    "_id": {
-                                                        "_id": "$homeworks._id",
-                                                        "subject": "$homeworks.subject",
-                                                        "subgroup": "$homeworks.subgroup",
-                                                        "name": "$homeworks.name",
-                                                        "priority": "$homeworks.priority",
-                                                        "deadline": "$homeworks.deadline"
-                                                    }
-                                                }
-                                            },
-                                        ]
-                                        )
-
-        return brief_info
-
-    async def get_full_info(self, collection, by_id=False, filters=None):
-        """
-        Get homework info
-
-        :param str collection:
-        :param dict filters: filters
-        :param bool by_id: search by hw id
-
-        :return dict hw: homework(s) full info
-        """
+        group = {
+            "_id": {
+                "_id": "$homeworks._id",
+                "subject": "$homeworks.subject",
+                "subgroup": "$homeworks.subgroup",
+                "name": "$homeworks.name",
+                "priority": "$homeworks.priority",
+                "deadline": "$homeworks.deadline"
+            }
+        }
 
         db = Database()
+
+        if custom_query:
+            return await db.aggregate(collection=collection, pipeline=custom_query)
+
         if by_id:
+            if not isinstance(self.id, int):
+                return
+
             filters = {'homeworks._id': self.id}
 
-        hw = await db.aggregate(collection=collection,
-                                pipeline=[
-                                    {"$match": {"_id": self.chat_id}},
-                                    {"$unwind": "$homeworks"},
-                                    {"$match": filters},
-                                    {
-                                        "$group": {
-                                            "_id": {
-                                                "_id": "$homeworks._id",
-                                                "subject": "$homeworks.subject",
-                                                "subgroup": "$homeworks.subgroup",
-                                                "name": "$homeworks.name",
-                                                "description": "$homeworks.description",
-                                                "deadline": "$homeworks.deadline",
-                                                "priority": "$homeworks.priority",
-                                            }
-                                        }
-                                    },
-                                ]
-                                )
+        if full_info:
+            group["_id"].update([
+                ("description", "$homeworks.description"),
+            ])
 
-        return hw
+        data = await db.aggregate(collection=collection,
+                                  pipeline=[
+                                      {"$match": {"_id": self.chat_id}},
+                                      {"$unwind": "$homeworks"},
+                                      {"$match": filters},
+                                      {
+                                          "$group": group
+                                      },
+
+                                  ])
+
+        return data
+
 
     async def delete(self, collection):
         """
@@ -206,11 +184,9 @@ class Homework:
             return 0
 
         db = Database()
-        return await db.delete(collection,
-                               filters={
-                                   "_id": self.chat_id,
-                                   "hws": {"$elemMatch": {"_id": self.id}}
-                               })
+        return await db.update(collection=collection,
+                               filters={"_id": self.chat_id},
+                               changes={"$pull": {"homeworks": {"_id": self.id}}})
 
     # def __repr__(self):
     #     hw = "{'id': 1}"

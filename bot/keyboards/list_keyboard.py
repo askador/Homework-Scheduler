@@ -37,7 +37,7 @@ async def list_keyboard(chat_id, filters, page, arr=None):
             hw = hw['_id']
             button_text = f"{index}. {hw['subject']} "
 
-            if hw['subgroup'] != '':
+            if hw['subgroup'] != 'any':
                 button_text += f"{hw['subgroup']}пг. "
 
             button_text += f"{hw['name']}"

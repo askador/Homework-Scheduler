@@ -14,7 +14,7 @@ async def back_to_list(callback_query: types.CallbackQuery, state: FSMContext):
     await state.update_data(page=1)
     kb = await list_keyboard(callback_query.message.chat.id, 'homework', 1)
     await bot.edit_message_text("Выберите задание которое хотите удалить", callback_query.message.chat.id, callback_query.message.message_id,
-                          reply_markup=kb)
+                                reply_markup=kb)
 
 
 @dp.callback_query_handler(lambda c: c.data == 'delete', state=DeleteHomework.homework)

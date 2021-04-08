@@ -28,7 +28,8 @@ class HomeworksList:
         """
         week_day = datetime.now().isocalendar()[2]
         start_date = datetime.now() - timedelta(days=week_day)
-        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0) for i in range(1 + 7 * self.page, 8 + 7 * self.page)]
+        dates = [(start_date + timedelta(days=i)).replace(hour=0, minute=0, second=0, microsecond=0) for i in
+                 range(1 + 7 * self.page, 8 + 7 * self.page)]
         return dates
 
     async def set_fields(self):
@@ -77,6 +78,9 @@ class HomeworksList:
         filtered_hws = {'important': [],
                         'common': []}
 
+        if not hws:
+            return filtered_hws
+
         for hw in hws:
             """
             Add both filtered by deadline common hw and important hw
@@ -97,16 +101,26 @@ class HomeworksList:
         :return html table row
         """
         from datetime import datetime
+
+        week_days = {
+            "Monday": "Понедельник",
+            "Tuesday": "Вторник",
+            "Wednesday": "Среда",
+            "Thursday": "Четверг",
+            "Friday": "Пятница",
+            "Saturday": "Суббота",
+            "Sunday": "Воскресенье",
+        }
+
         tr_day = TRElement(class_name="week-day")
 
         td_day_name = TDElement(colspan=2)
-        td_day_name.insert_data(datetime.strftime(date, "%A"))
+        td_day_name.insert_data(week_days[datetime.strftime(date, "%A")])
 
         td_date = TDElement(colspan=2)
         td_date.insert_data(datetime.strftime(date, "%d.%m.%y"))
 
         tr_day.add_element(td_day_name)
-        # tr_day.add_element(datetime.strftime(date, "%d.%m.%y"))
         tr_day.add_element(td_date)
 
         return str(tr_day)
@@ -228,8 +242,12 @@ class HomeworksList:
                 pin_sign = ''
                 if hw['priority'] != "common":
                     pin_sign = "📌"
+                if hw['subgroup'] != 'any':
+                    subj = f"{hw['subject']} {hw['subgroup']}пг."
+                else:
+                    subj = hw['subject']
                 text += f"     {pin_sign}📝 <b>{i}</b>\n" \
-                        f"     предмет: {hw['subject']}\n" \
+                        f"     предмет: {subj}\n" \
                         f"     название: {hw['name']}\n" \
                         f"     приоритетность: {importance[hw['priority']]}\n"
                 if hws.index(hw) + 1 != len(hws):

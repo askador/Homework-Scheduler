@@ -10,14 +10,14 @@ from bot.utils.methods.get_files_paths import get_files_paths
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Text(startswith=ALIAS), state='*')
+@dp.message_handler(filters.Text(startswith="!показать дз"), state='*')
 @dp.message_handler(filters.Command(commands=COMMANDS), state='*')
+@dp.message_handler(filters.Command(commands="п", prefixes="!"), state='*')
 async def show_hw(message, state):
-    print(message.text)
-    if message.text.split() == 1 and message.text != "!п":
-        return
-    if message.text.split() == 2 and message.text.split()[0] != "!показать" and message.text.split()[1] != "дз":
-        return
+    # if message.text.split() == 1 and message.text != "!п":
+    #     return
+    # if message.text.split() == 2 and message.text.split()[0] != "!показать" and message.text.split()[1] != "дз":
+    #     return
 
     # # Todo implement hw search
     # text_entities = message.text.replace("!показать дз", "").replace('!п', "").strip().split()

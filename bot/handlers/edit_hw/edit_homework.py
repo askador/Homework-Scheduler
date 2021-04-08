@@ -10,7 +10,7 @@ from bot.keyboards import edit_hw_keyboard
 @dp.callback_query_handler(lambda c: c.data is not None, state=GetHomework.homework)
 async def callback_select_homework(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
-    if not callback_query.data.isdigit():
+    if callback_query.data.isdigit():
         await state.update_data(hw_id=callback_query.data, page=1)
     await bot.answer_callback_query(callback_query.id)
     await GetHomework.choice.set()

@@ -1,31 +1,86 @@
 from bot.loader import bot
 import datetime
+from datetime import timedelta
 import asyncio
 from bot.types import Database
-
-"""
-CHATS = [
-    -1001424619068
-]
-
-PINS = [
-
-]
-
-ALLOWS = [
-
-]
-"""
+from bot.types.MongoDB import Chat
 
 
-async def get_hw(date):
-    return "Лаба на часик"
+async def get_hw(chat_id, current_day):
+    text = ""
+    tomorrow_text = "<b>Завтра нужно сдать</b>\n"
+    after_tomorrow_text = "<b>Послеавтра нужно сдать</b>\n"
 
-    # Todo
-    # ызвать метод показа дз
+    tomorrow_day_start = (current_day + timedelta(days=1)).replace(hour=0, minute=0, second=0)
+    tomorrow_day_end = (current_day + timedelta(days=1)).replace(hour=23, minute=59, second=59)
+    after_tomorrow_day_start = (current_day + timedelta(days=2)).replace(hour=0, minute=0, second=0)
+    after_tomorrow_day_end = (current_day + timedelta(days=2)).replace(hour=23, minute=59, second=59)
+
+    chat = Chat(chat_id)
+    homeworks_tomorrow = await chat.get_homeworks(filters=[
+        {
+            "$and": [
+                {
+                    "homeworks.deadline": {
+                        "$gte": tomorrow_day_start
+                    }
+                },
+                {
+                    "homeworks.deadline": {
+                        "$lte": tomorrow_day_end
+                    }
+                }
+            ]
+        }
+    ])
+
+    homeworks_after_tomorrow = await chat.get_homeworks(filters=[
+        {
+            "$and": [
+                {
+                    "homeworks.deadline": {
+                        "$gte": after_tomorrow_day_start
+                    }
+                },
+                {
+                    "homeworks.deadline": {
+                        "$lte": after_tomorrow_day_end
+                    }
+                }
+            ]
+        }
+    ])
+
+    hws_array = [homeworks_tomorrow, homeworks_after_tomorrow]
+
+    temp_day = 1
+
+    for day in hws_array:
+        index = 1
+
+        if day:
+            if temp_day == 1:
+                text += tomorrow_text
+            else:
+                text += after_tomorrow_text
+            temp_day += 1
+            for hw in day:
+                hw = hw['_id']
+                del hw['_id']
+                del hw['deadline']
+                del hw['priority']
+                subj = hw['subject']
+                if hw['subgroup'] != "any":
+                    subj += f"{hw['subgroup']}пг."
+
+                text += f"{index}. <b>предмет:</b> {subj}\n" \
+                             f"    <b>название:</b> {hw['name']}\n" \
+                             f"    <b>описание:</b> {hw['description']}\n\n"
+
+    return text
 
 
-async def remove_hw(date):
+async def remove_hw(chat_id, date):
     print('removed some hw')
 
     # Todo
@@ -34,7 +89,6 @@ async def remove_hw(date):
 
 async def show_daily_hw(time):
 
-    # global CHATS, PINS, ALLOWS
     db = Database()
     data = await db.find('chat', filters={"notification_time": time}, projection={"_id": 1, "pin_message_id": 1,
                                                                                   "can_pin": 1})
@@ -44,16 +98,23 @@ async def show_daily_hw(time):
     # print(CHATS)
 
     async def each_chat(chat):
+        print(chat["pin_message_id"])
         try:
-            print(chat["pin_message_id"])
-            await bot.unpin_chat_message(chat["_id"], chat["pin_message_id"])
-        except Exception as e:
+            if isinstance(chat["pin_message_id"], int):
+                await bot.unpin_chat_message(chat["_id"], chat["pin_message_id"])
+        except:
             pass
-        await remove_hw(datetime.datetime.now())
-        message = await bot.send_message(chat["_id"], await get_hw(datetime.datetime.now()))
+
+        await remove_hw(chat["_id"], datetime.datetime.now())
+        message = await bot.send_message(chat["_id"], await get_hw(chat['_id'], datetime.datetime.now()))
         if chat["can_pin"]:
-            await bot.pin_chat_message(chat["_id"], message.message_id)
-        await db.update('chat', filters={"_id": chat["_id"]}, changes={"$set": {"pin_message_id": message.message_id}})
+            try:
+                await bot.pin_chat_message(chat["_id"], message.message_id)
+            except:
+                pass
+
+        update_chat_pin_message = Chat(chat['_id'])
+        await update_chat_pin_message.update(pin_message_id=message.message_id)
         # PINS[chat] = message.message_id
 
     cor = [each_chat(chat) for chat in data]
