@@ -10,17 +10,21 @@ from bot.utils.methods import clear, update_last, check_date, make_datetime, che
 
 @dp.message_handler(state=SetHomework.deadline)
 async def select_deadline(message: types.Message, state: FSMContext):
-    # await clear(state)
+    await clear(state)
     hw_date = message.text.split()
 
+    markup = InlineKeyboardMarkup()
     if await check_date(hw_date):
         date = await make_datetime(hw_date)
-        await state.update_data(deadline=date)
-        await SetHomework.description.set()
-        text = "Введите описание работы:"
+        await state.update_data(deadline=date, noskip=0)
+        await SetHomework.deadline_precise.set()
+        text = "Введите время сдачи:"
+        markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
     else:
+        await state.update_data(month=0)
+        markup = await calendar_keyboard(0)
         text = "Данные введены неверно!\nВведите дату повторно:"
-    await update_last(state, await bot.send_message(message.chat.id, text))
+    await update_last(state, await bot.send_message(message.chat.id, text, reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'next_month', state=SetHomework.deadline)
@@ -70,13 +74,14 @@ async def calendar_prev_year(callback_query: types.CallbackQuery, state: FSMCont
 @dp.callback_query_handler(lambda c: len(c.data.split()) > 1, state=SetHomework.deadline)
 async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMContext):
     # print(callback_query.data)
+    await clear(state)
     date = callback_query.data.split()
 
     if await check_callback_date(datetime.datetime.strptime(date[1], '%Y-%m-%d')):
         # await clear(state)
 
         await state.update_data(deadline=datetime.datetime.strptime(date[1], '%Y-%m-%d'))
-        await SetHomework.next()
+        await SetHomework.deadline_precise.set()
 
         markup = InlineKeyboardMarkup()
         markup.add(InlineKeyboardButton('Дальше', callback_data='next'))
@@ -107,7 +112,7 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
         date = date.replace(minute=time.minute)
 
         await state.update_data(deadline=date)
-        await SetHomework.next()
+        await SetHomework.description.set()
 
         text = "Введите описание работы: "
         markup = InlineKeyboardMarkup()

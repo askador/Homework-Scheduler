@@ -22,8 +22,10 @@ async def edit_deadline(message, state: FSMContext):
         markup = await edit_hw_keyboard()
         await update_last(state, await message.reply(text, reply_markup=markup))
     else:
+        await state.update_data(month=0)
+        markup = await calendar_keyboard(0)
         text = "Данные введены неверно!\nВведите дату повторно:"
-        await update_last(state, await message.reply(text))
+        await update_last(state, await message.reply(text, reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'next_month', state=GetHomework.deadline)

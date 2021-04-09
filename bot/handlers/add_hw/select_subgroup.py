@@ -3,7 +3,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from bot.keyboards import calendar_keyboard, list_keyboard
 from bot.states import SetHomework
-from bot.utils.methods import update_last
+from bot.utils.methods import update_last, clear
 from bot.types.MongoDB.Collections import Chat
 
 
@@ -12,15 +12,15 @@ async def select_subgroup(message: types.Message, state: FSMContext):
     hw_subg = message.text
 
     SUBGROUPS = await Chat(message.chat.id).get_field_value("subgroups")
-    # await clear(state)
+    await clear(state)
 
     if hw_subg in SUBGROUPS or hw_subg == 'any':
         if hw_subg == 'any':
             hw_subg = ''
-        await state.update_data(subgroup=hw_subg)
-        await SetHomework.next()
-        markup = await list_keyboard(message.chat.id, 'subgroup', 1)
-        await update_last(state, await bot.send_message(message.chat.id, "Выберите подгруппу:",
+        await state.update_data(subgroup=hw_subg, month=0)
+        await SetHomework.deadline.set()
+        markup = await calendar_keyboard(0)
+        await update_last(state, await bot.send_message(message.chat.id, "Введите срок сдачи в формате ДД/ММ:",
                                                         reply_markup=markup))
         return
     else:
