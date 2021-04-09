@@ -2,7 +2,7 @@ from bot.keyboards import list_keyboard
 from aiogram.dispatcher import FSMContext
 from aiogram import types
 from bot.loader import dp, bot
-from bot.states import SetHomework, GetHomework, DeleteHomework
+from bot.states import SetHomework, GetHomework, DeleteHomework, Settings
 
 
 async def change_page(callback_query: types.CallbackQuery, state: FSMContext, text):
@@ -25,12 +25,12 @@ async def change_page(callback_query: types.CallbackQuery, state: FSMContext, te
                                         reply_markup=markup)
 
 
-@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subgroup, GetHomework.subgroup])
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subgroup, GetHomework.subgroup, Settings.remove_subjects])
 async def subgroup_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'subgroup')
 
 
-@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subject, GetHomework.subject])
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subject, GetHomework.subject, Settings.remove_subgroups])
 async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'subject')
 

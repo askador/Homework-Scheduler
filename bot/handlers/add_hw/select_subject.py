@@ -3,7 +3,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from bot.keyboards import list_keyboard
 from bot.states import SetHomework
-from bot.utils.methods import update_last
+from bot.utils.methods import update_last, clear
 from bot.types.MongoDB.Collections import Chat
 
 
@@ -12,13 +12,13 @@ async def select_subject(message: types.Message, state: FSMContext):
     hw_subj = message.text
 
     SUBJECTS = await Chat(message.chat.id).get_field_value("subjects")
-    #await clear(state)
+    await clear(state)
 
 
     if hw_subj in SUBJECTS:
         await state.update_data(subject=hw_subj)
         await SetHomework.next()
-        await update_last(await bot.send_message(message.chat.id, "Введите название работы:"))
+        await update_last(state, await bot.send_message(message.chat.id, "Введите название работы:"))
         return
     else:
         async with state.proxy() as data:
