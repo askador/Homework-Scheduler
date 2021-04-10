@@ -53,7 +53,7 @@ async def settings_keyboard_terms(selected):
 
 async def settings_keyboard_moderators():
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить модераторов', callback_data='add'))
+    # markup.add(InlineKeyboardButton('➕ Добавить модераторов', callback_data='add'))
     markup.add(InlineKeyboardButton('➖ Удалить модераторов', callback_data='remove'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))

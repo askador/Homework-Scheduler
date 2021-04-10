@@ -68,6 +68,7 @@ async def picked_subgroup(callback_query: types.CallbackQuery, state: FSMContext
         subgroups.pop(subg_id)
         data['subgroups'] = subgroups
         markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subgroups'])
+        markup.add(InlineKeyboardButton('⏪ Отменить', callback_data='redo'))
         markup.add(InlineKeyboardButton('✅ Сохранить изменения', callback_data='save'))
         to_display = ""
         for i in range(len(data['to_display'])-1):
