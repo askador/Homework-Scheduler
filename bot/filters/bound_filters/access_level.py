@@ -17,7 +17,7 @@ class AccessLevelFilter(BoundFilter):
                 obj = obj
             elif isinstance(obj, CallbackQuery):
                 obj = obj.message
-            return obj.type in self.allowed_chats
+            return obj.type in self.access_level
         except AttributeError:
             pass
         member = await bot.get_chat_member(obj.chat.id, obj.from_user.id)
