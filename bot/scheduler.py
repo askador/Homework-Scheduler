@@ -15,20 +15,13 @@ executors = {
     'processpool': ProcessPoolExecutor(24)
 }
 
-
-
 #scheduler = AsyncIOScheduler(jobstores=jobstores, executors=executors, timezone='Europe/Kiev')
 scheduler = AsyncIOScheduler(timezone='Europe/Kiev')
-
-
-def show_hw():
-    print('Пришло дз')
-
 
 # print('scheduling')
 for time in range(24):
     scheduler.add_job(show_daily_hw, 'cron', args=[time], hour=time)
     # scheduler.add_job(show_hw, 'cron', hour=10, minute=42)
-# scheduler.add_job(show_daily_hw, 'cron', args=[15], hour=21, minute=30)
+# scheduler.add_job(show_daily_hw, 'cron', args=[14], hour=11, minute=59)
 #scheduler.add_job(show_daily_hw, 'interval', args=[12],  seconds=5)
 scheduler.start()
