@@ -54,9 +54,9 @@ async def subject_remove(callback_query: types.CallbackQuery, state: FSMContext)
 
     await Settings.remove_subjects.set()
     chat = Chat(callback_query.message.chat.id)
-    await state.update_data(page=1, subjects=await chat.get_field_value('subjects'), to_display=[])
+    await state.update_data(page=1, special=await chat.get_field_value('subjects'), to_display=[])
     async with state.proxy() as data:
-        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subjects'])
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['special'])
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     await update_last(state,
@@ -70,11 +70,12 @@ async def picked_subject(callback_query: types.CallbackQuery, state: FSMContext)
 
     subj_id = int(callback_query.data)
     async with state.proxy() as data:
-        subjects = data['subjects']
+        subjects = data['special']
         data['to_display'] += [subjects[subj_id]]
         subjects.pop(subj_id)
-        data['subjects'] = subjects
-        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['subjects'])
+        data['special'] = subjects
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['special'])
+        markup.add(InlineKeyboardButton('⏪ Отменить', callback_data='redo'))
         markup.add(InlineKeyboardButton('Сохранить изменения', callback_data='save'))
         to_display = ""
         for i in range(len(data['to_display'])-1):
@@ -83,6 +84,31 @@ async def picked_subject(callback_query: types.CallbackQuery, state: FSMContext)
         await update_last(state,
                           await bot.edit_message_text("Удалить предметы \n Выбраны:{}".format(to_display), callback_query.message.chat.id,
                                                       callback_query.message.message_id, reply_markup=markup))
+
+
+@dp.callback_query_handler(lambda c: c.data == 'redo', state=Settings.remove_subjects)
+async def redo_subject(callback_query: types.CallbackQuery, state: FSMContext):
+    chat = Chat(callback_query.message.chat.id)
+
+    async with state.proxy() as data:
+        data['special'] += [data['to_display'].pop()]
+        markup = await list_keyboard(callback_query.message.chat.id, 'special', data['page'], data['special'])
+        if len(data['to_display']) != 0:
+            markup.add(InlineKeyboardButton('⏪ Отменить', callback_data='redo'))
+        markup.add(InlineKeyboardButton('Сохранить изменения', callback_data='save'))
+        to_display = ""
+        if len(data['to_display']) != 0:
+            for i in range(len(data['to_display'])-1):
+                to_display += data['to_display'][i] + ', '
+            to_display += data['to_display'][len(data['to_display'])-1]
+            await update_last(state,
+                              await bot.edit_message_text("Удалить предметы \n Выбраны:{}".format(to_display), callback_query.message.chat.id,
+                                                          callback_query.message.message_id, reply_markup=markup))
+        else:
+            await update_last(state,
+                              await bot.edit_message_text("Удалить предметы",
+                                                          callback_query.message.chat.id,
+                                                          callback_query.message.message_id, reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'save', state=Settings.remove_subjects)

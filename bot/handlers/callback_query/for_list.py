@@ -3,6 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram import types
 from bot.loader import dp, bot
 from bot.states import SetHomework, GetHomework, DeleteHomework, Settings
+from aiogram.types import InlineKeyboardButton
 
 
 async def change_page(callback_query: types.CallbackQuery, state: FSMContext, text):
@@ -20,17 +21,23 @@ async def change_page(callback_query: types.CallbackQuery, state: FSMContext, te
             page = 1
         else:
             page = data['page']
-    markup = await list_keyboard(callback_query.message.chat.id, text, page)
+            if text == 'special':
+                markup = await list_keyboard(callback_query.message.chat.id, text, page, data['special'])
+                if len(data['to_display']) != 0:
+                    markup.add(InlineKeyboardButton('⏪ Отменить', callback_data='redo'))
+                markup.add(InlineKeyboardButton('Сохранить изменения', callback_data='save'))
+            else:
+                markup = await list_keyboard(callback_query.message.chat.id, text, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,
                                         reply_markup=markup)
 
 
-@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subgroup, GetHomework.subgroup, Settings.remove_subjects])
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subgroup, GetHomework.subgroup])
 async def subgroup_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'subgroup')
 
 
-@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subject, GetHomework.subject, Settings.remove_subgroups])
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[SetHomework.subject, GetHomework.subject])
 async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'subject')
 
@@ -38,3 +45,8 @@ async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[GetHomework.homework, DeleteHomework.homework])
 async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'homework')
+
+
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[Settings.remove_subjects, Settings.remove_subgroups])
+async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
+    await change_page(callback_query, state, 'special')

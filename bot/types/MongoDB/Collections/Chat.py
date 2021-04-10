@@ -17,6 +17,7 @@ class Chat:
         "admins",
         "subjects",
         "subgroups",
+        "notify",
         "notification_time",
         "emoji_on",
         "photo_mode",
@@ -33,6 +34,7 @@ class Chat:
                   admins,
                   subjects=[],
                   subgroups=[],
+                  notify=True,
                   notification_time=12,
                   emoji_on=True,
                   photo_mode=True,
@@ -41,18 +43,17 @@ class Chat:
                   homeworks=[]):
         """
         Add new chat
-
         :param str title: chat title
         :param list admins: list of chat admins
         :param list subjects: list of subjects
         :param list subgroups: subgroups
+        :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification time
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
         :param bool can_pin: pin homeworks to do at notification time
         :param int pin_message_id: last pinned bot message
         :param list homeworks: homeworks
-
         :return changes
         """
 
@@ -62,6 +63,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
             "photo_mode": photo_mode,
@@ -78,6 +80,7 @@ class Chat:
                      admins=None,
                      subjects=None,
                      subgroups=None,
+                     notify=None,
                      notification_time=None,
                      emoji_on=None,
                      photo_mode=None,
@@ -86,17 +89,16 @@ class Chat:
                      ):
         """
         Update chat info
-
         :param str title: chat title
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
+        :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification hour
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
         :param bool can_pin: pin homeworks to do at notification time
         :param int pin_message_id: last pinned bot message
-
         :return changes
         """
 
@@ -105,6 +107,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
             "photo_mode": photo_mode,
@@ -130,14 +133,12 @@ class Chat:
                      ):
         """
         Add homework
-
         :param str subject: subject
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
         :param int priority: work priority
-
         :return changes
         """
 
@@ -170,7 +171,6 @@ class Chat:
                         priority=None):
         """
         Change homework
-
         :param int _id: homework id
         :param str subject: subject
         :param str name: name
@@ -178,7 +178,6 @@ class Chat:
         :param datetime.datetime deadline: deadline
         :param int subgroup: subgroup id
         :param int priority: work priority
-
         :return changes
         """
 
@@ -195,12 +194,10 @@ class Chat:
     async def get_homeworks(self, _id=None, filters: List[Dict] = None, full_info=True, custom_query=None):
         """
         Get homeworks either by id or by list of dates or other filters
-
         :param int _id: homework id
         :param filters: list of filters
         :param bool full_info:
         :param list custom_query:
-
         :return list data: homeworks
         """
         data = []
@@ -217,9 +214,7 @@ class Chat:
     async def delete_hw(self, _id):
         """
         Delete homework
-
         :param int _id: homework id
-
         :return changes
         """
         hw = Homework(chat_id=self.id, _id=int(_id))

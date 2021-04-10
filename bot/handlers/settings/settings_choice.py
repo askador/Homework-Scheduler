@@ -32,7 +32,8 @@ async def callback_select_setting(callback_query: types.CallbackQuery, state: FS
         text = "Настройки уведомлений"
         await Settings.notifications.set()
         pin = await chat.get_field_value("can_pin")
-        markup = await settings_keyboard_notifications(pin)
+        notify = await chat.get_field_value("notify")
+        markup = await settings_keyboard_notifications(pin, notify)
     elif callback_query.data == '3':
         text = "Изменить время обновления"
         await Settings.terms.set()
