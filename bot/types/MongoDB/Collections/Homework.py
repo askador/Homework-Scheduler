@@ -36,17 +36,17 @@ class Homework:
 
         return _id + 1
 
-    async def create(self, collection, *, subject, subgroup, name, description, deadline, priority=0):
+    async def create(self, collection, *, subject, subgroup, name, description, deadline, priority='common'):
         """
         Add homework
 
         :param str collection: db collection with chat homeworks
         :param str subject:
-        :param int subgroup:
+        :param str subgroup:
         :param str name:
         :param str description:
         :param datetime.datetime deadline:
-        :param int priority: priority of work
+        :param str priority: priority of work
 
         :return
             dict if successfully created
@@ -87,7 +87,7 @@ class Homework:
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
-        :param int priority: work priority
+        :param str priority: work priority
 
         :return
             dict changes_log if successfully created
@@ -167,7 +167,6 @@ class Homework:
                                   ])
 
         return data
-
 
     async def delete(self, collection):
         """

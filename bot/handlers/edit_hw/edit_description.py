@@ -13,7 +13,6 @@ async def edit_description(message, state: FSMContext):
 
     chat = Chat(message.chat.id)
     async with state.proxy() as data:
-        print(data)
         await chat.update_hw(_id=data["hw_id"], description=data['description'])
         text = "Новое описание: {} \n Выберите что вы хотите отредактировать: ".format(data['description'])
 
