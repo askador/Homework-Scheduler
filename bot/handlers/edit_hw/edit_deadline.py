@@ -108,7 +108,6 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
 
         chat = Chat(message.chat.id)
         async with state.proxy() as data:
-            print(data['hw_id'], data['deadline'])
             await chat.update_hw(_id=int(data['hw_id']), deadline=date)
 
             await GetHomework.choice.set()
@@ -142,7 +141,6 @@ async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
 
         chat = Chat(callback_query.message.chat.id)
         async with state.proxy() as data:
-            print(data['hw_id'], data['deadline'])
             await chat.update_hw(_id=int(data['hw_id']), deadline=date)
 
             await GetHomework.choice.set()

@@ -17,6 +17,7 @@ class Chat:
         "admins",
         "subjects",
         "subgroups",
+        "notify",
         "notification_time",
         "emoji_on",
         "photo_mode",
@@ -33,6 +34,7 @@ class Chat:
                   admins,
                   subjects=[],
                   subgroups=[],
+                  notify=True,
                   notification_time=12,
                   emoji_on=True,
                   photo_mode=True,
@@ -46,6 +48,7 @@ class Chat:
         :param list admins: list of chat admins
         :param list subjects: list of subjects
         :param list subgroups: subgroups
+        :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification time
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
@@ -62,6 +65,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
             "photo_mode": photo_mode,
@@ -78,6 +82,7 @@ class Chat:
                      admins=None,
                      subjects=None,
                      subgroups=None,
+                     notify=None,
                      notification_time=None,
                      emoji_on=None,
                      photo_mode=None,
@@ -91,6 +96,7 @@ class Chat:
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
+        :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification hour
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
@@ -105,6 +111,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
             "photo_mode": photo_mode,
