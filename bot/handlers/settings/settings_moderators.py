@@ -18,7 +18,7 @@ async def moderators_add(callback_query: types.CallbackQuery, state: FSMContext)
                                                          callback_query.message.message_id, reply_markup=markup))
 
 
-@dp.callback_query_handler(lambda c: c.data == 'remove', state=Settings.moderators, access_level='creator')
+@dp.callback_query_handler(lambda c: c.data == 'remove', state=Settings.moderators)
 async def moderators_remove(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
     markup = await moderators_keyboard(callback_query.message.chat.id)

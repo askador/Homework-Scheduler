@@ -10,8 +10,7 @@ async def moderators_keyboard(chat_id):
     moderators = await chat.get_field_value('admins')
 
     for moderator in moderators:
-        user = await bot.get_chat_member(chat_id, moderator)
-        user = user.user
+        user = (await bot.get_chat_member(chat_id, moderator)).user
         markup.row(InlineKeyboardButton(user.full_name, callback_data=moderator),
                    InlineKeyboardButton("👤", url='https://t.me/{}'.format(user.username)))
     return markup
