@@ -113,7 +113,7 @@ class Homework:
                 await db.update(collection,
                                 filters={"_id": self.chat_id,
                                          "homeworks": {"$elemMatch": {"_id": self.id}}},
-                                changes={"$set": {f"homeworks.$.{field}": {val}}})
+                                changes={"$set": {f"homeworks.$.{field}": val}})
 
     async def get_info(self, collection, by_id=False, filters=None, full_info=True, custom_query=None):
         """
