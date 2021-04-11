@@ -41,13 +41,13 @@ async def settings_keyboard_subgroups():
 async def settings_keyboard_notifications(pin, notify):
     markup = InlineKeyboardMarkup()
     if pin:
-        markup.add(InlineKeyboardButton('📌 Бот закрепляет новое дз', callback_data='pin'))
+        markup.add(InlineKeyboardButton('📌 Закреплять напоминание', callback_data='pin'))
     else:
-        markup.add(InlineKeyboardButton('Бот не закрепляет новое дз', callback_data='pin'))
+        markup.add(InlineKeyboardButton('Не закреплять напоминания', callback_data='pin'))
     if notify:
-        markup.add(InlineKeyboardButton('🔔 Бот уведомляет о новом дз', callback_data='notify'))
+        markup.add(InlineKeyboardButton('🔔 Уведомлять о сроках сдачи', callback_data='notify'))
     else:
-        markup.add(InlineKeyboardButton('Бот не уведомляет о новом дз', callback_data='notify'))
+        markup.add(InlineKeyboardButton('🔕 Не уведомлять о срокках сдачи', callback_data='notify'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
