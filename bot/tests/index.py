@@ -1,9 +1,6 @@
-from aiogram import Bot,Dispatcher, executor
+from aiogram import Bot, Dispatcher, executor
 from bot.data import config
 import logging
-
-from aiogram.types import InlineQuery, \
-    InputTextMessageContent, InlineQueryResultArticle
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token = config.token)

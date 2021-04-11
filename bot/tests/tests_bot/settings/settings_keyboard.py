@@ -4,30 +4,39 @@ from .select_time import select_time_keyboard
 
 async def settings_keyboard():
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('📚 Предметы', callback_data='0'))
-    markup.add(InlineKeyboardButton('🚻 Подгруппы', callback_data='1'))
-    markup.add(InlineKeyboardButton('🔔 Уведомления', callback_data='2'))
-    markup.add(InlineKeyboardButton('📅 Сроки', callback_data='3'))
-    markup.add(InlineKeyboardButton('🔑 Модераторы', callback_data='4'))
-    markup.add(InlineKeyboardButton('🖼 Внешний вид', callback_data='5'))
-    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='6'))
+    markup.add(InlineKeyboardButton('📚 Предметы', callback_data='subj_settings'))
+    markup.add(InlineKeyboardButton('🚻 Подгруппы', callback_data='subgr_settings'))
+    markup.add(InlineKeyboardButton('🔔 Уведомления', callback_data='notifications_settings'))
+    markup.add(InlineKeyboardButton('📅 Сроки', callback_data='terms_settings'))
+    markup.add(InlineKeyboardButton('🖼 Внешний вид', callback_data='style_settings'))
+    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='close_settings'))
     return markup
 
 
 async def settings_keyboard_subjects():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить предметы', callback_data='add'))
-    markup.add(InlineKeyboardButton('➖ Убрать предметы', callback_data='remove'))
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        [
+            InlineKeyboardButton('➕ Добавить предметы', callback_data='add_subjs'),
+            InlineKeyboardButton('➖ Убрать предметы', callback_data='remove_subjs')
+        ]
+    )
+    markup.row_width(1)
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
 
 async def settings_keyboard_subgroups():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить подгруппу', callback_data='add'))
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        [
+            InlineKeyboardButton('➕ Добавить подгруппу', callback_data='add'),
+            InlineKeyboardButton('❌ Удалить подгруппу', callback_data='remove')
+        ]
+    )
+    markup.row_width(1)
     markup.add(InlineKeyboardButton('➖ Изменить состав', callback_data='edit'))
-    markup.add(InlineKeyboardButton('❌ Удалить подгруппу', callback_data='remove'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
@@ -46,18 +55,8 @@ async def settings_keyboard_notifications(pin):
 
 async def settings_keyboard_terms(selected):
     markup = await select_time_keyboard(selected)
-    markup.row_width(1)
-    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
-    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
-    return markup
-
-
-async def settings_keyboard_moderators():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить модераторов', callback_data='add'))
-    markup.add(InlineKeyboardButton('➖ Удалить модераторов', callback_data='remove'))
-    markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
-    markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
+    # markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
+    # markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
 
