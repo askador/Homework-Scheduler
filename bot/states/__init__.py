@@ -1,4 +1,4 @@
-from . import get_public_hw
+from .get_public_hw import ShowHw
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
