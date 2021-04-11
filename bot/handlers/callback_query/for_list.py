@@ -2,7 +2,7 @@ from bot.keyboards import list_keyboard
 from aiogram.dispatcher import FSMContext
 from aiogram import types
 from bot.loader import dp, bot
-from bot.states import SetHomework, GetHomework, DeleteHomework, Settings
+from bot.states import SetHomework, GetHomework, DeleteHomework, Settings, ShowHw
 from aiogram.types import InlineKeyboardButton
 
 
@@ -42,7 +42,8 @@ async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'subject')
 
 
-@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back', state=[GetHomework.homework, DeleteHomework.homework])
+@dp.callback_query_handler(lambda c: c.data == 'next' or c.data == 'back',
+                           state=[GetHomework.homework, DeleteHomework.homework, ShowHw.week])
 async def subject_next(callback_query: types.CallbackQuery, state: FSMContext):
     await change_page(callback_query, state, 'homework')
 
