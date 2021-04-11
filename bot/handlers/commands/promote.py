@@ -4,8 +4,6 @@ from aiogram.dispatcher import filters
 
 from bot.types.MongoDB import Chat
 
-from bot.utils.methods.get_chat_admins import get_chat_admins
-
 
 @dp.message_handler(filters.IsReplyFilter(is_reply=True),
                     filters.Command(commands="повысить", prefixes='!'),
