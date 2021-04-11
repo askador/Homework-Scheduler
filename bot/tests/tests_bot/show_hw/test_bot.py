@@ -14,15 +14,19 @@ from bot.types.MongoDB.Collections import Chat
 @dp.message_handler(Command(commands=COMMANDS, prefixes="/"))
 async def edit_hw(message):
     chat_id = message.chat.id
-
     chat = Chat(chat_id)
 
     args = message.get_args().split() if message.is_command() else message.text.split()[1:]
-    await message.answer(args)
 
-    homeworks = await chat.homeworks_search(args=args)
+    homeworks = sorted(await chat.homeworks_search(args=args, full_info=False), key=lambda x: x["_id"]["_id"])
 
-    await message.answer(homeworks)
+    if not homeworks:
+        await message.reply("По запросу ничего не нашлось")
+        return
+
+    kb = await list_keyboard(message.chat.id, 'homework', page=1, arr=homeworks)
+    await message.answer(text="дз",
+                         reply_markup=kb)
 
     # await GetHomework.homework.set()
     # state = dp.get_current().current_state()
