@@ -1,8 +1,8 @@
 import os
-from aiogram.dispatcher import filters
+from aiogram.dispatcher.filters import Command
 
 from bot.loader import dp, bot
-from bot.data.commands.show_hw import COMMANDS, ALIAS
+from bot.data.commands.show_hw import COMMANDS, COMMANDS_TEXT
 from bot.states.get_public_hw import ShowHw
 from bot.keyboards.show_homework.show_homework import homework_kb_next_week
 from bot.types.HomeworksList import HomeworksList
@@ -10,9 +10,8 @@ from bot.utils.methods.get_files_paths import get_files_paths
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Text(startswith="!показать дз"), state='*')
-@dp.message_handler(filters.Command(commands=COMMANDS), state='*')
-@dp.message_handler(filters.Command(commands="п", prefixes="!"), state='*')
+@dp.message_handler(Command(commands=COMMANDS), state='*')
+@dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"), state='*')
 async def show_hw(message, state):
     # if message.text.split() == 1 and message.text != "!п":
     #     return

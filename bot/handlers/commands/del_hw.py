@@ -3,11 +3,12 @@ from aiogram import types
 from aiogram.dispatcher import filters
 from bot.states import DeleteHomework
 from bot.keyboards import list_keyboard
-from bot.data.commands.del_hw import COMMANDS, ALIAS
+from bot.data.commands.del_hw import COMMANDS, COMMANDS_TEXT
+from aiogram.dispatcher.filters import Command
 from bot.types.MongoDB.Collections import Chat
 
 
-@dp.message_handler(filters.Text(startswith=ALIAS), access_level='moderator')
+@dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"), access_level='moderator')
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
 async def del_hw(message: types.Message):
     chat_id = message.chat.id

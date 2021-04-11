@@ -4,11 +4,11 @@ from aiogram import types
 from bot.keyboards import settings_keyboard
 from bot.states import Settings
 from bot.utils.methods import update_last
-from bot.data.commands.settings import COMMANDS, ALIAS
+from bot.data.commands.settings import COMMANDS, COMMANDS_TEXT
 
 
 @dp.message_handler(commands=COMMANDS,  access_level='admin')
-@dp.message_handler(filters.Text(startswith=ALIAS), access_level='admin')
+@dp.message_handler(filters.Command(commands=COMMANDS_TEXT), access_level='admin')
 async def settings(message):
     markup = await settings_keyboard()
     await Settings.choice.set()

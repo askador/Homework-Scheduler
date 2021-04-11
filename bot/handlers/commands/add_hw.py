@@ -1,8 +1,8 @@
-from bot.data.commands.add_hw import ALIAS, COMMANDS
+from bot.data.commands.add_hw import COMMANDS_TEXT, COMMANDS
 
 from bot.loader import dp
 from aiogram import types
-from aiogram.dispatcher import filters
+from aiogram.dispatcher.filters import Command
 from bot.keyboards import list_keyboard
 from bot.states import SetHomework
 from bot.utils.methods import update_last, check_date
@@ -10,7 +10,7 @@ from bot.types.MongoDB.Collections import Chat
 
 
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
-@dp.message_handler(filters.Text(startswith=ALIAS),  access_level='moderator')
+@dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"),  access_level='moderator')
 async def add_hw(message: types.Message):
     """
     try:

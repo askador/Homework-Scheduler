@@ -1,5 +1,5 @@
-ALIAS = [
-    '!настройки'
+COMMANDS_TEXT = [
+    'настройки'
 ]
 
 COMMANDS = [
