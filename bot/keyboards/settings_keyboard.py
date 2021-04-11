@@ -47,7 +47,7 @@ async def settings_keyboard_notifications(pin, notify):
     if notify:
         markup.add(InlineKeyboardButton('🔔 Уведомлять о сроках сдачи', callback_data='notify'))
     else:
-        markup.add(InlineKeyboardButton('🔕 Не уведомлять о срокках сдачи', callback_data='notify'))
+        markup.add(InlineKeyboardButton('🔕 Не уведомлять о сроках сдачи', callback_data='notify'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
