@@ -209,7 +209,7 @@ class Chat:
                                      full_info=full_info,
                                      custom_query=custom_query)
         if _id:
-            filters = [{'homeworks._id': _id}]
+            filters = [{'homeworks._id': int(_id)}]
         for _filter in filters:
             return await hw.get_info(self.__collection_name__,
                                      filters=_filter,
@@ -234,8 +234,14 @@ class Chat:
             'homeworks.subgroup',
             'homeworks.name',
             'homeworks.description',
-            'format_date'
+            'format_date_point',
+            'format_date_slash'
         ]
+
+        priority = {
+            "common": "обычное",
+            "important": "важное"
+        }
 
         _and = {}
 
@@ -253,6 +259,17 @@ class Chat:
                             }
                         }
                     )
+
+                for k, v in priority.items():
+                    if arg in v:
+                        _and["$and"][index]["$or"].append(
+                            {
+                                'homeworks.priority': {
+                                    "$regex": f'{k}', "$options": "i"
+                                }
+                            }
+                        )
+
                 index += 1
 
         query = [
@@ -260,8 +277,11 @@ class Chat:
             {"$unwind": "$homeworks"},
             {
                 "$addFields": {
-                    "format_date": {
-                        "$dateToString": {"format": "%Y-%m-%d %H-%M", "date": "$homeworks.deadline"},
+                    "format_date_point": {
+                        "$dateToString": {"format": "%Y.%m.%d %H.%M", "date": "$homeworks.deadline"},
+                    },
+                    "format_date_slash": {
+                        "$dateToString": {"format": "%Y/%m/%d %H/%M", "date": "$homeworks.deadline"},
                     }
                 }
             },

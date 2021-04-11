@@ -11,16 +11,21 @@ from bot.types.MongoDB.Collections import Chat
 @dp.message_handler(commands=COMMANDS, access_level='moderator')
 async def edit_hw(message):
     chat_id = message.chat.id
-
     chat = Chat(chat_id)
-
-    # homeworks = await chat.get_homeworks(filters=[{}], full_info=False)
 
     await GetHomework.homework.set()
     state = dp.get_current().current_state()
     await state.update_data(page=1)
 
-    kb = await list_keyboard(message.chat.id, 'homework', 1)
+    args = message.get_args().split() if message.is_command() else message.text.split()[1:]
+
+    homeworks = sorted(await chat.homeworks_search(args=args, full_info=False), key=lambda x: x["_id"]["_id"])
+
+    if not homeworks:
+        await message.reply("По запросу ничего не нашлось")
+        return
+
+    kb = await list_keyboard(message.chat.id, 'homework', page=1, arr=homeworks)
     await message.answer(text="Выберите задание, которое Вы хотите редактировать",
                          reply_markup=kb)
 

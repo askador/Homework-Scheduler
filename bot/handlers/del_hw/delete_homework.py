@@ -12,7 +12,9 @@ from bot.types.MongoDB import Chat
 async def back_to_list(callback_query: types.CallbackQuery, state: FSMContext):
 
     await state.update_data(page=1)
-    kb = await list_keyboard(callback_query.message.chat.id, 'homework', 1)
+    chat = Chat(callback_query.message.chat.id)
+    hws = sorted(await chat.get_homeworks(filters=[{}], full_info=False), key=lambda x: x["_id"]["_id"])
+    kb = await list_keyboard(callback_query.message.chat.id, 'homework', page=1, arr=hws)
     await bot.edit_message_text("Выберите задание которое хотите удалить", callback_query.message.chat.id, callback_query.message.message_id,
                                 reply_markup=kb)
 
