@@ -129,7 +129,7 @@ class Chat:
                      description,
                      deadline,
                      subgroup=None,
-                     priority=0
+                     priority='common'
                      ):
         """
         Add homework
@@ -137,8 +137,8 @@ class Chat:
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
-        :param int subgroup: subgroup id
-        :param int priority: work priority
+        :param str subgroup: subgroup id
+        :param str priority: work priority
         :return changes
         """
 
@@ -203,6 +203,11 @@ class Chat:
         data = []
         hw = Homework(chat_id=self.id)
 
+        if custom_query:
+            return await hw.get_info(self.__collection_name__,
+                                     filters={},
+                                     full_info=full_info,
+                                     custom_query=custom_query)
         if _id:
             filters = [{'homeworks._id': _id}]
         for _filter in filters:
@@ -210,6 +215,63 @@ class Chat:
                                      filters=_filter,
                                      full_info=full_info,
                                      custom_query=custom_query)
+
+    async def homeworks_search(self, args, full_info=True):
+        """
+        Search homeworks by args
+
+        :param list args: search will be implemented by given args
+        :param bool full_info:
+
+        :return list data: searched homeworks
+        """
+
+        data = []
+        hw = Homework(chat_id=self.id)
+
+        fields = [
+            'homeworks.subject',
+            'homeworks.subgroup',
+            'homeworks.name',
+            'homeworks.description',
+            'format_date'
+        ]
+
+        _and = {}
+
+        if args:
+            _and = {"$and": []}
+
+            index = 0
+            for arg in args:
+                _and['$and'].append({"$or": []})
+                for field in fields:
+                    _and["$and"][index]["$or"].append(
+                        {
+                            field: {
+                                "$regex": f'{arg}+', "$options": "i"
+                            }
+                        }
+                    )
+                index += 1
+
+        query = [
+            {"$match": {"_id": -1001424619068}},
+            {"$unwind": "$homeworks"},
+            {
+                "$addFields": {
+                    "format_date": {
+                        "$dateToString": {"format": "%Y-%m-%d %H-%M", "date": "$homeworks.deadline"},
+                    }
+                }
+            },
+            {"$match": _and},
+        ]
+
+        return await hw.get_info(self.__collection_name__,
+                                 filters={},
+                                 full_info=full_info,
+                                 custom_query=query)
 
     async def delete_hw(self, _id):
         """

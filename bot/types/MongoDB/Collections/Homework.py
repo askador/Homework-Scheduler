@@ -141,7 +141,13 @@ class Homework:
 
         db = Database()
 
+        if full_info:
+            group["_id"].update([
+                ("description", "$homeworks.description"),
+            ])
+
         if custom_query:
+            custom_query.append({"$group": group})
             return await db.aggregate(collection=collection, pipeline=custom_query)
 
         if by_id:
@@ -149,11 +155,6 @@ class Homework:
                 return
 
             filters = {'homeworks._id': self.id}
-
-        if full_info:
-            group["_id"].update([
-                ("description", "$homeworks.description"),
-            ])
 
         data = await db.aggregate(collection=collection,
                                   pipeline=[
