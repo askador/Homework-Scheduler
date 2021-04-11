@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.types.MongoDB.Collections import Chat
 
+
 async def list_keyboard(chat_id, filters, page, arr=None):
     """
 

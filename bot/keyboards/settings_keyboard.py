@@ -33,12 +33,16 @@ async def settings_keyboard_subgroups():
     return markup
 
 
-async def settings_keyboard_notifications(pin):
+async def settings_keyboard_notifications(pin, notify):
     markup = InlineKeyboardMarkup()
     if pin:
         markup.add(InlineKeyboardButton('📌 Бот закрепляет новое дз', callback_data='pin'))
     else:
         markup.add(InlineKeyboardButton('Бот не закрепляет новое дз', callback_data='pin'))
+    if notify:
+        markup.add(InlineKeyboardButton('🔔 Бот уведомляет о новом дз', callback_data='notify'))
+    else:
+        markup.add(InlineKeyboardButton('Бот не уведомляет о новом дз', callback_data='notify'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
@@ -54,7 +58,7 @@ async def settings_keyboard_terms(selected):
 
 async def settings_keyboard_moderators():
     markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить модераторов', callback_data='add'))
+    # markup.add(InlineKeyboardButton('➕ Добавить модераторов', callback_data='add'))
     markup.add(InlineKeyboardButton('➖ Удалить модераторов', callback_data='remove'))
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
