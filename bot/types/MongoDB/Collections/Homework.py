@@ -154,7 +154,7 @@ class Homework:
             if not isinstance(self.id, int):
                 return
 
-            filters = {'homeworks._id': self.id}
+            filters = {'homeworks._id': int(self.id)}
 
         data = await db.aggregate(collection=collection,
                                   pipeline=[
