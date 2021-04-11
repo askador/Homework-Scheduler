@@ -15,19 +15,24 @@ async def settings_keyboard():
 
 
 async def settings_keyboard_subjects():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить предметы', callback_data='add'))
-    markup.add(InlineKeyboardButton('➖ Убрать предметы', callback_data='remove'))
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        InlineKeyboardButton('➕ Добавить предметы', callback_data='add'),
+        InlineKeyboardButton('➖ Убрать предметы', callback_data='remove')
+    )
+    markup.row_width = 1
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
 
 
 async def settings_keyboard_subgroups():
-    markup = InlineKeyboardMarkup()
-    markup.add(InlineKeyboardButton('➕ Добавить подгруппу', callback_data='add'))
-    markup.add(InlineKeyboardButton('➖ Изменить состав', callback_data='edit'))
-    markup.add(InlineKeyboardButton('❌ Удалить подгруппу', callback_data='remove'))
+    markup = InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        InlineKeyboardButton('➕ Добавить подгруппу', callback_data='add'),
+        InlineKeyboardButton('❌ Удалить подгруппу', callback_data='remove')
+    )
+    markup.row_width = 1
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
@@ -50,7 +55,7 @@ async def settings_keyboard_notifications(pin, notify):
 
 async def settings_keyboard_terms(selected):
     markup = await select_time_keyboard(selected)
-    markup.row_width(1)
+    markup.row_width = 1
     markup.add(InlineKeyboardButton('⏪ Назад', callback_data='back'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
