@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.keyboards import edit_hw_keyboard, calendar_keyboard
 from bot.states import GetHomework
-from bot.types.MongoDB import Chat
+from bot.types.MongoDB import Chat, Homework
 from bot.utils.methods import clear, update_last, check_date, make_datetime, check_callback_date, check_precise
 import datetime
 
@@ -70,6 +70,8 @@ async def calendar_prev_year(callback_query: types.CallbackQuery, state: FSMCont
 
 @dp.callback_query_handler(lambda c: len(c.data.split()) > 1, state=GetHomework.deadline)
 async def calendar_select_date(callback_query: types.CallbackQuery, state: FSMContext):
+    await clear(state)
+
     date = callback_query.data.split()
 
     if await check_callback_date(datetime.datetime.strptime(date[1], '%Y-%m-%d')):
@@ -108,12 +110,12 @@ async def select_deadline_precise(message: types.Message, state: FSMContext):
 
         chat = Chat(message.chat.id)
         async with state.proxy() as data:
+            hw = Homework(chat_id=chat.id, _id=int(data["hw_id"]))
             await chat.update_hw(_id=int(data['hw_id']), deadline=date)
 
             await GetHomework.choice.set()
             text = "Установлен новый срок сдачи:{} \n Выберите что вы хотите отредактировать: ".format(date)
-
-        markup = await edit_hw_keyboard()
+            markup = await edit_hw_keyboard(common=((await hw.get_info(collection='chat', by_id=True))[0]["_id"]["priority"]))
     else:
         text = "Данные введены неверно!\nВведите время повторно:"
         markup = InlineKeyboardMarkup()
@@ -141,12 +143,12 @@ async def skip_precise(callback_query: types.CallbackQuery, state: FSMContext):
 
         chat = Chat(callback_query.message.chat.id)
         async with state.proxy() as data:
+            hw = Homework(chat_id=chat.id, _id=int(data["hw_id"]))
             await chat.update_hw(_id=int(data['hw_id']), deadline=date)
 
             await GetHomework.choice.set()
             text = "Установлен новый срок сдачи:{} \n Выберите что вы хотите отредактировать: ".format(date)
-
-        markup = await edit_hw_keyboard()
+            markup = await edit_hw_keyboard(common=((await hw.get_info(collection='chat', by_id=True))[0]["_id"]["priority"]))
     else:
         await state.update_data(noskip=1)
         text = "Данные введены неверно!\nВведите время повторно:"
