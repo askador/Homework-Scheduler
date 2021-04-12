@@ -54,7 +54,6 @@ async def list_keyboard(chat_id, filters, page, arr=None):
 
     markup = InlineKeyboardMarkup()
 
-
     if len(array) <= list_height:
         async for elem in asrange(0, len(array)):
             markup.add(InlineKeyboardButton(array[elem], callback_data=data[elem]))
