@@ -82,7 +82,7 @@ class Homework:
         Update homework info
 
         :param str collection: collection
-        :param int subgroup: subgroup
+        :param str subgroup: subgroup
         :param str subject: subject
         :param str name: name
         :param str description: description

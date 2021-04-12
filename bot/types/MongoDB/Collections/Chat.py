@@ -176,8 +176,8 @@ class Chat:
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
-        :param int subgroup: subgroup id
-        :param int priority: work priority
+        :param str subgroup: subgroup id
+        :param str priority: work priority
         :return changes
         """
 
