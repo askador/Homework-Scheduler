@@ -10,3 +10,4 @@ from .show_hw import show_hw
 from .settings import settings
 from .for_private_commands import for_private_commands
 from .getid import get_id
+from .get_chat_id import get_chat_id
