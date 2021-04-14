@@ -5,15 +5,17 @@ from bot.keyboards import settings_keyboard
 from bot.states import Settings
 from bot.utils.methods import update_last
 from bot.data.commands.settings import COMMANDS, COMMANDS_TEXT
+from bot.types import select_text
 
 
 @dp.message_handler(commands=COMMANDS,  access_level='admin')
 @dp.message_handler(filters.Command(commands=COMMANDS_TEXT), access_level='admin')
-async def settings(message):
+async def settings(message: types.Message):
     markup = await settings_keyboard()
     await Settings.choice.set()
     state = dp.get_current().current_state()
-    await update_last(state, await message.reply("Открыто меню настроек", reply_markup=markup))
+    await update_last(state, await message.reply(await select_text(message.chat.id, "settings", "choice", "ru"),
+                                                 reply_markup=markup))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'back', state=Settings.all_states)

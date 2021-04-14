@@ -71,7 +71,8 @@ async def show_hw(inline_query: InlineQuery):
                 title=title,
                 id=str(hw['_id']),
                 description=descr,
-                input_message_content=InputTextMessageContent(message_text=message_text)
+                input_message_content=InputTextMessageContent(message_text=message_text),
+                thumb_url="https://i.imgur.com/ZNlIlT0.png", thumb_height=32, thumb_width=32
             )
 
             results.append(article)
