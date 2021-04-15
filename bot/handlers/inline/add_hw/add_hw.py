@@ -16,7 +16,7 @@ OUTPUTS = {
         "url": "https://i.imgur.com/f5uscGB.png"
     },
     "1": {
-        "description": "предмет название подгруппа срок_сдачи",
+        "description": "предмет, название, подгруппа, срок_сдачи",
         "input": "Я молодец и неправильно ввел аргументы",
         "url": "https://i.imgur.com/f5uscGB.png"
     },
@@ -50,23 +50,28 @@ async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
     # state = dp.get_current().current_state()
     await state.finish()
 
-    args = inline_query.query.split()
+
+    args = inline_query.query.replace("add_hw", "").replace(" ", "").split(",")
 
     key = "0"
+    cache = []
 
     if len(args) == 1:
         key = "1"
-    elif len(args) >= 2:
-        if args[1] in TEST:
+    elif len(args) >= 1:
+        if args[0] in TEST:
             key = "1"
-            if len(args) >=4:
-                if args[3] in TEST or args[3] == 'все':
+            if len(args) >= 3:
+                if args[2] in TEST or args[2] == 'все':
                     pass
                 else:
                     key = "3"
-                if len(args) >= 5:
-                    if await check_date([args[4]]):
+                if len(args) >= 4:
+                    if await check_date([args[3]]):
                         key = "2"
+                        cache = args
+                        cache.append("from inline")
+                        cache.append("common")
                     else:
                         key = "4"
                 else:
@@ -74,9 +79,13 @@ async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
             else:
                 pass
         else:
+            print(args)
             key = "5"
     else:
         pass
+
+    if key == "2":
+        OUTPUTS[key]["input"] = "add_hw {}, {}, {}, {}, {}, {}".format(*cache)
 
     input_content = InputTextMessageContent(OUTPUTS[key]["input"], parse_mode='HTML')
     result_id = '1'

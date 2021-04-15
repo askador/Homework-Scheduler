@@ -1,11 +1,11 @@
 from bot.data.commands.add_hw import COMMANDS_TEXT, COMMANDS
 
-from bot.loader import dp
+from bot.loader import dp, bot
 from aiogram import types
-from aiogram.dispatcher.filters import Command
+from aiogram.dispatcher.filters import Command, Text
 from bot.keyboards import list_keyboard
 from bot.states import SetHomework
-from bot.utils.methods import update_last, check_date
+from bot.utils.methods import update_last, check_date, make_datetime
 from bot.types.MongoDB.Collections import Chat
 
 
@@ -42,5 +42,33 @@ async def add_hw(message: types.Message):
 
     markup = await list_keyboard(message.chat.id, 'subject', 1)
     await update_last(state, await message.reply(text, reply_markup=markup))
+
+
+@dp.message_handler(Text(startswith="add_hw"), lambda m: m.via_bot)
+async def inline_add(message: types.Message):
+    # await message.reply("Принял")
+    data = message.text.replace("add_hw", "").replace(" ", "").split(",")
+    await bot.send_message(message.chat.id, "Задание успешно добавлено!\n\n"
+                                                           "<b>Предмет</b>: <i>{}</i>\n"
+                                                           "<b>Название</b>: <i>{}</i>\n"
+                                                           "<b>Подгруппа</b>: <i>{}</i>\n"
+                                                           "<b>Срок сдачи</b>: <i>{}</i>\n"
+                                                           "<b>Описание</b>: <i>{}</i>\n"
+                                                           "<b>Приоритет</b>: <i>{}</i>".format(
+        data[0],
+        data[1],
+        data[2],
+        data[3],
+        data[4],
+        data[5]), )
+
+    chat = Chat(message.chat.id)
+    await chat.add_hw(subject=data[0],
+                      subgroup=data[1],
+                      name=data[2],
+                      description=data[4],
+                      deadline=await make_datetime([data[3]]),
+                      priority=data[5])
+
 
 
