@@ -14,7 +14,7 @@ async def settings(message: types.Message):
     markup = await settings_keyboard()
     await Settings.choice.set()
     state = dp.get_current().current_state()
-    await update_last(state, await message.reply(await select_text(message.chat.id, "settings", "choice", "ru"),
+    await update_last(state, await message.reply(text=await select_text(message.chat.id, "settings", "choice", "ru"),
                                                  reply_markup=markup))
 
 
@@ -23,13 +23,18 @@ async def back_to_choice(callback_query: types.CallbackQuery, state: FSMContext)
     # await clear(state)
     await Settings.choice.set()
     markup = await settings_keyboard()
-    await update_last(state, await bot.edit_message_text("Меню настроек", callback_query.message.chat.id,
-                                                         callback_query.message.message_id, reply_markup=markup))
+    await update_last(state, await bot.edit_message_text(chat_id=callback_query.message.chat.id,
+                                                         message_id=callback_query.message.message_id,
+                                                         reply_markup=markup,
+                                                         text=await select_text(callback_query.message.chat.id,
+                                                                                "settings", "choice", "ru")))
 
 
 @dp.callback_query_handler(lambda c: c.data == 'done', state=Settings.all_states)
 async def back_to_choice(callback_query: types.CallbackQuery, state: FSMContext):
     # await clear(state)
     await state.finish()
-    await bot.edit_message_text("Удачно завершено", callback_query.message.chat.id,
-                                                         callback_query.message.message_id)
+    await bot.edit_message_text(text=await select_text(callback_query.message.chat.id,
+                                                       "settings", "on_close", "ru"),
+                                chat_id=callback_query.message.chat.id,
+                                message_id=callback_query.message.message_id)

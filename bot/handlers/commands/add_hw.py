@@ -47,7 +47,9 @@ async def add_hw(message: types.Message):
 @dp.message_handler(Text(startswith="add_hw"), lambda m: m.via_bot)
 async def inline_add(message: types.Message):
     # await message.reply("Принял")
-    data = message.text.replace("add_hw", "").replace(" ", "").split(",")
+    data = message.text.replace("add_hw", "").split(",")
+    data = [arg.strip() for arg in data]
+
     await bot.send_message(message.chat.id, "Задание успешно добавлено!\n\n"
                                                            "<b>Предмет</b>: <i>{}</i>\n"
                                                            "<b>Название</b>: <i>{}</i>\n"

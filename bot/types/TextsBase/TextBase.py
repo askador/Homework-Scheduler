@@ -6,11 +6,20 @@ Texts = {
             "emojis":
                 {
                     "on": ["🔧"],
-                    "off": [""]
                 },
             "langs":
                 {
                     "ru": "{} Меню настроек"
+                }
+        },
+        "on_close": {
+            "emojis":
+                {
+                    "on": ""
+                },
+            "langs":
+                {
+                    "ru": "Удачно завершено!"
                 }
         }
     }
@@ -23,7 +32,8 @@ async def select_text(chat_id, command, stadia,  lang):
     if emojis:
         text = Texts[command][stadia]["langs"][lang].format(*Texts[command][stadia]["emojis"]["on"])
     else:
-        text = Texts[command][stadia]["langs"][lang].format(*Texts[command][stadia]["emojis"]["off"])
+        # text = Texts[command][stadia]["langs"][lang].format(*Texts[command][stadia]["emojis"]["off"])
+        text = Texts[command][stadia]["langs"][lang].format("")
     return text
 
 # print(select_text(1, "settings", "choice", "ru"))

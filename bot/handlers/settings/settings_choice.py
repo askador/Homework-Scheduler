@@ -20,33 +20,33 @@ async def callback_select_setting(callback_query: types.CallbackQuery, state: FS
     chat = Chat(callback_query.message.chat.id)
 
     chosen_kb = {
-        "0": {
+        "subject": {
             "text": "Настройки предметов",
             "state": Settings.subjects,
             "kb": await settings_keyboard_subjects()
         },
-        "1": {
+        "subgroup": {
             "text": "Настройки подгрупп",
             "state": Settings.subgroups,
             "kb": await settings_keyboard_subgroups()
         },
-        "2": {
+        "notifications": {
             "text": "Настройки уведомлений",
             "state": Settings.notifications,
             "kb": await settings_keyboard_notifications(pin=await chat.get_field_value("can_pin"),
                                                         notify=await chat.get_field_value("notify"))
         },
-        "3": {
+        "terms": {
             "text": "Изменить время обновления",
             "state": Settings.terms,
             "kb": await settings_keyboard_terms(selected=await chat.get_field_value("notification_time"))
         },
-        "4": {
+        "moderators": {
             "text": "Управление модераторами",
             "state": Settings.moderators,
             "kb": await settings_keyboard_moderators(),
         },
-        "5": {
+        "appearance": {
             "text": "Настройки отображения",
             "state": Settings.appearance,
             "kb": await settings_keyboard_appearance(photo=await chat.get_field_value("photo_mode"),

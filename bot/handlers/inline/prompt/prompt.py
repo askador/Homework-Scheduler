@@ -7,25 +7,25 @@ OUTPUTS = [
         "title": "add_hw",
         "description": "Добавить дз",
         "input": "Нажал на подсказку",
-        "url": "https://i.imgur.com/f5uscGB.png"
+        "url": "https://i.imgur.com/OTKZVgd.png"
     },
     {
         "title": "edit_hw",
         "description": "Изменить дз",
         "input": "Нажал на подсказку",
-        "url": "https://i.imgur.com/TgRtSFO.png"
+        "url": "https://i.imgur.com/5vZLIOD.png"
     },
    {
         "title": "del_hw",
         "description": "Удалить дз",
         "input": "Нажал на подсказку",
-        "url": "https://i.imgur.com/godfTeT.png"
+        "url": "https://i.imgur.com/DV2Wwcm.png"
     },
     {
         "title": "show_hw",
         "description": "Показать дз",
         "input": "Нажал на подсказку",
-        "url": "https://i.imgur.com/ZNlIlT0.png"
+        "url": "https://i.imgur.com/CRsWuP5.png"
     },
 ]
 

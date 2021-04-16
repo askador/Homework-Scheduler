@@ -9,36 +9,41 @@ TEST = [
     "1"
 ]
 
+IMAGES = {
+    "add_hw" : "https://i.imgur.com/OTKZVgd.png",
+    "cancel" : "https://i.imgur.com/2iiesoE.png"
+}
+
 OUTPUTS = {
     "0": {
         "description": "Загрузка...",
         "input": "Я молодец и неправильно ввел аргументы",
-        "url": "https://i.imgur.com/f5uscGB.png"
+        "url": IMAGES["add_hw"]
     },
     "1": {
         "description": "предмет, название, подгруппа, срок_сдачи",
         "input": "Я молодец и неправильно ввел аргументы",
-        "url": "https://i.imgur.com/f5uscGB.png"
+        "url": IMAGES["add_hw"]
     },
     "2": {
         "description": "Успешно заполнено!",
         "input": "Типа добавляем",
-        "url": "https://i.imgur.com/f5uscGB.png"
+        "url": IMAGES["add_hw"]
     },
     "3": {
         "description": "Подгруппа введена неверно!",
         "input": "Недописал и кликнул",
-        "url": "https://i.imgur.com/2iiesoE.png"
+        "url": IMAGES["cancel"]
     },
     "4": {
         "description": "Дата введена неверно!",
         "input": "Недописал и кликнул",
-        "url": "https://i.imgur.com/2iiesoE.png"
+        "url": IMAGES["cancel"]
     },
     "5": {
         "description": "Предмет введен неверно!",
         "input": "Недописал и кликнул",
-        "url": "https://i.imgur.com/2iiesoE.png"
+        "url": IMAGES["cancel"]
     },
 
 }
@@ -50,8 +55,10 @@ async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
     # state = dp.get_current().current_state()
     await state.finish()
 
+    args = inline_query.query.replace("add_hw", "").split(",")
+    args = [arg.strip() for arg in args]
 
-    args = inline_query.query.replace("add_hw", "").replace(" ", "").split(",")
+    #print(args)
 
     key = "0"
     cache = []
@@ -79,7 +86,6 @@ async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
             else:
                 pass
         else:
-            print(args)
             key = "5"
     else:
         pass
