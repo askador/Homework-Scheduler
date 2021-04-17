@@ -92,5 +92,12 @@ class Database:
 
         return self.client[self.database][collection].delete_many(filters)
 
+    async def count_documents(self, collection):
+        """
+        Amount of documents in collection
 
+        :param str collection: name of collection
+        :return int amount
+        """
 
+        return self.client[self.database][collection].count_documents({})
