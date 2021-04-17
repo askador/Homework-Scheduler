@@ -7,11 +7,13 @@ from bot.keyboards import list_keyboard
 from bot.states import SetHomework
 from bot.utils.methods import update_last, check_date, make_datetime
 from bot.types.MongoDB.Collections import Chat
+from bot.utils.methods import user_in_chat_students, bind_student_to_chat
 
 
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
 @dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"),  access_level='moderator')
 async def add_hw(message: types.Message):
+    await bind_student_to_chat(message.from_user.id, message.chat.id)
     """
     try:
         arguments = message.get_args().split()
@@ -47,10 +49,14 @@ async def add_hw(message: types.Message):
 @dp.message_handler(Text(startswith="add_hw"), lambda m: m.via_bot)
 async def inline_add(message: types.Message):
     # await message.reply("Принял")
+    await bind_student_to_chat(message.from_user.id, message.chat.id)
+
+
     data = message.text.replace("add_hw", "").split(",")
     data = [arg.strip() for arg in data]
+    chat_id = await user_in_chat_students(message.from_user.id)
 
-    await bot.send_message(message.chat.id, "Задание успешно добавлено!\n\n"
+    await bot.send_message(chat_id, "Задание успешно добавлено!\n\n"
                                                            "<b>Предмет</b>: <i>{}</i>\n"
                                                            "<b>Название</b>: <i>{}</i>\n"
                                                            "<b>Подгруппа</b>: <i>{}</i>\n"
@@ -64,7 +70,7 @@ async def inline_add(message: types.Message):
         data[4],
         data[5]), )
 
-    chat = Chat(message.chat.id)
+    chat = Chat(chat_id)
     await chat.add_hw(subject=data[0],
                       subgroup=data[1],
                       name=data[2],
