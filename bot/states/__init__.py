@@ -61,3 +61,7 @@ class InlineSettings(StatesGroup):
     notifications = State()
     update_time = State()
     appearance = State()
+
+
+class ChangeChat(StatesGroup):
+    new_chat_id = State()

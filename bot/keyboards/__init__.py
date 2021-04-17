@@ -8,3 +8,4 @@ from .settings_keyboard import select_time_keyboard
 from .subgroups import subgroups_keyboard
 from .list_keyboard import list_keyboard
 from .moderators_keyboard import moderators_keyboard
+from .change_my_chat import change_my_chat_kb

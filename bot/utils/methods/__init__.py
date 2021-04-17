@@ -8,3 +8,6 @@ from .date_check import check_date
 from .parse_hw_add import add_parse_hw
 from .parse_hw_edit import edit_parse_hw
 from .get_chat_admins import get_chat_admins
+from .user_in_chat_students import user_in_chat_students
+from .bind_student_to_chat import bind_student_to_chat
+from .get_files_paths import get_files_paths
