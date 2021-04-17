@@ -178,31 +178,6 @@ class HomeworksList:
 
         return sorted_hws
 
-    async def _generate_body(self):
-        """
-        Generate html body
-        """
-        body = top_block()
-
-        important_hws = await self._sort_hws(self.hws['important'], True)
-        common_hws = await self._sort_hws(self.hws['common'])
-
-        # Generate important elements
-        for date, hws in important_hws.items():
-            body += await self._date_row(date)
-            for hw in hws:
-                body += str(await self._generate_hw_block("important__row", hw))
-
-        # Generate important elements
-        for date, hws in common_hws.items():
-            body += await self._date_row(date)
-            for hw in hws:
-                body += str(await self._generate_hw_block("common__row", hw))
-
-        body += bottom_block()
-
-        return body
-
     @staticmethod
     async def _check_insert_into_common_week(important_list, common_list):
 
@@ -215,6 +190,36 @@ class HomeworksList:
                 del important_list[date]
 
         return [important_list, common_list]
+
+    async def _generate_body(self):
+        """
+        Generate html body
+        """
+        body = top_block()
+
+        important_hws = await self._sort_hws(self.hws['important'], True)
+        common_hws = await self._sort_hws(self.hws['common'])
+
+        important_hws, common_hws = await self._check_insert_into_common_week(important_hws, common_hws)
+
+        # Generate important elements
+        for date, hws in important_hws.items():
+            body += await self._date_row(date)
+            for hw in hws:
+                body += str(await self._generate_hw_block("important__row", hw))
+
+        # Generate important elements
+        for date, hws in common_hws.items():
+            body += await self._date_row(date)
+            for hw in hws:
+                if hw['priority'] == 'important':
+                    body += str(await self._generate_hw_block("important__row", hw))
+                else:
+                    body += str(await self._generate_hw_block("common__row", hw))
+
+        body += bottom_block()
+
+        return body
 
     @staticmethod
     async def _generate_text_body(hws_list):
