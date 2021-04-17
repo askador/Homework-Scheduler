@@ -9,18 +9,18 @@ OUTPUTS = [
         "input": "Нажал на подсказку",
         "url": "https://i.imgur.com/OTKZVgd.png"
     },
-    {
-        "title": "edit_hw",
-        "description": "Изменить дз",
-        "input": "Нажал на подсказку",
-        "url": "https://i.imgur.com/5vZLIOD.png"
-    },
-   {
-        "title": "del_hw",
-        "description": "Удалить дз",
-        "input": "Нажал на подсказку",
-        "url": "https://i.imgur.com/DV2Wwcm.png"
-    },
+   #  {
+   #      "title": "edit_hw",
+   #      "description": "Изменить дз",
+   #      "input": "Нажал на подсказку",
+   #      "url": "https://i.imgur.com/5vZLIOD.png"
+   #  },
+   # {
+   #      "title": "del_hw",
+   #      "description": "Удалить дз",
+   #      "input": "Нажал на подсказку",
+   #      "url": "https://i.imgur.com/DV2Wwcm.png"
+   #  },
     {
         "title": "show_hw",
         "description": "Показать дз",
