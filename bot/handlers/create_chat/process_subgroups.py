@@ -29,7 +29,8 @@ async def process_subgroups(message, state):
     await chat.add(title=chat_title,
                    admins=chat_admins,
                    subjects=chat_subjects,
-                   subgroups=chat_subgroups)
+                   subgroups=chat_subgroups,
+                   students=chat_admins)
 
     await state.finish()
 
