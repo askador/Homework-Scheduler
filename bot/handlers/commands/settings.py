@@ -3,7 +3,7 @@ from aiogram.dispatcher import filters, FSMContext
 from aiogram import types
 from bot.keyboards import settings_keyboard
 from bot.states import Settings
-from bot.utils.methods import update_last
+from bot.utils.methods import update_last, bind_student_to_chat
 from bot.data.commands.settings import COMMANDS, COMMANDS_TEXT
 from bot.types import select_text
 
@@ -11,6 +11,8 @@ from bot.types import select_text
 @dp.message_handler(commands=COMMANDS,  access_level='admin')
 @dp.message_handler(filters.Command(commands=COMMANDS_TEXT), access_level='admin')
 async def settings(message: types.Message):
+    await bind_student_to_chat(message.from_user.id, message.chat.id)
+
     markup = await settings_keyboard()
     await Settings.choice.set()
     state = dp.get_current().current_state()
