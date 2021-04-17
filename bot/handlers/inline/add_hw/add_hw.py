@@ -3,6 +3,8 @@ from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResul
 from aiogram.dispatcher import filters, FSMContext
 from bot.utils.methods import check_date
 from bot.states import Inline
+from bot.utils.methods import user_in_chat_students
+from bot.types.MongoDB import Chat
 
 
 TEST = [
@@ -50,15 +52,27 @@ OUTPUTS = {
 
 
 @dp.inline_handler(filters.Text(startswith=['add_hw']))
-@dp.inline_handler(filters.Text(startswith=['add_hw']))
-async def inline_add_hw(inline_query: InlineQuery, state: FSMContext):
-    # state = dp.get_current().current_state()
-    await state.finish()
+async def inline_add_hw(inline_query: InlineQuery):
+
+    chat_id = await user_in_chat_students(inline_query.from_user.id)
+    if not chat_id:
+        await inline_query.answer(results=[
+            InlineQueryResultArticle(
+                title='Показать дз',
+                id='1',
+                description='Вы не привязаны к группе!\n'
+                            'Воспользуйтесь ботом в чате, куда вы хотите получать ответ',
+                input_message_content=InputTextMessageContent(
+                    message_text='Вы не привязаны к группе!\n'
+                                 'Воспользуйтесь ботом в чате, куда вы хотите получать ответ'
+                )
+            )
+        ],
+            cache_time=0)
+        return
 
     args = inline_query.query.replace("add_hw", "").split(",")
     args = [arg.strip() for arg in args]
-
-    #print(args)
 
     key = "0"
     cache = []

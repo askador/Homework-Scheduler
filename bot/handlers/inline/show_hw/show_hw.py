@@ -4,38 +4,33 @@ from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.dispatcher import filters, FSMContext
 from bot.utils.methods import check_date
+from bot.utils.methods import user_in_chat_students
 from bot.states import Inline
 from bot.types.MongoDB import Chat
 
-users = {
-    526497876: -1001424619068
-}
 
-COMMANDS = (
-    'дз',
-    'показать'
-)
-
-
-# TODO inline
-#
-# if inline_query.query.strip() == "":
-#     await inline_query.answer(results=[
-#         InlineQueryResultArticle(
-#             title='show_hw:',
-#             id='1',
-#             description='Вы не состоите в группе',
-#             input_message_content=InputTextMessageContent(message_text="test")
-#         )
-#     ],
-#         cache_time=0)
-
-
-@dp.inline_handler(lambda inline_query: inline_query.query.startswith(COMMANDS))
+@dp.inline_handler(lambda inline_query: inline_query.query.startswith('show_hw'))
 async def show_hw(inline_query: InlineQuery):
-    args = inline_query.query.split()[1:]
 
-    chat = Chat(users[int(inline_query.from_user.id)])
+    chat_id = await user_in_chat_students(inline_query.from_user.id)
+    if not chat_id:
+        await inline_query.answer(results=[
+            InlineQueryResultArticle(
+                title='Показать дз',
+                id='1',
+                description='Вы не привязаны к группе!\n'
+                            'Воспользуйтесь ботом в чате, куда вы хотите получать ответ',
+                input_message_content=InputTextMessageContent(
+                    message_text='Вы не привязаны к группе!\n'
+                                 'Воспользуйтесь ботом в чате, куда вы хотите получать ответ'
+                )
+            )
+        ],
+            cache_time=0)
+        return
+
+    args = inline_query.query.split()[1:]
+    chat = Chat(chat_id)
     homeworks = sorted(await chat.homeworks_search(args=args, full_info=True), key=lambda x: x["_id"]["_id"])
 
     results = []
