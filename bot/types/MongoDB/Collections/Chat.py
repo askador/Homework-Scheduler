@@ -17,6 +17,7 @@ class Chat:
         "admins",
         "subjects",
         "subgroups",
+        "students",
         "notify",
         "notification_time",
         "emoji_on",
@@ -34,6 +35,7 @@ class Chat:
                   admins,
                   subjects=[],
                   subgroups=[],
+                  students=[],
                   notify=True,
                   notification_time=12,
                   emoji_on=True,
@@ -47,6 +49,7 @@ class Chat:
         :param list admins: list of chat admins
         :param list subjects: list of subjects
         :param list subgroups: subgroups
+        :param list students: students id of group
         :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification time
         :param bool emoji_on: can use emoji
@@ -63,6 +66,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "students": students,
             "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
@@ -80,6 +84,7 @@ class Chat:
                      admins=None,
                      subjects=None,
                      subgroups=None,
+                     students=None,
                      notify=None,
                      notification_time=None,
                      emoji_on=None,
@@ -93,6 +98,7 @@ class Chat:
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
+        :param list students: students id of group
         :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification hour
         :param bool emoji_on: can use emoji
@@ -107,6 +113,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "students": students,
             "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
