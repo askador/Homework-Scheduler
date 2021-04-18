@@ -5,7 +5,7 @@ from aiogram import types
 from aiogram.dispatcher.filters import Command, Text
 from bot.keyboards import list_keyboard
 from bot.states import SetHomework
-from bot.utils.methods import update_last, check_date, make_datetime
+from bot.utils.methods import update_last, check_date, make_datetime, add_parse_hw
 from bot.types.MongoDB.Collections import Chat
 from bot.utils.methods import user_in_chat_students, bind_student_to_chat
 
@@ -14,6 +14,16 @@ from bot.utils.methods import user_in_chat_students, bind_student_to_chat
 @dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"),  access_level='moderator')
 async def add_hw(message: types.Message):
     await bind_student_to_chat(message.from_user.id, message.chat.id)
+    args = message.text.split(",")[1:]
+
+    if len(args) > 0:
+        try:
+            await add_parse_hw(args)
+            return
+        except:
+            pass
+
+
     """
     try:
         arguments = message.get_args().split()
