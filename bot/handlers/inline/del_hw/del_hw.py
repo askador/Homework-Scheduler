@@ -59,7 +59,7 @@ async def inline_del_hw(inline_query: InlineQuery, state: FSMContext):
                            f"<b>Название:</b> {hw['name']}\n" \
                            f"<b>Срок сдачи:</b> {datetime.strftime(hw['deadline'], '%d.%m.%Y %H:%M')}\n" \
                            f"<b>Описание:</b> {hw['description']}\n" \
-                           f"<b>Дополнильные материалы:</b> <u>materials</u>\n"
+                           # f"<b>Дополнильные материалы:</b> <u>materials</u>\n"
 
             article = InlineQueryResultArticle(
                 title=title,
