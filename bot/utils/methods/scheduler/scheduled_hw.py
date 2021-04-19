@@ -13,10 +13,10 @@ async def get_hw(chat_id, current_day):
     tomorrow_text = "<b>Завтра нужно сдать</b>\n"
     after_tomorrow_text = "<b>Послезавтра нужно сдать</b>\n"
 
-    tomorrow_day_start = (current_day + timedelta(days=1)).replace(hour=0, minute=0, second=0)
-    tomorrow_day_end = (current_day + timedelta(days=1)).replace(hour=23, minute=59, second=59)
-    after_tomorrow_day_start = (current_day + timedelta(days=2)).replace(hour=0, minute=0, second=0)
-    after_tomorrow_day_end = (current_day + timedelta(days=2)).replace(hour=23, minute=59, second=59)
+    tomorrow_day_start = (current_day + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+    tomorrow_day_end = (current_day + timedelta(days=1)).replace(hour=23, minute=59, second=59, microsecond=59)
+    after_tomorrow_day_start = (current_day + timedelta(days=2)).replace(hour=0, minute=0, second=0, microsecond=0)
+    after_tomorrow_day_end = (current_day + timedelta(days=2)).replace(hour=23, minute=59, second=59, microsecond=0)
 
     chat = Chat(chat_id)
     homeworks_tomorrow = await chat.get_homeworks(filters=[
