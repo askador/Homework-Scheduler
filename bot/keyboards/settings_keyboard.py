@@ -8,7 +8,7 @@ async def settings_keyboard():
     markup.add(InlineKeyboardButton('🚻 Подгруппы', callback_data='subgroup'))
     markup.add(InlineKeyboardButton('🔔 Уведомления', callback_data='notifications'))
     markup.add(InlineKeyboardButton('📅 Сроки', callback_data='terms'))
-    markup.add(InlineKeyboardButton('🔑 Модераторы', callback_data='moderators'))
+    # markup.add(InlineKeyboardButton('🔑 Модераторы', callback_data='moderators'))
     markup.add(InlineKeyboardButton('🖼 Внешний вид', callback_data='appearance'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup
