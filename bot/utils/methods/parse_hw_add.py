@@ -4,13 +4,13 @@ async def add_parse_hw(args):
 
     HW = {}
 
-    HW['subj'] = args[1]
-    HW['name'] = args[2]
-    HW['subg'] = args[3]
-    HW['deadline'] = args[4]
-    if len(args) > 5:
+    HW['subj'] = args[0]
+    HW['name'] = args[1]
+    HW['subg'] = args[2]
+    HW['deadline'] = args[3]
+    if len(args) > 4:
         s = ' '
-        s = s.join(args[5:])
+        s = s.join(args[4:])
         if s.find('приоритет:важное') != -1:
             s = s.replace('приоритет:важное', '')
             HW['priority'] = 'important'

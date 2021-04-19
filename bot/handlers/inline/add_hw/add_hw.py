@@ -50,6 +50,8 @@ OUTPUTS = {
 @dp.inline_handler(filters.Text(startswith=['add_hw']))
 async def inline_add_hw(inline_query: InlineQuery):
 
+    id = 1
+
     chat_id = await user_in_chat_students(inline_query.from_user.id)
     if not chat_id:
         await inline_query.answer(results=[
@@ -69,6 +71,8 @@ async def inline_add_hw(inline_query: InlineQuery):
 
     args = inline_query.query.replace("add_hw", "").split(",")
     args = [arg.strip() for arg in args]
+
+    #print(args)
 
     subjects = await Chat(chat_id).get_field_value('subjects')
     subgroups = await Chat(chat_id).get_field_value('subjects')
@@ -107,7 +111,7 @@ async def inline_add_hw(inline_query: InlineQuery):
         OUTPUTS[key]["input"] = "add_hw {}, {}, {}, {}, {}, {}".format(*cache)
 
     input_content = InputTextMessageContent(OUTPUTS[key]["input"], parse_mode='HTML')
-    result_id = '1'
+    result_id = '{}'.format(id)
     item = InlineQueryResultArticle(
         title='add_hw:',
         id=result_id,
@@ -116,9 +120,11 @@ async def inline_add_hw(inline_query: InlineQuery):
         thumb_url=OUTPUTS[key]["url"], thumb_height=32, thumb_width=32
     )
 
-    try:
+    await bot.answer_inline_query(inline_query.id, results=[item], cache_time=1)
+
+    """try:
         await bot.answer_inline_query(inline_query.id, results=[item], cache_time=1)
     except InvalidQueryID:
         await bot.send_message(chat_id,
                                text="Время ожидания инлайн запроса истекло.\n"
-                                    "Удалите и напишите запрос снова")
+                                    "Удалите и напишите запрос снова")"""

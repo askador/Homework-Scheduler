@@ -116,7 +116,11 @@ async def choice_dialogue(message, state: FSMContext):
         await state.finish()
         return
 
-    text = chosen_kb[message.text]['text']
+    try:
+        text = chosen_kb[message.text]['text']
+    except KeyError:
+        await message.reply("Такого параметра нет")
+        return
     await chosen_kb[message.text]['state'].set()
     markup = chosen_kb[message.text]['kb']
 

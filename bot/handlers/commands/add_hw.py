@@ -14,13 +14,49 @@ from bot.utils.methods import user_in_chat_students, bind_student_to_chat
 @dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"),  access_level='moderator')
 async def add_hw(message: types.Message):
     await bind_student_to_chat(message.from_user.id, message.chat.id)
-    args = message.text.split(",")[1:]
+
+    args = message.text.replace("/add_hw", "").split(",")
+    args = [arg.strip() for arg in args]
+
+    chat = Chat(message.chat.id)
+
+    text = ""
 
     if len(args) > 0:
         try:
-            await add_parse_hw(args)
+            print(args)
+            args = await add_parse_hw(args)
+            print(args)
+            date = await make_datetime([args["deadline"]])
+            if not args['subj'] in await chat.get_field_value("subject"):
+                raise 1
+            if not args['subg'] in await chat.get_field_value("subgroups"):
+                raise 2
+            await bot.send_message(chat.id, "Задание успешно добавлено!\n\n"
+                                            "<b>Предмет</b>: <i>{}</i>\n"
+                                            "<b>Название</b>: <i>{}</i>\n"
+                                            "<b>Подгруппа</b>: <i>{}</i>\n"
+                                            "<b>Срок сдачи</b>: <i>{}</i>\n"
+                                            "<b>Описание</b>: <i>{}</i>\n"
+                                            "<b>Приоритет</b>: <i>{}</i>".format(
+                args['subj'],
+                args['name'],
+                args['subg'],
+                args['deadline'],
+                args['description'],
+                args['priority']), )
+
+            await chat.add_hw(subject=args['subj'],
+                              subgroup=args['subg'],
+                              name=args['name'],
+                              description=args['description'],
+                              deadline=date,
+                              priority=args['priority'])
+
             return
-        except:
+        except Exception as e:
+            text += "Аргументы не верны! \n"
+            print(e)
             pass
 
 
@@ -46,7 +82,7 @@ async def add_hw(message: types.Message):
         else:
             text = "Введенные данные не подходят, вызываю стандартный диалог.\nВыберите предмет или введите его:"
     """
-    text = "Выберите предмет или введите его:"
+    text += "Выберите предмет или введите его:"
 
     await SetHomework.subject.set()
     state = dp.get_current().current_state()
