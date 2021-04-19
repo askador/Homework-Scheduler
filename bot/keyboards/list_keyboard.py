@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot.types.MongoDB.Collections import Chat
 
+
 async def list_keyboard(chat_id, filters, page, arr=None):
     """
 
@@ -8,6 +9,7 @@ async def list_keyboard(chat_id, filters, page, arr=None):
     :param str filters:
     :param str filters: either subject or subgroup or homeworks
     :param int page: keyboard page
+    :param list arr: array
     """
 
     async def asrange(a, b):
@@ -29,7 +31,7 @@ async def list_keyboard(chat_id, filters, page, arr=None):
         array += await chat.get_field_value("subgroups")
         data += await chat.get_field_value("subgroups")
     elif filters == 'homework':
-        homeworks = sorted(await chat.get_homeworks(filters=[{}], full_info=False), key=lambda x: x["_id"]["_id"])
+        homeworks = arr
 
         index = 1
 

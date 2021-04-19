@@ -1,4 +1,4 @@
-from . import get_public_hw
+from .get_public_hw import ShowHw
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
@@ -61,3 +61,7 @@ class InlineSettings(StatesGroup):
     notifications = State()
     update_time = State()
     appearance = State()
+
+
+class ChangeChat(StatesGroup):
+    new_chat_id = State()

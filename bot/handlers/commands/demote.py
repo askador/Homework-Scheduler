@@ -3,6 +3,7 @@ from aiogram import types
 from aiogram.dispatcher import filters
 
 from bot.types.MongoDB import Chat
+from bot.utils.methods import bind_student_to_chat
 
 
 @dp.message_handler(filters.IsReplyFilter(is_reply=True),
@@ -10,6 +11,8 @@ from bot.types.MongoDB import Chat
                     access_level='creator',
                     state='*')
 async def demote(message: types.Message):
+    await bind_student_to_chat(message.from_user.id, message.chat.id)
+
     moder = message.reply_to_message.from_user.id
     name = message.reply_to_message.from_user.full_name
 

@@ -1,0 +1,3 @@
+COMMANDS = [
+    "my_chat",
+]

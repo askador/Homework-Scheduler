@@ -1,7 +1,0 @@
-ALIAS = [
-    '!настройки'
-]
-
-COMMANDS = [
-    "settings",
-]

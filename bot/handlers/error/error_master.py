@@ -4,7 +4,7 @@ from aiogram.utils.exceptions import (Unauthorized, InvalidQueryID, TelegramAPIE
                                       MessageCantBeEdited, MessageToEditNotFound,
                                       MessageTextIsEmpty, RetryAfter,
                                       CantParseEntities, MessageCantBeDeleted, ValidationError,
-                                      FSMStorageWarning, TimeoutWarning, AIOGramWarning)
+                                      FSMStorageWarning, TimeoutWarning, AIOGramWarning, BotKicked)
 
 from bot.loader import dp
 
@@ -13,7 +13,6 @@ from bot.loader import dp
 async def errors_handler(update, exception):
     """
     Exceptions handler. Catches all exceptions within task factory tasks.
-    :param dispatcher:
     :param update:
     :param exception:
     :return: stdout logging
@@ -81,6 +80,10 @@ async def errors_handler(update, exception):
 
     if isinstance(exception, AIOGramWarning):
         logging.exception(f'AIOGramWarning: {exception} \nUpdate: {update}')
+        return True
+
+    if isinstance(exception, BotKicked):
+        logging.exception(f'BotKicked: {exception} \nUpdate: {update}')
         return True
 
     logging.exception(f'Update: {update} \n{exception}')

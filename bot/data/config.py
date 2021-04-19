@@ -1,6 +1,7 @@
 token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE' #ai4
-# token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8' #shishki
-test_bot_token = '1173133322:AAG_E7H2IjRypO3dt-pygUjh9V1HP8X8JPk' # test_bot
+test_bot_token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8' #shishki
+
+MAX_CHATS_AMOUNT = 3
 
 mongodb_setting = {
     "User": "test_user",
@@ -23,8 +24,9 @@ commands = {
     'edit_hw': "edit homework",
     'del_hw': "delete homework",
     'show_hws': "show homework this week",
-    'cancel': "cancel dialog",
     'settings': "bot settings",
+    'cancel': "cancel dialog",
+    'my_chat': "your group chat",
 
 }
 

@@ -82,7 +82,7 @@ class Homework:
         Update homework info
 
         :param str collection: collection
-        :param int subgroup: subgroup
+        :param str subgroup: subgroup
         :param str subject: subject
         :param str name: name
         :param str description: description
@@ -141,19 +141,20 @@ class Homework:
 
         db = Database()
 
+        if full_info:
+            group["_id"].update([
+                ("description", "$homeworks.description"),
+            ])
+
         if custom_query:
+            custom_query.append({"$group": group})
             return await db.aggregate(collection=collection, pipeline=custom_query)
 
         if by_id:
             if not isinstance(self.id, int):
                 return
 
-            filters = {'homeworks._id': self.id}
-
-        if full_info:
-            group["_id"].update([
-                ("description", "$homeworks.description"),
-            ])
+            filters = {'homeworks._id': int(self.id)}
 
         data = await db.aggregate(collection=collection,
                                   pipeline=[

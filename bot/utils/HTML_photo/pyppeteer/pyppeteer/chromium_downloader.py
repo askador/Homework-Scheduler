@@ -72,8 +72,8 @@ def get_url() -> str:
 
 def download_zip(url: str) -> BytesIO:
     """Download data from url."""
-    logger.warning('start chromium download.\n'
-                   'Download may take a few minutes.')
+    # logger.warning('start chromium download.\n'
+    #                'Download may take a few minutes.')
 
     # disable warnings so that we don't need a cert.
     # see https://urllib3.readthedocs.io/en/latest/advanced-usage.html for more
@@ -101,7 +101,7 @@ def download_zip(url: str) -> BytesIO:
             process_bar.update(len(chunk))
         process_bar.close()
 
-    logger.warning('\nchromium download done.')
+    # logger.warning('\nchromium download done.')
     return _data
 
 
@@ -138,7 +138,7 @@ def extract_zip(data: BytesIO, path: Path) -> None:
         raise IOError('Failed to extract chromium.')
     exec_path.chmod(exec_path.stat().st_mode | stat.S_IXOTH | stat.S_IXGRP |
                     stat.S_IXUSR)
-    logger.warning(f'chromium extracted to: {path}')
+    # logger.warning(f'chromium extracted to: {path}')
 
 
 def download_chromium() -> None:

@@ -1,11 +1,13 @@
 from bot.loader import dp
 from bot.scheduler import scheduler
 from bot.states import AddChat
+from bot.utils.methods import bind_student_to_chat
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 @dp.message_handler(state=AddChat.subjects)
 async def process_subjects(message, state):
+    await bind_student_to_chat(message.from_user.id, message.chat.id)
 
     subjects = message.text.split(',')
     filtered_subjects = []

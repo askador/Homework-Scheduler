@@ -17,6 +17,7 @@ class Chat:
         "admins",
         "subjects",
         "subgroups",
+        "students",
         "notify",
         "notification_time",
         "emoji_on",
@@ -34,6 +35,7 @@ class Chat:
                   admins,
                   subjects=[],
                   subgroups=[],
+                  students=[],
                   notify=True,
                   notification_time=12,
                   emoji_on=True,
@@ -43,11 +45,11 @@ class Chat:
                   homeworks=[]):
         """
         Add new chat
-
         :param str title: chat title
         :param list admins: list of chat admins
         :param list subjects: list of subjects
         :param list subgroups: subgroups
+        :param list students: students id of group
         :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification time
         :param bool emoji_on: can use emoji
@@ -55,7 +57,6 @@ class Chat:
         :param bool can_pin: pin homeworks to do at notification time
         :param int pin_message_id: last pinned bot message
         :param list homeworks: homeworks
-
         :return changes
         """
 
@@ -65,6 +66,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "students": students,
             "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
@@ -82,6 +84,7 @@ class Chat:
                      admins=None,
                      subjects=None,
                      subgroups=None,
+                     students=None,
                      notify=None,
                      notification_time=None,
                      emoji_on=None,
@@ -91,18 +94,17 @@ class Chat:
                      ):
         """
         Update chat info
-
         :param str title: chat title
         :param list admins: chat admins
         :param list subjects: subjects
         :param dict subgroups: subgroups
+        :param list students: students id of group
         :param bool notify: to notify chat about deadlines
         :param int notification_time: to do homework notification hour
         :param bool emoji_on: can use emoji
         :param bool photo_mode: show homework as a photo
         :param bool can_pin: pin homeworks to do at notification time
         :param int pin_message_id: last pinned bot message
-
         :return changes
         """
 
@@ -111,6 +113,7 @@ class Chat:
             "admins": admins,
             "subjects": subjects,
             "subgroups": subgroups,
+            "students": students,
             "notify": notify,
             "notification_time": notification_time,
             "emoji_on": emoji_on,
@@ -133,18 +136,16 @@ class Chat:
                      description,
                      deadline,
                      subgroup=None,
-                     priority=0
+                     priority='common'
                      ):
         """
         Add homework
-
         :param str subject: subject
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
-        :param int subgroup: subgroup id
-        :param int priority: work priority
-
+        :param str subgroup: subgroup id
+        :param str priority: work priority
         :return changes
         """
 
@@ -177,15 +178,13 @@ class Chat:
                         priority=None):
         """
         Change homework
-
         :param int _id: homework id
         :param str subject: subject
         :param str name: name
         :param str description: description
         :param datetime.datetime deadline: deadline
-        :param int subgroup: subgroup id
-        :param int priority: work priority
-
+        :param str subgroup: subgroup id
+        :param str priority: work priority
         :return changes
         """
 
@@ -202,31 +201,109 @@ class Chat:
     async def get_homeworks(self, _id=None, filters: List[Dict] = None, full_info=True, custom_query=None):
         """
         Get homeworks either by id or by list of dates or other filters
-
         :param int _id: homework id
         :param filters: list of filters
         :param bool full_info:
         :param list custom_query:
-
         :return list data: homeworks
         """
         data = []
         hw = Homework(chat_id=self.id)
 
+        if custom_query:
+            return await hw.get_info(self.__collection_name__,
+                                     filters={},
+                                     full_info=full_info,
+                                     custom_query=custom_query)
         if _id:
-            filters = [{'homeworks._id': _id}]
+            filters = [{'homeworks._id': int(_id)}]
         for _filter in filters:
             return await hw.get_info(self.__collection_name__,
                                      filters=_filter,
                                      full_info=full_info,
                                      custom_query=custom_query)
 
+    async def homeworks_search(self, args, full_info=True):
+        """
+        Search homeworks by args
+
+        :param list args: search will be implemented by given args by $and func
+        :param bool full_info:
+
+        :return list data: searched homeworks
+        """
+
+        data = []
+        hw = Homework(chat_id=self.id)
+
+        fields = [
+            'homeworks.subject',
+            'homeworks.subgroup',
+            'homeworks.name',
+            'homeworks.description',
+            'format_date_point',
+            'format_date_slash'
+        ]
+
+        priority = {
+            "common": "обычное",
+            "important": "важное"
+        }
+
+        _and = {}
+
+        if args:
+            _and = {"$and": []}
+
+            index = 0
+            for arg in args:
+                _and['$and'].append({"$or": []})
+                for field in fields:
+                    _and["$and"][index]["$or"].append(
+                        {
+                            field: {
+                                "$regex": f'{arg}+', "$options": "i"
+                            }
+                        }
+                    )
+
+                for k, v in priority.items():
+                    if arg in v:
+                        _and["$and"][index]["$or"].append(
+                            {
+                                'homeworks.priority': {
+                                    "$regex": f'{k}', "$options": "i"
+                                }
+                            }
+                        )
+
+                index += 1
+
+        query = [
+            {"$match": {"_id": -1001424619068}},
+            {"$unwind": "$homeworks"},
+            {
+                "$addFields": {
+                    "format_date_point": {
+                        "$dateToString": {"format": "%Y.%m.%d %H.%M", "date": "$homeworks.deadline"},
+                    },
+                    "format_date_slash": {
+                        "$dateToString": {"format": "%Y/%m/%d %H/%M", "date": "$homeworks.deadline"},
+                    }
+                }
+            },
+            {"$match": _and},
+        ]
+
+        return await hw.get_info(self.__collection_name__,
+                                 filters={},
+                                 full_info=full_info,
+                                 custom_query=query)
+
     async def delete_hw(self, _id):
         """
         Delete homework
-
         :param int _id: homework id
-
         :return changes
         """
         hw = Homework(chat_id=self.id, _id=int(_id))
