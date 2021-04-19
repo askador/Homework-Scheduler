@@ -20,8 +20,6 @@ async def callback_select_homework(callback_query: types.CallbackQuery, state: F
     await GetHomework.choice.set()
     priority = await hw.get_info(collection='chat', by_id=True)
 
-    print(priority)
-
     markup = await edit_hw_keyboard(common=priority[0]["_id"]["priority"])
 
     await update_last(state, await bot.edit_message_text("Выберите что вы хотите отредактировать:",
