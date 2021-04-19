@@ -1,6 +1,9 @@
 import os
+
 from aiogram.dispatcher.filters import Command
 from aiogram.types import InlineKeyboardButton
+
+from http.client import BadStatusLine
 
 from bot.loader import dp, bot
 from bot.data.commands.show_hw import COMMANDS, COMMANDS_TEXT
@@ -65,7 +68,10 @@ async def show_hw(message, state):
 
     if show_hw_mode == "photo":
         html_path, photo_path = get_files_paths(chat_id)
-        hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+        try:
+            hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
+        except BadStatusLine:
+            hw_data = await hws_list.generate_photo(html_file=html_path, photo_file=photo_path)
 
         await bot.delete_message(chat_id=chat_id, message_id=loading.message_id)
         await message.answer_photo(hw_data, reply_markup=homework_kb_next_week)

@@ -57,6 +57,7 @@ async def edit_choice(callback_query: types.CallbackQuery, state: FSMContext):
 
         async with state.proxy() as data:
             await chat.delete_hw(data['hw_id'])
+        await clear(state)
         await update_last(state, await bot.send_message(callback_query.message.chat.id, text, reply_markup=markup))
         await state.finish()
         return

@@ -1,15 +1,11 @@
 from bot.loader import dp, bot
 from aiogram.types import InlineQuery, InputTextMessageContent, InlineQueryResultArticle
 from aiogram.dispatcher import filters, FSMContext
+from aiogram.utils.exceptions import InvalidQueryID
 from bot.utils.methods import check_date
 from bot.states import Inline
 from bot.utils.methods import user_in_chat_students
 from bot.types.MongoDB import Chat
-
-
-TEST = [
-    "1"
-]
 
 IMAGES = {
     "add_hw" : "https://i.imgur.com/OTKZVgd.png",
@@ -74,16 +70,19 @@ async def inline_add_hw(inline_query: InlineQuery):
     args = inline_query.query.replace("add_hw", "").split(",")
     args = [arg.strip() for arg in args]
 
+    subjects = await Chat(chat_id).get_field_value('subjects')
+    subgroups = await Chat(chat_id).get_field_value('subjects')
+
     key = "0"
     cache = []
 
     if len(args) == 1:
         key = "1"
     elif len(args) >= 1:
-        if args[0] in TEST:
+        if args[0] in subjects:
             key = "1"
             if len(args) >= 3:
-                if args[2] in TEST or args[2] == 'все':
+                if args[2] in subgroups or args[2] == 'все':
                     pass
                 else:
                     key = "3"
@@ -117,4 +116,9 @@ async def inline_add_hw(inline_query: InlineQuery):
         thumb_url=OUTPUTS[key]["url"], thumb_height=32, thumb_width=32
     )
 
-    await bot.answer_inline_query(inline_query.id, results=[item], cache_time=1)
+    try:
+        await bot.answer_inline_query(inline_query.id, results=[item], cache_time=1)
+    except InvalidQueryID:
+        await bot.send_message(chat_id,
+                               text="Время ожидания инлайн запроса истекло.\n"
+                                    "Удалите и напишите запрос снова")

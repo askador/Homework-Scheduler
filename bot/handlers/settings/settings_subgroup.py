@@ -109,11 +109,33 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
     # Todo
     # deleting, checking for hw
 
+    groups = callback_query.message.text.replace("Выбраны:", '').replace("Удалить подгруппы \n", '').split(',')
+    groups = [group.strip() for group in groups]
+
     await clear(state)
 
-    await Settings.choice.set()
+    chat = Chat(callback_query.message.chat.id)
+
+    text = ''
+
+    for group in groups:
+        hw = await chat.get_homeworks(filters=[{"homeworks.subgroup": group}])
+        if hw:
+            text += f"Еще остались задания для <b>{group}</b> подгруппы"
+            break
+
+    if text == '':
+        text = "Удалено!\nМеню настроек"
+
+        subgroups = await chat.get_field_value('subgroups')
+        for group in groups:
+            subgroups.remove(group)
+
+        await chat.update(subgroups=subgroups)
+
+    await Settings.chopice.set()
     markup = await settings_keyboard()
-    await update_last(state, await bot.send_message(callback_query.message.chat.id, "Удалено!\nМеню настроек",
+    await update_last(state, await bot.send_message(callback_query.message.chat.id, text,
                                                     reply_markup=markup))
 
 
