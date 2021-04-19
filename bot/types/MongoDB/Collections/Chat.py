@@ -227,7 +227,7 @@ class Chat:
         """
         Search homeworks by args
 
-        :param list args: search will be implemented by given args
+        :param list args: search will be implemented by given args by $and func
         :param bool full_info:
 
         :return list data: searched homeworks

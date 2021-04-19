@@ -320,8 +320,4 @@ class HomeworksList:
         await browser.close()
 
         photo = open(photo_file, 'rb')
-        # os.remove(_html)
-        # os.remove(_photo)
         return photo
-
-        # hw_photo = await generate_png(html_file=html_file, output=photo_file)
