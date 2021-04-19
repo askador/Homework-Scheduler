@@ -24,9 +24,9 @@ async def add_hw(message: types.Message):
 
     if len(args) > 0:
         try:
-            print(args)
+            # print(args)
             args = await add_parse_hw(args)
-            print(args)
+            # print(args)
             date = await make_datetime([args["deadline"]])
             if not args['subj'] in await chat.get_field_value("subject"):
                 raise 1
@@ -56,7 +56,7 @@ async def add_hw(message: types.Message):
             return
         except Exception as e:
             text += "Аргументы не верны! \n"
-            print(e)
+            # print(e)
             pass
 
 

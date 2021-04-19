@@ -7,7 +7,7 @@ from bot.utils.methods import user_in_chat_students
 
 @dp.chosen_inline_handler(lambda chosen_inline_query: True)
 async def chosen_delete_hw(chosen_inline_query: ChosenInlineResult):
-    print("del")
+    # print("del")
     chat_id = -1001424619068
 
     args = chosen_inline_query.query.split()

@@ -21,8 +21,8 @@ async def show_hw(inline_query):
 
 @dp.chosen_inline_handler()
 async def chosen_delete_hw(chosen_inline_query):
-    print(chosen_inline_query)
-
+    # print(chosen_inline_query)
+    pass
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
