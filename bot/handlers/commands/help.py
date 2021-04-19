@@ -11,7 +11,7 @@ async def bot_help(message):
 
     help_message = \
 """
-Чтобы пользоваться функционалом бота добавьте его в группу https://t.me/AI4HWBOT?startgroup=a
+Чтобы пользоваться функционалом бота добавьте его в группу https://t.me/itai_hw_bot?startgroup=a
 
 <b>Основные команды:</b>
 Для всех участников:
