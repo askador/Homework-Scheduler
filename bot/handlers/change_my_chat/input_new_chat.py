@@ -9,7 +9,7 @@ async def input_new_chat_id(message, state):
     user_id = message.from_user.id
     new_chat_id = message.text
 
-    if not new_chat_id.startswith('-100') and new_chat_id != 'chat id':
+    if not new_chat_id.startswith('-') and new_chat_id != 'chat id':
         await message.reply("Такой группы не сущесвует")
 
         return
