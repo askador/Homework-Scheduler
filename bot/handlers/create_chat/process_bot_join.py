@@ -4,7 +4,7 @@ from bot.utils.methods import get_chat_admins
 from bot.types import Database
 
 
-@dp.message_handler(content_types=["new_chat_members"])
+@dp.message_handler(content_types=["new_chat_members"], access_level="admin")
 async def process_bot_join(message, state):
     chat_id = message.chat.id
 
@@ -31,3 +31,17 @@ async def process_bot_join(message, state):
                                  "Пожалуйста введите список ваших предметов через запятую")
 
             return
+
+
+@dp.message_handler(content_types=["new_chat_members"])
+async def input_wait(message, state):
+    chat_id = message.chat.id
+
+    db = Database()
+    already_exists = await db.find(collection="chat", filters={"_id": chat_id})
+
+    if already_exists:
+        return
+
+    await message.answer("Привет, я Homework Scheduler!\n\n"
+                         "ля настройки требуется сообщение от администратора")
