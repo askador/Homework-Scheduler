@@ -3,6 +3,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 
 class AddChat(StatesGroup):
+    for_start = State()
     subjects = State()
     subgroups = State()
 
