@@ -280,7 +280,7 @@ class Chat:
                 index += 1
 
         query = [
-            {"$match": {"_id": -1001424619068}},
+            {"$match": {"_id": self.id}},
             {"$unwind": "$homeworks"},
             {
                 "$addFields": {
