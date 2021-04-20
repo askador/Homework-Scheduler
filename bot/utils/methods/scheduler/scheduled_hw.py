@@ -1,4 +1,4 @@
-from aiogram.utils.exceptions import BadRequest, MessageTextIsEmpty
+from aiogram.utils.exceptions import BadRequest, MessageTextIsEmpty, ChatNotFound
 
 from bot.loader import bot
 import datetime
@@ -111,6 +111,8 @@ async def each_chat(chat):
         try:
             message = await bot.send_message(chat["_id"], await get_hw(chat['_id'], datetime.datetime.now()))
         except MessageTextIsEmpty:
+            pass
+        except ChatNotFound:
             pass
         else:
             if chat["can_pin"]:
