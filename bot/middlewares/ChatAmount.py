@@ -8,7 +8,7 @@ from bot.data.config import MAX_CHATS_AMOUNT
 class ChatAmount(BaseMiddleware):
     async def on_pre_process_update(self, update, data):
         a = (await Database().count_documents('chat'))
-        if a >= MAX_CHATS_AMOUNT:
+        if a > MAX_CHATS_AMOUNT:
             chat_id = False
             if update.message:
                 chat_id = update.message.chat.id
