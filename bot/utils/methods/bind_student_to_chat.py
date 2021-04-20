@@ -14,6 +14,6 @@ async def bind_student_to_chat(user_id, chat_id):
     if already_in_chat:
         return
 
-    result = chat_students.append(int(user_id))
-    await chat.update(students=result)
+    chat_students += [user_id]
+    await chat.update(students=chat_students)
 
