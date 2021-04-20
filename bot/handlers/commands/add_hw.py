@@ -28,7 +28,7 @@ async def add_hw(message: types.Message):
             args = await add_parse_hw(args)
             # print(args)
             date = await make_datetime([args["deadline"]])
-            if not args['subj'] in await chat.get_field_value("subject"):
+            if not args['subj'] in await chat.get_field_value("subjects"):
                 raise 1
             if not args['subg'] in await chat.get_field_value("subgroups"):
                 raise 2
