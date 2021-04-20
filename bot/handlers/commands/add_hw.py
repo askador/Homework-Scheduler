@@ -15,8 +15,9 @@ from bot.utils.methods import user_in_chat_students, bind_student_to_chat
 async def add_hw(message: types.Message):
     await bind_student_to_chat(message.from_user.id, message.chat.id)
 
-    args = message.text.replace("/add_hw", "").split(",")
-    args = [arg.strip() for arg in args]
+    args = message.get_args().split() if message.is_command() else message.text.split()[1:]
+    args = [arg.split(',')[0].strip() for arg in args]
+
 
     chat = Chat(message.chat.id)
 
@@ -26,9 +27,9 @@ async def add_hw(message: types.Message):
         try:
             # print(args)
             args = await add_parse_hw(args)
-            # print(args)
             date = await make_datetime([args["deadline"]])
-            if not args['subj'] in await chat.get_field_value("subjects"):
+            subjects = await chat.get_field_value("subjects")
+            if not args['subj'] in subjects:
                 raise 1
             if not args['subg'] in await chat.get_field_value("subgroups"):
                 raise 2

@@ -65,7 +65,6 @@ async def get_hw(chat_id, current_day):
                 text += tomorrow_text
             else:
                 text += after_tomorrow_text
-            temp_day += 1
             for hw in day:
                 hw = hw['_id']
                 del hw['_id']
@@ -78,6 +77,7 @@ async def get_hw(chat_id, current_day):
                 text += f"{index}. <b>предмет:</b> {subj}\n" \
                              f"    <b>название:</b> {hw['name']}\n" \
                              f"    <b>описание:</b> {hw['description']}\n\n"
+        temp_day += 1
 
     return text
 
