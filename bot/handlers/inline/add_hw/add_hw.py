@@ -75,7 +75,7 @@ async def inline_add_hw(inline_query: InlineQuery):
     #print(args)
 
     subjects = await Chat(chat_id).get_field_value('subjects')
-    subgroups = await Chat(chat_id).get_field_value('subjects')
+    subgroups = await Chat(chat_id).get_field_value('subgroups')
 
     key = "0"
     cache = []
