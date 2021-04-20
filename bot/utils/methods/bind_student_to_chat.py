@@ -3,6 +3,10 @@ from bot.utils.methods import user_in_chat_students
 
 
 async def bind_student_to_chat(user_id, chat_id):
+
+    if await user_in_chat_students(user_id):
+        return
+
     chat = Chat(chat_id)
     chat_students = await chat.get_field_value('students')
 
@@ -14,6 +18,6 @@ async def bind_student_to_chat(user_id, chat_id):
     if already_in_chat:
         return
 
-    result = chat_students.append(int(user_id))
-    await chat.update(students=result)
+    chat_students += [user_id]
+    await chat.update(students=chat_students)
 

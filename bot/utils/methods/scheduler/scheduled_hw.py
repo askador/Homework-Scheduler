@@ -54,7 +54,6 @@ async def get_hw(chat_id, current_day):
     ])
 
     hws_array = [homeworks_tomorrow, homeworks_after_tomorrow]
-    print(homeworks_tomorrow)
 
     temp_day = 1
 
