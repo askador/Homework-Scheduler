@@ -116,7 +116,23 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
     # Todo
     # deleting, checking for hw
 
+    to_remove = callback_query.message.text.replace("Выбраны:", '').replace("Удалить предметы \n", '').split(',')
+    to_remove = [subject.strip() for subject in to_remove]
+
     await clear(state)
+
+    chat = Chat(callback_query.message.chat.id)
+
+    text = ''
+
+    if text == '':
+        text = "Удалено!\nМеню настроек"
+
+        subjects = await chat.get_field_value('subjects')
+        for subject in to_remove:
+            subjects.remove(subject)
+
+        await chat.update(subjects=subjects)
 
     await Settings.choice.set()
     markup = await settings_keyboard()

@@ -9,6 +9,6 @@ async def edit_hw_keyboard(common):
         markup.add(InlineKeyboardButton('❕ Обычное', callback_data='common'))
     else:
         markup.add(InlineKeyboardButton('❗️Важное', callback_data='common'))
-    markup.add(InlineKeyboardButton('⏪ Удалить', callback_data='delete'))
+    markup.add(InlineKeyboardButton('➖ Удалить', callback_data='delete'))
     markup.add(InlineKeyboardButton('✖️ Завершить', callback_data='done'))
     return markup

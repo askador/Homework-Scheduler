@@ -133,7 +133,7 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
 
         await chat.update(subgroups=subgroups)
 
-    await Settings.chopice.set()
+    await Settings.choice.set()
     markup = await settings_keyboard()
     await update_last(state, await bot.send_message(callback_query.message.chat.id, text,
                                                     reply_markup=markup))
