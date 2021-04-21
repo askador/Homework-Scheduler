@@ -6,7 +6,7 @@ from bot.keyboards import list_keyboard
 from bot.data.commands.del_hw import COMMANDS, COMMANDS_TEXT
 from aiogram.dispatcher.filters import Command
 from bot.types.MongoDB.Collections import Chat
-from bot.utils.methods import bind_student_to_chat
+from bot.utils.methods import bind_student_to_chat, update_last
 
 
 @dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"), access_level='moderator')
