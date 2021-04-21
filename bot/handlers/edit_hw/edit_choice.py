@@ -62,6 +62,7 @@ async def edit_choice(callback_query: types.CallbackQuery, state: FSMContext):
         await state.finish()
         return
     elif callback_query.data == 'done':
+        await clear(state)
         text = "Успешно завершено"
 
         # chat = Chat(callback_query.message.chat.id)

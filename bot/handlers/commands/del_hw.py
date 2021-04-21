@@ -1,6 +1,6 @@
 from bot.loader import dp
 from aiogram import types
-from aiogram.dispatcher import filters
+from aiogram.dispatcher import filters, FSMContext
 from bot.states import DeleteHomework
 from bot.keyboards import list_keyboard
 from bot.data.commands.del_hw import COMMANDS, COMMANDS_TEXT
@@ -11,7 +11,7 @@ from bot.utils.methods import bind_student_to_chat
 
 @dp.message_handler(Command(commands=COMMANDS_TEXT, prefixes="!"), access_level='moderator')
 @dp.message_handler(commands=COMMANDS,  access_level='moderator')
-async def del_hw(message: types.Message):
+async def del_hw(message: types.Message, state: FSMContext):
     await bind_student_to_chat(message.from_user.id, message.chat.id)
 
 
@@ -31,5 +31,5 @@ async def del_hw(message: types.Message):
         return
 
     kb = await list_keyboard(message.chat.id, 'homework', page=1, arr=homeworks)
-    await message.answer(text="Выберите задание, которое Вы хотите удалить",
-                         reply_markup=kb)
+    await update_last(state, await message.answer(text="Выберите задание, которое Вы хотите удалить",
+                         reply_markup=kb))
