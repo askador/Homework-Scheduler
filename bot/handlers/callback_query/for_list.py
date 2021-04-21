@@ -26,6 +26,9 @@ async def change_page(callback_query: types.CallbackQuery, state: FSMContext, te
                 if len(data['to_display']) != 0:
                     markup.add(InlineKeyboardButton('⏪ Отменить', callback_data='redo'))
                 markup.add(InlineKeyboardButton('Сохранить изменения', callback_data='save'))
+            elif text == 'homework':
+                async with state.proxy() as data:
+                    markup = await list_keyboard(callback_query.message.chat.id, text, page, arr=data['homeworks'])
             else:
                 markup = await list_keyboard(callback_query.message.chat.id, text, page)
     await bot.edit_message_reply_markup(callback_query.message.chat.id, callback_query.message.message_id,

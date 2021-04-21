@@ -25,6 +25,7 @@ async def del_hw(message: types.Message):
     args = message.get_args().split() if message.is_command() else message.text.split()[1:]
 
     homeworks = sorted(await chat.homeworks_search(args=args, full_info=False), key=lambda x: x["_id"]["_id"])
+    await state.update_data(homeworks=homeworks)
 
     if not homeworks:
         await message.reply("По запросу ничего не нашлось")
