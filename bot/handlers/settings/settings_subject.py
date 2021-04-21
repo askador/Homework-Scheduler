@@ -130,7 +130,7 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
 
         subjects = await chat.get_field_value('subjects')
         for subject in to_remove:
-            subjects.remove(to_remove)
+            subjects.remove(subject)
 
         await chat.update(subjects=subjects)
 
