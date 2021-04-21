@@ -116,8 +116,8 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
     # Todo
     # deleting, checking for hw
 
-    subjects = callback_query.message.text.replace("Выбраны:", '').replace("Удалить подгруппы \n", '').split(',')
-    subjects = [subject.strip() for subject in subjects]
+    to_remove = callback_query.message.text.replace("Выбраны:", '').replace("Удалить подгруппы \n", '').split(',')
+    to_remove = [subject.strip() for subject in to_remove]
 
     await clear(state)
 
@@ -129,8 +129,8 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
         text = "Удалено!\nМеню настроек"
 
         subjects = await chat.get_field_value('subjects')
-        for subject in subjects:
-            subjects.remove(subject)
+        for subject in to_remove:
+            subjects.remove(to_remove)
 
         await chat.update(subjects=subjects)
 
