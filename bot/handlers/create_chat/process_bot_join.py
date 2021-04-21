@@ -47,4 +47,4 @@ async def input_wait(message, state):
     await AddChat.for_start.set()
 
     await message.answer("Привет, я Homework Scheduler!\n\n"
-                         "ля настройки требуется сообщение от администратора")
+                         "Для настройки требуется сообщение от администратора")
