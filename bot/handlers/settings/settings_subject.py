@@ -116,7 +116,7 @@ async def save_changes(callback_query: types.CallbackQuery, state: FSMContext):
     # Todo
     # deleting, checking for hw
 
-    to_remove = callback_query.message.text.replace("Выбраны:", '').replace("Удалить подгруппы \n", '').split(',')
+    to_remove = callback_query.message.text.replace("Выбраны:", '').replace("Удалить предметы \n", '').split(',')
     to_remove = [subject.strip() for subject in to_remove]
 
     await clear(state)
