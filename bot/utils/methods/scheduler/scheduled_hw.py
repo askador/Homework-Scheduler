@@ -77,6 +77,7 @@ async def get_hw(chat_id, current_day):
                 text += f"{index}. <b>предмет:</b> {subj}\n" \
                              f"    <b>название:</b> {hw['name']}\n" \
                              f"    <b>описание:</b> {hw['description']}\n\n"
+                index += 1
         temp_day += 1
 
     return text
