@@ -1,13 +1,11 @@
-token = '1683570768:AAFydK1ItIvQc2soe2LLAqxw9Q1XjcwihDE' #ai4
-test_bot_token = '1482334694:AAH6GzEuYH34ZOwuoXgZttO87lcP9WiH_B8' #shishki
-
+token = '11111111111111:AAAAAAAAAAAAAAAAAAAAAA' #ai4
 MAX_CHATS_AMOUNT = 3
 
 mongodb_setting = {
-    "User": "test_user",
-    "Password": "1234",
-    "Host": "cluster0.lajfk.mongodb.net",
-    "Database": "hw_bot_db",
+    "User": "user",
+    "Password": "password",
+    "Host": "host",
+    "Database": "db_name",
     "args": "retryWrites=true&w=majority"
 }
 
@@ -16,7 +14,7 @@ admins = [
     534794338,
 ]
 
-materials = "https://drive.google.com/drive/folders/1sirZ5VHO0djffSrOdWcMhMJ30DdSV1zQ?usp=sharing"
+materials = "https://drive.google.com/"
 
 commands = {
     'help': "how to use @itai_hw_bot",
